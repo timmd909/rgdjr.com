@@ -1,0 +1,13 @@
+#!/bin/bash 
+
+pushd "`dirname $0`" > /dev/null
+
+cd ../www/
+
+wp-cli core update 
+wp-cli core update-db
+wp-cli plugin update --all 
+
+
+popd > /dev/null
+
