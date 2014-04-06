@@ -14,6 +14,8 @@ body {
 	z-index: 1;
 }
 
+/* -=- -=-  -=-  -=-  -=-  -=-  -=-  -=-  -=-  -=-  -=-  -=-  -=-  -=-  -=- */
+
 header#header {
 	position: fixed;
 	top: 0; left: 0;
@@ -42,6 +44,8 @@ header.entry-header {
 	text-align: center;
 }
 
+/* -=- -=-  -=-  -=-  -=-  -=-  -=-  -=-  -=-  -=-  -=-  -=-  -=-  -=-  -=- */
+
 ul {
 	list-style-type: none;
 }
@@ -53,6 +57,21 @@ p {
 body.home #site-navigation {
 	display: none;
 }
+
+input {
+	border: 1px solid #000;
+	padding: 8px;
+	font: inherit;
+}
+
+a, a:link, a:visited {
+	color: #2175fB;
+}
+	a:active, a:hover {
+		color: #4195fB;
+	}
+
+/* -=- -=-  -=-  -=-  -=-  -=-  -=-  -=-  -=-  -=-  -=-  -=-  -=-  -=-  -=- */
 
 #page {
 	padding-top: 72pt;
@@ -94,30 +113,21 @@ body.home #site-navigation {
 
 	.entry-content {
 		max-width: 800px;
+		padding: 0 24px;
 		margin: 0 auto;
 	}
 
 
-input {
-	border: 1px solid #000;
-	padding: 8px;
-	font: inherit;
-}
-
-a, a:link, a:visited {
-	color: #2175fB;
-}
-	a:active, a:hover {
-		color: #4195fB;
-	}
-
-
+/* -=- -=-  -=-  -=-  -=-  -=-  -=-  -=-  -=-  -=-  -=-  -=-  -=-  -=-  -=- */
 
 footer {
 	background: #000;
 	color: #fff;
 	padding: 8pt;
 }
+
+/* -=- -=-  -=-  -=-  -=-  -=-  -=-  -=-  -=-  -=-  -=-  -=-  -=-  -=-  -=- */
+
 
 .clear-both { clear: both; }
 .hide { display:none; }

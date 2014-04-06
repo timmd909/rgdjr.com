@@ -31,9 +31,11 @@
 		<div class="letter-group"><?php }
 
 		?>
-		<div class="letter"><?php echo strtoupper($letter); ?></div>
-		<?php
+		<a class="letter" href="/<?php echo $letter ?>">
+			<?php echo strtoupper($letter); ?>
+		</a>
 
+		<?php
 		$letter = chr(ord($letter)+1);
 	}
 
