@@ -1,0 +1,17 @@
+#main {
+	max-width: none;
+}
+
+
+.letter-columns {
+}
+
+.letter-columns .letter-group {
+	height: 200px;
+}
+
+.letter-columns .letter-group .letter {
+	width: 50%; height: 100%;
+	float: left;
+	background: #ff0;
+}
