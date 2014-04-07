@@ -1,0 +1,153 @@
+
+div.wpcf7 p {
+	display: block;
+	float: left;
+	width: 49%; height: 64pt;
+	position: relative;
+	min-width: 240px;
+	padding: 6px 0;
+}
+	div.wpcf7 p.captcha {
+		margin: 0 12px;
+		height: auto;
+		padding-top: 0;
+		padding-bottom: 12px;
+	}
+	div.wpcf7 p label {
+		display: block;
+		color: #999;
+		font-size: 18pt;
+		margin-bottom: 6pt;
+	}
+
+	div.wpcf7 p.full-size {
+		width: auto;
+		clear: both;
+		float: none;
+	}
+		div.wpcf7 p textarea,
+		div.wpcf7 p input {
+			/*margin: 0 12px 0 0;*/
+			width: 90%;
+			display: block;
+			margin: 0 auto;
+
+		}
+		div.wpcf7 p textarea {
+			height: 48pt;
+		}
+
+		div.wpcf7 p br {
+			display: none;
+		}
+		div.wpcf7 p.full-size textarea {
+			max-width: 780px;
+			width: 90%;
+		}
+	div.wpcf7 p.save {
+		margin: 0;
+		padding: 0;
+		height: auto;
+		line-height: auto;
+	}
+
+@media screen and (max-width: 400px) {
+	div.wpcf7 p {
+		width: auto;
+		clear: both;
+		float: none;
+	}
+	div.wpcf7 .alignleft span {
+		display: block;
+		margin: 0 auto;
+		float: none;
+		width: auto;
+	}
+
+	div.wpcf7 p input {
+		margin: 0 auto;
+	}
+}
+
+
+img.wpcf7-captchac {
+	margin: 0 0 0 8px;
+}
+
+input.wpcf7-captchar {
+	width: 90%;
+	max-width: 44pt;
+	text-align: center;
+	margin: 0 16px;
+	display: block;
+	font-family: monospace;
+	letter-spacing: 2px;
+}
+
+@media screen and (max-width: 400px) {
+	input.wpcf7-captchar {
+		margin: 0 auto;
+	}
+}
+
+div.wpcf7 {
+	margin: 0;
+	padding: 0;
+}
+
+div.wpcf7-response-output {
+	margin: 2em 0.5em 1em;
+	padding: 0.2em 1em;
+}
+
+div.wpcf7-mail-sent-ok {
+	border: none;
+	clear:both;
+	position: relative;
+	top: -32px;
+	font-size: 20pt;
+	color: #999;
+	text-align: center;
+	background: #fff;
+
+}
+
+div.wpcf7-mail-sent-ng {
+	border: 2px solid #ff0000;
+}
+
+div.wpcf7-spam-blocked {
+	border: 2px solid #ffa500;
+}
+
+span.wpcf7-not-valid-tip {
+	padding: 0 12px;
+	display: block;
+	padding: 4px 8px;
+	text-align: center;
+}
+
+div.wpcf7 p input.wpcf7-submit {
+	max-width: 100px;
+}
+	div.wpcf7 p input.wpcf7-submit:hover,
+	div.wpcf7 p input.wpcf7-submit:active {
+		background: #000; color: #fff;
+		cursor: pointer;
+		font-weight: bold;
+	}
+
+div.wpcf7 p.full-size.your-message {
+	padding-top: 28pt;
+	height: auto;
+}
+
+.required {
+	font-size: 18pt;
+	color: #aaa;
+	position: relative; top: 4px;
+}
+div.wpcf7 p.required-note {
+	height: auto;
+}
+

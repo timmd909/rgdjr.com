@@ -19,6 +19,7 @@
 
 <link rel="stylesheet" href="<?php echo get_template_directory_uri(); ?>/style.css" type="text/css" media="all" />
 <link rel="stylesheet" href="<?php echo get_template_directory_uri(); ?>/css/welcome.css" type="text/css" media="all" />
+<link rel="stylesheet" href="<?php echo get_template_directory_uri(); ?>/css/contact.css" type="text/css" media="all" />
 <script language="JavaScript" type="text/javascript" src="<?php echo get_template_directory_uri(); ?>/js/home.js"></script>
 </head>
 

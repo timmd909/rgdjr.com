@@ -19,6 +19,7 @@
 
 <link rel="stylesheet" href="<?php echo get_template_directory_uri(); ?>/style.css" type="text/css" media="all" />
 <link rel="stylesheet" href="<?php echo get_template_directory_uri(); ?>/css/letter.css" type="text/css" media="all" />
+<link rel="stylesheet" href="<?php echo get_template_directory_uri(); ?>/css/contact.css" type="text/css" media="all" />
 </head>
 
 <body <?php body_class(); ?>>
