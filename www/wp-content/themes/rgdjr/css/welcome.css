@@ -17,7 +17,6 @@
 			text-align: center;
 			position: relative;
 
-			font-size: 144px;
 			line-height: 200px;
 
 			overflow: hidden;
@@ -39,12 +38,17 @@
 				position: absolute;
 				top: 0; right: 0;
 				z-index: 0;
+				max-width: 1000px;
 			}
+				.letter-columns .letter-group .letter:nth-of-type(2) img {
+					right: auto; left: 0;
+				}
 				.letter-columns .letter-group .letter:hover img {
 					display: none;
 				}
 			.letter-columns .letter-group .letter span {
 				display: none;
+				font-size: 144px;
 			}
 				.letter-columns .letter-group .letter:hover span {
 					display: inline
@@ -76,6 +80,7 @@
 
 }
 
+/*
 @media screen and (min-width: 900px) {
 	.letter-columns .letter-group {
 		height: 300px;
@@ -83,4 +88,4 @@
 		.letter-columns .letter-group .letter {
 			line-height: 320px;
 		}
-}
+} */
