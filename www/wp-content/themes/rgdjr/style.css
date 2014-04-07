@@ -129,6 +129,7 @@ header.entry-header {
 	}
 		header#header h1 {
 			float: left;
+			margin-left: 8pt;
 			color: #000;
 		}
 		header#header h2 {
@@ -138,11 +139,12 @@ header.entry-header {
 			text-align: left;
 			display: block;
 			padding: 0 4px;
+			margin-left: 8pt;
 		}
 	header#header .links {
 		position: relative;
 		right: auto; bottom: auto;
-		margin-right: 4pt;
+		margin-right: 12pt;
 		margin-bottom: 8pt;
 		float: right;
 		text-align: left;
