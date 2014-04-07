@@ -1,7 +1,6 @@
 <?php
 
 /**
- * Default template for displaying content.
  *
  */
 
@@ -30,9 +29,18 @@
 		if ($letter != 'a' && ord($letter)%2) { ?></div><!-- .letter-group -->
 		<div class="letter-group"><?php }
 
+		$pageInfo = get_page_by_path($letter);
+		$pageId = $pageInfo->ID;
+		$pageTitle = $pageInfo->post_title;
 		?>
 		<a class="letter" href="/<?php echo $letter ?>">
-			<?php echo strtoupper($letter); ?>
+			<?php
+				if (has_post_thumbnail($pageId)) {
+					// $thumbnailId = get_post_thumbnail_id($pageId);
+					echo get_the_post_thumbnail($pageId);
+				}
+			?>
+			<span><?php echo $pageTitle; ?></span>
 		</a>
 
 		<?php

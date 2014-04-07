@@ -4,6 +4,7 @@
  * Header for RGDJR.com
  */
 
+
 ?><!DOCTYPE html>
 <html <?php language_attributes(); ?>>
 
@@ -17,10 +18,10 @@
 <!-- / WordPress Header -->
 
 <link rel="stylesheet" href="<?php echo get_template_directory_uri(); ?>/style.css" type="text/css" media="all" />
+<link rel="stylesheet" href="<?php echo get_template_directory_uri(); ?>/css/letter.css" type="text/css" media="all" />
 </head>
 
 <body <?php body_class(); ?>>
-
 	<header id="header">
 		<hgroup>
 			<h1 class="site-title"><a href="<?php echo esc_url(home_url('/')); ?>"

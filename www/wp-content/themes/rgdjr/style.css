@@ -12,36 +12,7 @@ body {
 	font-family: Helvetica, Arial, sans-serif;
 	background: #000;
 	z-index: 1;
-}
-
-/* -=- -=-  -=-  -=-  -=-  -=-  -=-  -=-  -=-  -=-  -=-  -=-  -=-  -=-  -=- */
-
-header#header {
-	position: fixed;
-	top: 0; left: 0;
-	width: 100%;
-	height: 72pt;
-	background: #fff;
-	z-index: 9000;
-}
-	header#header hgroup {
-		position: absolute; left: 0; top: 0;
-		width: 100%; height: 100%;
-	}
-	header#header h1 {
-		font-size: 20pt;
-		margin: 4pt;
-		display: inline-block;
-	}
-	header#header h2 {
-		font-size: 18pt;
-		margin: 4pt;
-		display: inline-block;
-	}
-
-header.entry-header {
-	font-size: 80pt;
-	text-align: center;
+	min-width: 280px;
 }
 
 /* -=- -=-  -=-  -=-  -=-  -=-  -=-  -=-  -=-  -=-  -=-  -=-  -=-  -=-  -=- */
@@ -51,7 +22,8 @@ ul {
 }
 
 p {
-	margin: 0 0 8pt 0;
+	margin: 0 0 16pt 0;
+	line-height: 16pt;
 }
 
 body.home #site-navigation {
@@ -59,7 +31,7 @@ body.home #site-navigation {
 }
 
 input {
-	border: 1px solid #000;
+	border: 1px solid #999;
 	padding: 8px;
 	font: inherit;
 }
@@ -71,6 +43,129 @@ a, a:link, a:visited {
 		color: #4195fB;
 	}
 
+/* -=- -=-  -=-  -=-  -=-  -=-  -=-  -=-  -=-  -=-  -=-  -=-  -=-  -=-  -=- */
+
+header#header {
+	position: fixed;
+	top: 0; left: 0;
+	width: 100%;
+	height: 72pt;
+	background: #fff;
+	z-index: 9000;
+	overflow: hidden;
+	/* border-bottom: 1px solid #CCC; */
+}
+	header#header hgroup {
+		position: relative;
+		/**position: absolute; left: 0; top: 0;
+		width: 100%; height: 100%; **/
+		height: 72pt;
+		max-width: 800px;
+		margin: 0 auto;
+	}
+	header#header h1 {
+		font-size: 20pt;
+		margin: 8pt 4pt 0 4pt;
+		display: inline-block;
+	}
+		header#header h1 a,
+		header#header h1 a:visited,
+		header#header h1 a:link {
+			background: #fff;
+			color: #000;
+			padding: 0;
+			font-size: 56pt;
+		}
+		header#header h1 a:active,
+		header#header h1 a:hover {
+			color: #fff;
+			background: #000;
+		}
+	header#header h2 {
+		font-size: 18pt;
+		margin: 4pt;
+		display: inline-block;
+		color: #999;
+	}
+
+	header#header .links {
+		position: absolute;
+		right: 0;
+		bottom: 16px;
+	}
+		header#header .links a,
+		header#header .links a:link,
+		header#header .links a:visited {
+			background: #fff;
+			display: block;
+			color: #000;
+			padding: 1pt 4pt;
+			min-width: 40pt;
+			text-align: right;
+			margin-top: 4pt;
+		}
+			header#header .links a:hover,
+			header#header .links a:active {
+				background: #000;
+				color: #fff;
+			}
+
+header.entry-header {
+	font-size: 18pt;
+	text-align: left;
+	margin: 0 16pt 4pt 16pt;
+	color: #999;
+}
+
+@media screen and (max-width: 800px) {
+	header#header {
+		height: auto;
+		position: static;
+	}
+	header#header hgroup {
+		height: auto;
+	}
+		header#header h1 {
+			float: left;
+			color: #000;
+		}
+		header#header h2 {
+			float: left;
+			clear: both;
+			color: #999;
+			text-align: left;
+			display: block;
+			padding: 0 4px;
+		}
+	header#header .links {
+		position: relative;
+		right: auto; bottom: auto;
+		margin-right: 4pt;
+		margin-bottom: 8pt;
+		float: right;
+		text-align: left;
+		clear: both;
+	}
+		header#header .links li {
+			display: inline-block;
+			width: auto;
+			margin: 0 0 0 4pt;
+		}
+		header#header .links a,
+		header#header .links a:link,
+		header#header .links a:visited {
+			color: #000;
+			min-width: 0;
+			text-align: right;
+			margin-top: 4pt;
+			padding: 0 4px;
+		}
+			header#header .links a:hover,
+			header#header .links a:active {
+				background: #000;
+				color: #fff;
+			}
+}
 /* -=- -=-  -=-  -=-  -=-  -=-  -=-  -=-  -=-  -=-  -=-  -=-  -=-  -=-  -=- */
 
 #page {
@@ -89,13 +184,14 @@ a, a:link, a:visited {
 		}
 		#page #site-navigation ul li {
 			display: inline-block;
-			margin: 4px -2px;
+			margin: 0 -2px;
 		}
 			#page #site-navigation ul li a {
 				width: 20pt; height: 24pt;
+				padding: 4pt 0;
 				line-height: 24pt;
 				font-size: 18pt;
-				background: #fff;
+				/* background: #fff; */
 				display: inline-block;
 			}
 				#page #site-navigation ul li a:active,
@@ -104,11 +200,15 @@ a, a:link, a:visited {
 					color: #fff;
 					font-weight: bold;
 				}
+			#page #site-navigation .current-menu-item a {
+				color: #000;
+				font-weight: bold;
+			}
 
 	#main {
 		max-width: 800px;
 		margin: 0 auto;
-		padding: 64px 0 24px 0;
+		padding: 24px 0 0 0;
 	}
 
 	.entry-content {
@@ -116,7 +216,41 @@ a, a:link, a:visited {
 		padding: 0 24px;
 		margin: 0 auto;
 	}
+	.entry-content img {
+		margin-top: 8px;
+		margin-bottom: 8px;
+	}
 
+@media screen and (max-width: 800px) {
+	#page {
+		padding-top: 0;
+	}
+}
+
+
+/* -=- -=-  -=-  -=-  -=-  -=-  -=-  -=-  -=-  -=-  -=-  -=-  -=-  -=-  -=- */
+
+.wp-caption {
+	margin: 12px 24px;
+	color: #444;
+	background: #eee;
+	border: 1px solid #000;
+}
+	.wp-caption img {
+		margin: 5px;
+	}
+.wp-caption-text {
+	padding: 0 5px;
+}
+	.wp-caption.alignleft { margin-left: 0; }
+	.wp-caption.alignright { margin-right: 0; }
+
+/* -=- -=-  -=-  -=-  -=-  -=-  -=-  -=-  -=-  -=-  -=-  -=-  -=-  -=-  -=- */
+
+#menu-interior {
+	padding: 0 24px;
+	background: #EEE;
+}
 
 /* -=- -=-  -=-  -=-  -=-  -=-  -=-  -=-  -=-  -=-  -=-  -=-  -=-  -=-  -=- */
 
@@ -124,6 +258,7 @@ footer {
 	background: #000;
 	color: #fff;
 	padding: 8pt;
+	clear: both;
 }
 
 /* -=- -=-  -=-  -=-  -=-  -=-  -=-  -=-  -=-  -=-  -=-  -=-  -=-  -=-  -=- */
@@ -131,3 +266,38 @@ footer {
 
 .clear-both { clear: both; }
 .hide { display:none; }
+
+.alignleft { float: left; }
+.alignright { float: right; }
+.aligncenter {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+/* -=- -=-  -=-  -=-  -=-  -=-  -=-  -=-  -=-  -=-  -=-  -=-  -=-  -=-  -=- */
+/* -=- HACK TO MAKE SURE IMAGES DON'T GET TOO WIDE ON NARROW SCREENS -=- */
+
+img {
+	max-width: 780px;
+	height: auto;
+}
+
+@media screen and (max-width: 400px) {
+	img {
+		max-width: 280px;
+		height: auto;
+	}
+}
+@media screen and (max-width: 600px) and (min-width: 401px) {
+	img {
+		max-width: 424px;
+		height: auto;
+	}
+}
+@media screen and (max-width: 800px) and (min-width: 601px) {
+	img {
+		max-width: 564px;
+		height: auto;
+	}
+}

@@ -29,12 +29,19 @@ function rgdjr_setup()
 	// this theme uses this in header.php
 	register_nav_menus(array(
 		'primary' => __('Home Page Menu', 'rgdjr'),
-		'interior' => __('Interior page menu', 'rgdjr')
+		'interior' => __('Interior page menu', 'rgdjr'),
+		'header' => __('Header links', 'rgdjr')
 	));
 
+	add_action( 'wp_enqueue_script', 'load_jquery' );
+
+	add_theme_support( 'post-thumbnails' );
 }
 add_action('after_setup_theme', 'rgdjr_setup');
 
+function load_jquery() {
+    wp_enqueue_script( 'jquery' );
+}
 
 function rgdjr_body_classes($classes)
 {
@@ -48,7 +55,7 @@ function rgdjr_body_classes($classes)
 }
 add_filter('body_class', 'rgdjr_body_classes');
 
-function rgdjr_wp_title($title, $separator)
+function rgdjr_wp_title($title, $separator = '|')
 {
 	global $paged, $page;
 
@@ -63,3 +70,13 @@ function rgdjr_wp_title($title, $separator)
 	return $title;
 }
 add_filter( 'wp_title', 'rgdjr_wp_title'); //, 10, 2 );
+
+
+function rgdjr_wp_header_links()
+{
+	$navMenu = wp_get_nav_menu_object('header');
+	wp_nav_menu(array(
+		'menu' => $navMenu,
+		'menu_class' => 'links'
+	));
+}

@@ -1,16 +1,13 @@
 <?php
-	if (is_home()) {
-		get_header('welcome');
-	} else if (is_front_page()) {
-		get_header('welcome');
-	} else {
-		get_header();
-	}
+/*
+ * Template Name: Letter Page
+ */
+	get_header('letter');
 ?>
 	<div id="primary" class="site-content">
 		<div id="content" role="main">
 			<?php while (have_posts()) : the_post(); ?>
-				<?php get_template_part('content', 'page'); ?>
+				<?php get_template_part('content', 'letter'); ?>
 				<?php
 					// comments_template('', true);
 				?>
