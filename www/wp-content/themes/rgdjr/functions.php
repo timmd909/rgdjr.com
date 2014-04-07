@@ -6,8 +6,6 @@
  */
 function rgdjr_setup()
 {
-	error_log('rgdjr_setup() is starting...');
-
 	/**
 	 * Make this template available for translation.
 	 *
