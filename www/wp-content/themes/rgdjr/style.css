@@ -31,10 +31,19 @@ body.home #site-navigation {
 }
 
 textarea, input {
-	border: 1px solid #aaa;
+	border: 1pt solid #aaa;
 	padding: 8px;
 	font: inherit;
+	transition: opacity 420ms;
 }
+	textarea:hover, textarea:active,
+	input:hover,    input:active {
+		border-color: #777;
+	}
+	textarea:focus,
+	input:focus {
+		border-color: #000;
+	}
 
 a, a:link, a:visited {
 	color: #2175fB;
@@ -75,6 +84,7 @@ header#header {
 			color: #000;
 			padding-top: 8pt;
 			font-size: 56pt;
+			transition: opacity 210ms;
 		}
 		header#header h1 a:active,
 		header#header h1 a:hover {
@@ -102,6 +112,7 @@ header#header {
 			min-width: 56pt;
 			text-align: right;
 			margin-top: 1px; margin-bottom: 1px;
+			transition: background 210ms;
 		}
 			header#header .links a:hover,
 			header#header .links a:active,

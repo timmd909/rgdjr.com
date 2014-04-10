@@ -4,3 +4,19 @@ header.entry-header {
 	color: #999;
 }
 
+iframe {
+	max-width: 90%;
+	max-height: 320px;
+}
+
+@media screen (max-width: 300px) {
+	iframe {
+		max-height: 200px;
+	}
+}
+
+@media screen (max-width: 600px) and (min-width: 301px) {
+	iframe {
+		max-height: 260px;
+	}
+}

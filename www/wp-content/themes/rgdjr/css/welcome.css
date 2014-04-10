@@ -13,45 +13,39 @@
 		.letter-columns .letter-group .letter {
 			width: 50%; height: 100%;
 			float: left;
-			background: #f0f;
+			display: block;
+
+			color: #fff; background: #000;
+
 			text-align: center;
 			position: relative;
 
 			line-height: 200px;
 
 			overflow: hidden;
-
-			background: #ffffff; /* Old browsers */
-			background: -moz-linear-gradient(-45deg,  #ffffff 0%, #aaaaaa 100%); /* FF3.6+ */
-			background: -webkit-gradient(linear, left top, right bottom, color-stop(0%,#ffffff), color-stop(100%,#aaaaaa)); /* Chrome,Safari4+ */
-			background: -webkit-linear-gradient(-45deg,  #ffffff 0%,#aaaaaa 100%); /* Chrome10+,Safari5.1+ */
-			background: -o-linear-gradient(-45deg,  #ffffff 0%,#aaaaaa 100%); /* Opera 11.10+ */
-			background: -ms-linear-gradient(-45deg,  #ffffff 0%,#aaaaaa 100%); /* IE10+ */
-			background: linear-gradient(135deg,  #ffffff 0%,#aaaaaa 100%); /* W3C */
 		}
-			.letter-columns .letter-group .letter:hover {
-				text-indent: 0;
-				color: #fff;
-				background: #000;
-			}
 			.letter-columns .letter-group .letter img {
 				position: absolute;
 				top: 0; right: 0;
 				z-index: 0;
 				max-width: 1000px;
+				opacity: 1;
+				transition: opacity 420ms;
 			}
 				.letter-columns .letter-group .letter:nth-of-type(2) img {
 					right: auto; left: 0;
 				}
 				.letter-columns .letter-group .letter:hover img {
-					display: none;
+					opacity: 0.01;
 				}
 			.letter-columns .letter-group .letter span {
-				display: none;
+				display: inline;
+				opacity: 0;
 				font-size: 144px;
+				transition: 420ms;
 			}
 				.letter-columns .letter-group .letter:hover span {
-					display: inline
+					opacity: 1;
 				}
 			.letter-columns .letter-group .letter.portrait img {
 				width: 100%; height: auto;
