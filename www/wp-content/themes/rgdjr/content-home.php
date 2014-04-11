@@ -33,7 +33,7 @@
 		$pageId = $pageInfo->ID;
 		$pageTitle = $pageInfo->post_title;
 		?>
-		<a class="letter" href="/<?php echo $letter ?>">
+		<a class="letter portrait" href="/<?php echo $letter ?>">
 			<?php
 				if (has_post_thumbnail($pageId)) {
 					// $thumbnailId = get_post_thumbnail_id($pageId);

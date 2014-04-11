@@ -58,19 +58,16 @@ header#header {
 	position: fixed;
 	top: 0; left: 0;
 	width: 100%;
-	height: 72pt;
+	height: 84px;
 	background: #fff;
 	z-index: 9000;
 	overflow: hidden;
 	/* border-bottom: 1px solid #CCC; */
 }
-	header#header hgroup {
+	header#header div {
 		position: relative;
-		/**position: absolute; left: 0; top: 0;
-		width: 100%; height: 100%; **/
-		height: 72pt;
-		max-width: 800px;
 		margin: 0 auto;
+		max-width: 800px;
 	}
 	header#header h1 {
 		font-size: 20pt;
@@ -92,7 +89,7 @@ header#header {
 			background: #000;
 		}
 	header#header h2 {
-		font-size: 18pt;
+		font-size: 15pt;
 		margin: 4pt;
 		display: inline-block;
 		color: #999;
@@ -100,7 +97,7 @@ header#header {
 
 	header#header .links {
 		position: absolute;
-		right: 0; bottom: 16px;
+		right: 0; bottom: 8px;
 	}
 		header#header .links a,
 		header#header .links a:link,
@@ -109,10 +106,15 @@ header#header {
 			display: block;
 			color: #000;
 			padding: 2px 4pt;
-			min-width: 56pt;
+			min-width: 32pt;
 			text-align: right;
-			margin-top: 1px; margin-bottom: 1px;
+
+			margin-top: 2px;
+			margin-bottom: 0;
+
 			transition: background 210ms;
+			border-bottom: 1px solid #aaa;
+			text-align: left;
 		}
 			header#header .links a:hover,
 			header#header .links a:active,
@@ -121,6 +123,38 @@ header#header {
 				background: #000;
 				color: #fff;
 			}
+	header#header ul.social-links {
+		display: block;
+		position: absolute;
+		top: 4px; right: 0;
+		width: 150px; height: 26px;
+		overflow: hidden;
+	}
+		header#header ul.social-links li {
+			float: left;
+			width: 24px; height: 23px;
+			position: relative;
+			margin-left: 4px;
+			border: 1px solid #fff;
+			overflow: hidden;
+		}
+			header#header ul.social-links li:first-of-type {
+				margin-left: 0;
+			}
+			header#header ul.social-links li:hover,
+			header#header ul.social-links li:active {
+				border: 1px solid #000;
+			}
+		header#header ul.social-links li a img {
+			width: 24px; height: 48px;
+			position: absolute;
+			top: 0; bottom: auto;
+			left: 0;
+		}
+		header#header ul.social-links li a:hover img,
+		header#header ul.social-links li a:active img {
+			bottom: 0; top: auto;
+		}
 
 header.entry-header {
 	font-size: 18pt;
@@ -129,21 +163,58 @@ header.entry-header {
 	color: #999;
 }
 
-@media screen and (max-width: 800px) {
+@media screen and (max-width:400px) {
 	header#header {
 		height: auto;
 		position: static;
 	}
-	header#header hgroup {
+		header#header div {
+			height: auto;
+			position: static;
+		}
+
+	header#header .links {
+		bottom: auto;
+		position: relative;
+		margin: 0 2pt;
+	}
+		header#header ul.links li {
+			float: left;
+			margin-right: 8px;
+		}
+		header#header .links a,
+		header#header .links a:link,
+		header#header .links a:visited {
+			width: auto;
+			min-width: 0;
+		}
+
+	header#header ul.social-links {
+		clear: both;
+		position: static;
+		display: block;
+		margin: 0 auto; padding: 8pt 0;
+		min-height: 24px;
+	}
+
+}
+
+@media screen and (max-width: 800px) and (min-width:401px) {
+	header#header {
+		height: auto;
+		position: static;
+	}
+	header#header div {
 		height: auto;
 	}
+
 		header#header h1 {
-			float: left;
+			float: none;
 			margin-left: 8pt;
 			color: #000;
 		}
 		header#header h2 {
-			float: left;
+			float: none;
 			clear: both;
 			color: #999;
 			text-align: left;
@@ -151,17 +222,24 @@ header.entry-header {
 			padding: 0 4px;
 			margin-left: 8pt;
 		}
+	header#header ul.social-links {
+		display: block;
+		position: static;
+		top: auto; right: auto;
+		margin-left: 8pt;
+		margin-top: 12pt; margin-bottom: 12pt;
+	}
+	header#header .menu-header-container {
+		width: 100%;
+		min-height: 40pt;
+		position: absolute;
+		top: 0; left: 0;
+	}
 	header#header .links {
-		position: relative;
-		right: auto; bottom: auto;
-		margin-right: 12pt;
-		margin-bottom: 8pt;
-		float: right;
-		text-align: left;
-		clear: both;
+		top: 8pt; right: 8pt; bottom: auto;
 	}
 		header#header .links li {
-			display: inline-block;
+			display: block;
 			width: auto;
 			margin: 0 0 0 4pt;
 		}
@@ -183,7 +261,7 @@ header.entry-header {
 /* -=- -=-  -=-  -=-  -=-  -=-  -=-  -=-  -=-  -=-  -=-  -=-  -=-  -=-  -=- */
 
 #page {
-	padding-top: 72pt;
+	padding-top: 84px;
 	background: #fff;
 }
 

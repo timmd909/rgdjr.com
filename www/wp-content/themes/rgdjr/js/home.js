@@ -1,13 +1,6 @@
 jQuery(document).ready(function($) {
-	
 	$(window).on('resize', resizeThumbnails);
-	
-	resizeThumbnails();
-	
-	setTimeout(function() {
-		// hack to resize thumbnails not always working at load
-		resizeThumbnails();
-	}, 100);
+	$('.letter img').on('load', resizeThumbnails);
 });
 
 
