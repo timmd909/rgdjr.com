@@ -4,8 +4,9 @@
  * Plugin Name: Photo Gallery
  * Plugin URI: http://web-dorado.com/products/wordpress-photo-gallery-plugin.html
  * Description: This plugin is a fully responsive gallery plugin with advanced functionality.  It allows having different image galleries for your posts and pages. You can create unlimited number of galleries, combine them into albums, and provide descriptions and tags.
- * Version: 1.1.6
- * Author: http://web-dorado.com/
+ * Version: 1.2.5
+ * Author: WebDorado
+ * Author URI: http://web-dorado.com/
  * License: GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
  */
 
@@ -49,8 +50,7 @@ function bwg_options_panel() {
   $licensing_plugins_page = add_submenu_page('galleries_bwg', 'Licensing', 'Licensing', 'manage_options', 'licensing_bwg', 'bw_gallery');
   add_action('admin_print_styles-' . $licensing_plugins_page, 'bwg_licensing_styles');
 
-  $featured_plugins_page = add_submenu_page('galleries_bwg', 'Featured Plugins', 'Featured Plugins', 'manage_options', 'featured_plugins_bwg', 'bw_gallery');
-  add_action('admin_print_styles-' . $featured_plugins_page, 'bwg_featured_plugins_styles');
+  add_submenu_page('galleries_bwg', 'Featured Plugins', 'Featured Plugins', 'manage_options', 'featured_plugins_bwg', 'bwg_featured');
 
   $uninstall_page = add_submenu_page('galleries_bwg', 'Uninstall', 'Uninstall', 'manage_options', 'uninstall_bwg', 'bw_gallery');
   add_action('admin_print_styles-' . $uninstall_page, 'bwg_styles');
@@ -62,12 +62,19 @@ function bw_gallery() {
   global $wpdb;
   require_once(WD_BWG_DIR . '/framework/WDWLibrary.php');
   $page = WDWLibrary::get('page');
-  if (($page != '') && (($page == 'galleries_bwg') || ($page == 'albums_bwg') || ($page == 'tags_bwg') || ($page == 'options_bwg') || ($page == 'themes_bwg') || ($page == 'licensing_bwg') || ($page == 'featured_plugins_bwg') || ($page == 'uninstall_bwg') || ($page == 'BWGShortcode'))) {
+  if (($page != '') && (($page == 'galleries_bwg') || ($page == 'albums_bwg') || ($page == 'tags_bwg') || ($page == 'options_bwg') || ($page == 'themes_bwg') || ($page == 'licensing_bwg') || ($page == 'uninstall_bwg') || ($page == 'BWGShortcode'))) {
     require_once(WD_BWG_DIR . '/admin/controllers/BWGController' . (($page == 'BWGShortcode') ? $page : ucfirst(strtolower($page))) . '.php');
     $controller_class = 'BWGController' . ucfirst(strtolower($page));
     $controller = new $controller_class();
     $controller->execute();
   }
+}
+
+function bwg_featured() {
+  require_once(WD_BWG_DIR . '/featured/featured.php');
+  wp_register_style('bwg_featured', WD_BWG_URL . '/featured/style.css', array(), get_option("wd_bwg_version"));
+  wp_print_styles('bwg_featured');
+  spider_featured('photo-gallery');
 }
 
 function bwg_ajax_frontend() {
@@ -100,6 +107,14 @@ function bwg_UploadHandler() {
 }
 
 function bwg_filemanager_ajax() {
+  if (function_exists('current_user_can')) {
+    if (!current_user_can('publish_posts')) {
+      die('Access Denied');
+    }
+  }
+  else {
+    die('Access Denied');
+  }
   global $wpdb;
   require_once(WD_BWG_DIR . '/framework/WDWLibrary.php');
   $page = WDWLibrary::get('action');
@@ -119,6 +134,14 @@ function bwg_edit_tag() {
 }
 
 function bwg_ajax() {
+  if (function_exists('current_user_can')) {
+    if (!current_user_can('publish_posts')) {
+      die('Access Denied');
+    }
+  }
+  else {
+    die('Access Denied');
+  }
   global $wpdb;
   require_once(WD_BWG_DIR . '/framework/WDWLibrary.php');
   $page = WDWLibrary::get('action');
@@ -144,6 +167,16 @@ function create_taxonomy() {
 add_action('init', 'create_taxonomy', 0);
 
 function bwg_shortcode($params) {
+  if (isset($params['id'])) {
+    global $wpdb;
+    $shortcode = $wpdb->get_var($wpdb->prepare("SELECT tagtext FROM " . $wpdb->prefix . "bwg_shortcode WHERE id='%d'", $params['id']));
+    $shortcode_params = explode('" ', $shortcode);
+    foreach ($shortcode_params as $shortcode_param) {
+      $shortcode_param = str_replace('"', '', $shortcode_param);
+      $shortcode_elem = explode('=', $shortcode_param);
+      $params[str_replace(' ', '', $shortcode_elem[0])] = $shortcode_elem[1];
+    }
+  }
   shortcode_atts(array(
     'gallery_type' => 'thumbnails',
     'theme_id' => 1,
@@ -153,6 +186,9 @@ function bwg_shortcode($params) {
       shortcode_atts(array(
         'gallery_id' => 1,
         'sort_by' => 'order',
+        'order_by' => 'asc',
+        'show_search_box' => 0,
+        'search_box_width' => 180,
         'image_column_number' => 3,
         'images_per_page' => 15,
         'image_title' => 'none',
@@ -179,6 +215,7 @@ function bwg_shortcode($params) {
       shortcode_atts(array(
         'gallery_id' => 1,
         'sort_by' => 'order',
+        'order_by' => 'asc',
         'slideshow_effect' => 'fade',
         'slideshow_interval' => 5,
         'slideshow_width' => 800,
@@ -187,7 +224,7 @@ function bwg_shortcode($params) {
         'enable_slideshow_shuffle' => 0,
         'enable_slideshow_ctrl' => 1,
         'enable_slideshow_filmstrip' => 1,
-        'slideshow_filmstrip_height' => 90,
+        'slideshow_filmstrip_height' => 70,
         'slideshow_enable_title' => 0,
         'slideshow_title_position' => 'top-right',
         'slideshow_enable_description' => 0,
@@ -202,6 +239,9 @@ function bwg_shortcode($params) {
       shortcode_atts(array(
         'gallery_id' => 1,
         'sort_by' => 'order',
+        'order_by' => 'asc',
+        'show_search_box' => 0,
+        'search_box_width' => 180,
         'image_browser_width' => 800,
         'image_browser_title_enable' => 1,
         'image_browser_description_enable' => 1,
@@ -214,9 +254,12 @@ function bwg_shortcode($params) {
       shortcode_atts(array(
         'album_id' => 1,
         'sort_by' => 'order',
+        'show_search_box' => 0,
+        'search_box_width' => 180,
         'compuct_album_column_number' => 3,
         'compuct_albums_per_page' => 15,
         'compuct_album_title' => 'hover',
+        'compuct_album_view_type' => 'thumbnail',
         'compuct_album_thumb_width' => 120,
         'compuct_album_thumb_height' => 90,
         'compuct_album_image_column_number' => 3,
@@ -234,9 +277,12 @@ function bwg_shortcode($params) {
       shortcode_atts(array(
         'album_id' => 1,
         'sort_by' => 'order',
+        'show_search_box' => 0,
+        'search_box_width' => 180,
         'extended_albums_per_page' => 15,
         'extended_album_height' => 150,
         'extended_album_description_enable' => 1,
+        'extended_album_view_type' => 'thumbnail',
         'extended_album_thumb_width' => 120,
         'extended_album_thumb_height' => 90,
         'extended_album_image_column_number' => 3,
@@ -257,6 +303,8 @@ function bwg_shortcode($params) {
 
   if ($params['gallery_type'] != 'slideshow') {
     shortcode_atts(array(
+        'popup_fullscreen' => 0,
+        'popup_autoplay' => 0,
         'popup_width' => 800,
         'popup_height' => 600,
         'popup_effect' => 'fade',
@@ -265,10 +313,16 @@ function bwg_shortcode($params) {
         'popup_filmstrip_height' => 70,
         'popup_enable_ctrl_btn' => 1,
         'popup_enable_fullscreen' => 1,
+        'popup_enable_info' => 1,
+        'popup_info_always_show' => 0,
+        'popup_hit_counter' => 0,
+        'popup_enable_rate' => 0,
         'popup_enable_comment' => 1,
         'popup_enable_facebook' => 1,
         'popup_enable_twitter' => 1,
         'popup_enable_google' => 1,
+        'popup_enable_pinterest' => 0,
+        'popup_enable_tumblr' => 0,
         'watermark_type' => 'none'
       ), $params);
   }
@@ -297,6 +351,7 @@ function bwg_shortcode($params) {
         'watermark_position' => 'bottom-right',
       ), $params);
       break;
+
     }
     default: {
       $params['watermark_type'] = 'none';
@@ -304,7 +359,7 @@ function bwg_shortcode($params) {
     }
   }
   foreach ($params as $key => $param) {
-    if (empty($param[$key]) == false) {
+    if (empty($param[$key]) == FALSE) {
       $param[$key] = esc_html(addslashes($param[$key]));
     }
   }
@@ -344,15 +399,6 @@ function bwg_admin_ajax() {
     var bwg_admin_ajax = '<?php echo add_query_arg(array('action' => 'BWGShortcode'), admin_url('admin-ajax.php')); ?>';
     var bwg_plugin_url = '<?php echo WD_BWG_URL; ?>';
   </script>
-  <style type="text/css">
-    .wp_themeSkin span.mce_bwg_mce {
-      background:url('<?php echo WD_BWG_URL . '/images/best-wordpress-gallery.png'; ?>') no-repeat !important;
-    }
-    .wp_themeSkin .mceButtonEnabled:hover span.mce_bwg_mce,
-    .wp_themeSkin .mceButtonActive span.mce_bwg_mce {
-      background:url('<?php echo WD_BWG_URL . '/images/best-wordpress-gallery-hover.png'; ?>') no-repeat !important;
-    }
-  </style>
   <?php
 }
 add_action('admin_head', 'bwg_admin_ajax');
@@ -373,6 +419,12 @@ if (class_exists('WP_Widget')) {
 // Activate plugin.
 function bwg_activate() {
   global $wpdb;
+  $bwg_shortcode = "CREATE TABLE IF NOT EXISTS `" . $wpdb->prefix . "bwg_shortcode` (
+    `id` bigint(20) NOT NULL AUTO_INCREMENT,
+    `tagtext` mediumtext NOT NULL,
+    PRIMARY KEY (`id`)
+  ) DEFAULT CHARSET=utf8;";
+  $wpdb->query($bwg_shortcode);
   $bwg_gallery = "CREATE TABLE IF NOT EXISTS `" . $wpdb->prefix . "bwg_gallery` (
     `id` bigint(20) NOT NULL AUTO_INCREMENT,
     `name` varchar(255) NOT NULL,
@@ -385,7 +437,7 @@ function bwg_activate() {
     `author` bigint(20) NOT NULL,
     `published` tinyint(1) NOT NULL,
     PRIMARY KEY (`id`)
-  ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;";
+  ) DEFAULT CHARSET=utf8;";
   $wpdb->query($bwg_gallery);
   $bwg_album = "CREATE TABLE IF NOT EXISTS `" . $wpdb->prefix . "bwg_album` (
     `id` bigint(20) NOT NULL AUTO_INCREMENT,
@@ -398,7 +450,7 @@ function bwg_activate() {
     `author` bigint(20) NOT NULL,
     `published` tinyint(1) NOT NULL,
     PRIMARY KEY (`id`)
-  ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;";
+  ) DEFAULT CHARSET=utf8;";
   $wpdb->query($bwg_album);
   $bwg_album_gallery = "CREATE TABLE IF NOT EXISTS `" . $wpdb->prefix . "bwg_album_gallery` (
     `id` bigint(20) NOT NULL AUTO_INCREMENT,
@@ -407,7 +459,7 @@ function bwg_activate() {
     `alb_gal_id` bigint(20) NOT NULL,
     `order` bigint(20) NOT NULL,
     PRIMARY KEY (`id`)
-  ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;";
+  ) DEFAULT CHARSET=utf8;";
   $wpdb->query($bwg_album_gallery);
   $bwg_image = "CREATE TABLE IF NOT EXISTS `" . $wpdb->prefix . "bwg_image` (
     `id` bigint(20) NOT NULL AUTO_INCREMENT,
@@ -426,8 +478,12 @@ function bwg_activate() {
     `order` bigint(20) NOT NULL,
     `published` tinyint(1) NOT NULL,
     `comment_count` bigint(20) NOT NULL,
+    `avg_rating` float(20) NOT NULL,
+    `rate_count` bigint(20) NOT NULL,
+    `hit_count` bigint(20) NOT NULL,
+    `redirect_url` varchar(255) NOT NULL,
     PRIMARY KEY (`id`)
-  ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;";
+  ) DEFAULT CHARSET=utf8;";
   $wpdb->query($bwg_image);
   $bwg_image_tag = "CREATE TABLE IF NOT EXISTS `" . $wpdb->prefix . "bwg_image_tag` (
     `id` bigint(20) NOT NULL AUTO_INCREMENT,
@@ -435,7 +491,7 @@ function bwg_activate() {
     `image_id` bigint(20) NOT NULL,
     `gallery_id` bigint(20) NOT NULL,
     PRIMARY KEY (`id`)
-  ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;";
+  ) DEFAULT CHARSET=utf8;";
   $wpdb->query($bwg_image_tag);
   $bwg_option = "CREATE TABLE IF NOT EXISTS `" . $wpdb->prefix . "bwg_option` (
     `id` bigint(20) NOT NULL AUTO_INCREMENT,
@@ -453,7 +509,7 @@ function bwg_activate() {
 
     `album_column_number` int(4) NOT NULL,
     `albums_per_page` int(4) NOT NULL,
-    `album_title_show_hover` varchar(255) NOT NULL,
+    `album_title_show_hover` varchar(8) NOT NULL,
     `album_thumb_width` int(4) NOT NULL,
     `album_thumb_height` int(4) NOT NULL,
     `album_enable_page` tinyint(1) NOT NULL,
@@ -469,7 +525,7 @@ function bwg_activate() {
     `blog_style_images_per_page` int(4) NOT NULL,
     `blog_style_enable_page` tinyint(1) NOT NULL,
 
-    `slideshow_type` varchar(255) NOT NULL,
+    `slideshow_type` varchar(16) NOT NULL,
     `slideshow_interval` int(4) NOT NULL,
     `slideshow_width` int(4) NOT NULL,
     `slideshow_height` int(4) NOT NULL,
@@ -479,20 +535,23 @@ function bwg_activate() {
     `slideshow_enable_filmstrip` tinyint(1) NOT NULL,
     `slideshow_filmstrip_height` int(4) NOT NULL,
     `slideshow_enable_title` tinyint(1) NOT NULL,
-    `slideshow_title_position` varchar(255) NOT NULL,
+    `slideshow_title_position` varchar(16) NOT NULL,
     `slideshow_enable_description` tinyint(1) NOT NULL,
-    `slideshow_description_position` varchar(255) NOT NULL,
+    `slideshow_description_position` varchar(16) NOT NULL,
     `slideshow_enable_music` tinyint(1) NOT NULL,
     `slideshow_audio_url` varchar(255) NOT NULL,
 
     `popup_width` int(4) NOT NULL,
     `popup_height` int(4) NOT NULL,
-    `popup_type` varchar(255) NOT NULL,
+    `popup_type` varchar(16) NOT NULL,
     `popup_interval` int(4) NOT NULL,
     `popup_enable_filmstrip` tinyint(1) NOT NULL,
     `popup_filmstrip_height` int(4) NOT NULL,
     `popup_enable_ctrl_btn` tinyint(1) NOT NULL,
     `popup_enable_fullscreen` tinyint(1) NOT NULL,
+    `popup_enable_info` tinyint(1) NOT NULL,
+    `popup_info_always_show` tinyint(1) NOT NULL,
+    `popup_enable_rate` tinyint(1) NOT NULL,
     `popup_enable_comment` tinyint(1) NOT NULL,
     `popup_enable_email` tinyint(1) NOT NULL,
     `popup_enable_captcha` tinyint(1) NOT NULL,
@@ -502,365 +561,435 @@ function bwg_activate() {
     `popup_enable_twitter` tinyint(1) NOT NULL,
     `popup_enable_google` tinyint(1) NOT NULL,
 
-    `watermark_type` varchar(255) NOT NULL,
-    `watermark_position` varchar(255) NOT NULL,
+    `watermark_type` varchar(8) NOT NULL,
+    `watermark_position` varchar(16) NOT NULL,
     `watermark_width` int(4) NOT NULL,
     `watermark_height` int(4) NOT NULL,
     `watermark_url` mediumtext NOT NULL,
     `watermark_text` mediumtext NOT NULL,
     `watermark_link` mediumtext NOT NULL,
     `watermark_font_size` int(4) NOT NULL,
-    `watermark_font` varchar(255) NOT NULL,
-    `watermark_color` varchar(255) NOT NULL,
+    `watermark_font` varchar(16) NOT NULL,
+    `watermark_color` varchar(8) NOT NULL,
     `watermark_opacity` int(4) NOT NULL,
     
-    `built_in_watermark_type` varchar(255) NOT NULL,
-    `built_in_watermark_position` varchar(255) NOT NULL,
+    `built_in_watermark_type` varchar(16) NOT NULL,
+    `built_in_watermark_position` varchar(16) NOT NULL,
     `built_in_watermark_size` int(4) NOT NULL,
     `built_in_watermark_url` mediumtext NOT NULL,
     `built_in_watermark_text` mediumtext NOT NULL,
     `built_in_watermark_font_size` int(4) NOT NULL,
-    `built_in_watermark_font` varchar(255) NOT NULL,
-    `built_in_watermark_color` varchar(255) NOT NULL,
+    `built_in_watermark_font` varchar(16) NOT NULL,
+    `built_in_watermark_color` varchar(8) NOT NULL,
     `built_in_watermark_opacity` int(4) NOT NULL,
 
+    `image_right_click` tinyint(1) NOT NULL,
+    `popup_fullscreen` tinyint(1) NOT NULL,
     `gallery_role` tinyint(1) NOT NULL,
     `album_role` tinyint(1) NOT NULL,
     `image_role` tinyint(1) NOT NULL,
+    `popup_autoplay` tinyint(1) NOT NULL,
+    `album_view_type` varchar(16) NOT NULL,
+    `popup_enable_pinterest` tinyint(1) NOT NULL,
+    `popup_enable_tumblr` tinyint(1) NOT NULL,
+    `show_search_box` tinyint(1) NOT NULL,
+    `search_box_width` int(4) NOT NULL,
+    `preload_images` tinyint(1) NOT NULL,
+    `preload_images_count` int(4) NOT NULL,
+    `thumb_click_action` varchar(16) NOT NULL,
+    `thumb_link_target` tinyint(1) NOT NULL,
+    `comment_moderation` tinyint(1) NOT NULL,
+    `popup_hit_counter` tinyint(1) NOT NULL,
+    `enable_ML_import` tinyint(1) NOT NULL,
+    `showthumbs_name` tinyint(1) NOT NULL,
+    `show_album_name` tinyint(1) NOT NULL,
+    `show_image_counts` tinyint(1) NOT NULL,
+    `upload_img_width` int(4) NOT NULL,
+    `upload_img_height` int(4) NOT NULL,
+    `play_icon` tinyint(1) NOT NULL,
+    `show_masonry_thumb_description` tinyint(1) NOT NULL,
     PRIMARY KEY (`id`)
-  ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;";
+  ) DEFAULT CHARSET=utf8;";
   $wpdb->query($bwg_option);
   $bwg_theme = "CREATE TABLE IF NOT EXISTS `" . $wpdb->prefix . "bwg_theme` (
     `id` bigint(20) NOT NULL AUTO_INCREMENT,
     `name` varchar(255) NOT NULL,
     `thumb_margin` int(4) NOT NULL,
     `thumb_padding` int(4) NOT NULL,
-    `thumb_border_radius` varchar(128) NOT NULL,
+    `thumb_border_radius` varchar(32) NOT NULL,
     `thumb_border_width` int(4) NOT NULL,
-    `thumb_border_style` varchar(128) NOT NULL,
-    `thumb_border_color` varchar(128) NOT NULL,
-    `thumb_bg_color` varchar(128) NOT NULL,
-    `thumbs_bg_color` varchar(128) NOT NULL,
+    `thumb_border_style` varchar(16) NOT NULL,
+    `thumb_border_color` varchar(8) NOT NULL,
+    `thumb_bg_color` varchar(8) NOT NULL,
+    `thumbs_bg_color` varchar(8) NOT NULL,
     `thumb_bg_transparent` int(4) NOT NULL,
-    `thumb_box_shadow` varchar(128) NOT NULL,
+    `thumb_box_shadow` varchar(32) NOT NULL,
     `thumb_transparent` int(4) NOT NULL,
-    `thumb_align` varchar(128) NOT NULL,
+    `thumb_align` varchar(8) NOT NULL,
     `thumb_hover_effect` varchar(128) NOT NULL,
     `thumb_hover_effect_value` varchar(128) NOT NULL,
     `thumb_transition` tinyint(1) NOT NULL,
-    `thumb_title_font_color` varchar(64) NOT NULL,
-    `thumb_title_font_style` varchar(64) NOT NULL,
+    `thumb_title_font_color` varchar(8) NOT NULL,
+    `thumb_title_font_style` varchar(16) NOT NULL,
+    `thumb_title_pos` varchar(8) NOT NULL,
     `thumb_title_font_size` int(4) NOT NULL,
-    `thumb_title_font_weight` varchar(64) NOT NULL,
-    `thumb_title_margin` varchar(64) NOT NULL,
-    `thumb_title_shadow` varchar(64) NOT NULL,
+    `thumb_title_font_weight` varchar(8) NOT NULL,
+    `thumb_title_margin` varchar(32) NOT NULL,
+    `thumb_title_shadow` varchar(32) NOT NULL,
 
-    `page_nav_position` varchar(64) NOT NULL,
-    `page_nav_align` varchar(64) NOT NULL,
+    `page_nav_position` varchar(8) NOT NULL,
+    `page_nav_align` varchar(8) NOT NULL,
     `page_nav_number` tinyint(1) NOT NULL,
     `page_nav_font_size` int(4) NOT NULL,
-    `page_nav_font_style` varchar(64) NOT NULL,
-    `page_nav_font_color` varchar(64) NOT NULL,
-    `page_nav_font_weight` varchar(64) NOT NULL,
+    `page_nav_font_style` varchar(32) NOT NULL,
+    `page_nav_font_color` varchar(8) NOT NULL,
+    `page_nav_font_weight` varchar(8) NOT NULL,
     `page_nav_border_width` int(4) NOT NULL,
-    `page_nav_border_style` varchar(64) NOT NULL,
-    `page_nav_border_color` varchar(64) NOT NULL,
-    `page_nav_border_radius` varchar(128) NOT NULL,
-    `page_nav_margin` varchar(128) NOT NULL,
-    `page_nav_padding` varchar(128) NOT NULL,
-    `page_nav_button_bg_color` varchar(64) NOT NULL,
+    `page_nav_border_style` varchar(16) NOT NULL,
+    `page_nav_border_color` varchar(8) NOT NULL,
+    `page_nav_border_radius` varchar(32) NOT NULL,
+    `page_nav_margin` varchar(32) NOT NULL,
+    `page_nav_padding` varchar(32) NOT NULL,
+    `page_nav_button_bg_color` varchar(8) NOT NULL,
     `page_nav_button_bg_transparent` int(4) NOT NULL,
-    `page_nav_box_shadow` varchar(128) NOT NULL,
+    `page_nav_box_shadow` varchar(32) NOT NULL,
     `page_nav_button_transition` tinyint(1) NOT NULL,
     `page_nav_button_text` tinyint(1) NOT NULL,
 
-    `lightbox_overlay_bg_color` varchar(64) NOT NULL,
+    `lightbox_overlay_bg_color` varchar(8) NOT NULL,
     `lightbox_overlay_bg_transparent` int(4) NOT NULL,
-    `lightbox_bg_color` varchar(64) NOT NULL,
+    `lightbox_bg_color` varchar(8) NOT NULL,
 
-    `lightbox_ctrl_btn_pos` varchar(64) NOT NULL,
-    `lightbox_ctrl_btn_align` varchar(64) NOT NULL,
+    `lightbox_ctrl_btn_pos` varchar(8) NOT NULL,
+    `lightbox_ctrl_btn_align` varchar(8) NOT NULL,
     `lightbox_ctrl_btn_height` int(4) NOT NULL,
     `lightbox_ctrl_btn_margin_top` int(4) NOT NULL,
     `lightbox_ctrl_btn_margin_left` int(4) NOT NULL,
     `lightbox_ctrl_btn_transparent` int(4) NOT NULL,
-    `lightbox_ctrl_btn_color` varchar(64) NOT NULL,
+    `lightbox_ctrl_btn_color` varchar(8) NOT NULL,
     `lightbox_toggle_btn_height` int(4) NOT NULL,
     `lightbox_toggle_btn_width` int(4) NOT NULL,
-    `lightbox_ctrl_cont_bg_color` varchar(64) NOT NULL,
+    `lightbox_ctrl_cont_bg_color` varchar(8) NOT NULL,
     `lightbox_ctrl_cont_transparent` int(4) NOT NULL,
     `lightbox_ctrl_cont_border_radius` int(4) NOT NULL,
     `lightbox_close_btn_transparent` int(4) NOT NULL,
-    `lightbox_close_btn_bg_color` varchar(64) NOT NULL,
+    `lightbox_close_btn_bg_color` varchar(8) NOT NULL,
     `lightbox_close_btn_border_width` int(4) NOT NULL,
-    `lightbox_close_btn_border_radius` varchar(128) NOT NULL,
-    `lightbox_close_btn_border_style` varchar(128) NOT NULL,
-    `lightbox_close_btn_border_color` varchar(64) NOT NULL,
-    `lightbox_close_btn_box_shadow` varchar(128) NOT NULL,
-    `lightbox_close_btn_color` varchar(64) NOT NULL,
+    `lightbox_close_btn_border_radius` varchar(32) NOT NULL,
+    `lightbox_close_btn_border_style` varchar(16) NOT NULL,
+    `lightbox_close_btn_border_color` varchar(8) NOT NULL,
+    `lightbox_close_btn_box_shadow` varchar(32) NOT NULL,
+    `lightbox_close_btn_color` varchar(8) NOT NULL,
     `lightbox_close_btn_size` int(4) NOT NULL,
     `lightbox_close_btn_width` int(4) NOT NULL,
     `lightbox_close_btn_height` int(4) NOT NULL,
-    `lightbox_close_btn_top` varchar(64) NOT NULL,
-    `lightbox_close_btn_right` varchar(64) NOT NULL,
-    `lightbox_close_btn_full_color` varchar(64) NOT NULL,
-    `lightbox_rl_btn_bg_color` varchar(64) NOT NULL,
+    `lightbox_close_btn_top` varchar(8) NOT NULL,
+    `lightbox_close_btn_right` varchar(8) NOT NULL,
+    `lightbox_close_btn_full_color` varchar(8) NOT NULL,
+    `lightbox_rl_btn_bg_color` varchar(8) NOT NULL,
     `lightbox_rl_btn_transparent` int(4) NOT NULL,
-    `lightbox_rl_btn_border_radius` varchar(64) NOT NULL,
+    `lightbox_rl_btn_border_radius` varchar(32) NOT NULL,
     `lightbox_rl_btn_border_width` int(4) NOT NULL,
-    `lightbox_rl_btn_border_style` varchar(64) NOT NULL,
-    `lightbox_rl_btn_border_color` varchar(64) NOT NULL,
-    `lightbox_rl_btn_box_shadow` varchar(128) NOT NULL,
-    `lightbox_rl_btn_color` varchar(64) NOT NULL,
+    `lightbox_rl_btn_border_style` varchar(32) NOT NULL,
+    `lightbox_rl_btn_border_color` varchar(8) NOT NULL,
+    `lightbox_rl_btn_box_shadow` varchar(32) NOT NULL,
+    `lightbox_rl_btn_color` varchar(8) NOT NULL,
     `lightbox_rl_btn_height` int(4) NOT NULL,
     `lightbox_rl_btn_width` int(4) NOT NULL,
     `lightbox_rl_btn_size` int(4) NOT NULL,
-    `lightbox_close_rl_btn_hover_color` varchar(64) NOT NULL,
-    `lightbox_comment_pos` varchar(64) NOT NULL,
+    `lightbox_close_rl_btn_hover_color` varchar(8) NOT NULL,
+    `lightbox_comment_pos` varchar(8) NOT NULL,
     `lightbox_comment_width` int(4) NOT NULL,
-    `lightbox_comment_bg_color` varchar(64) NOT NULL,
-    `lightbox_comment_font_color` varchar(64) NOT NULL,
-    `lightbox_comment_font_style` varchar(64) NOT NULL,
+    `lightbox_comment_bg_color` varchar(8) NOT NULL,
+    `lightbox_comment_font_color` varchar(8) NOT NULL,
+    `lightbox_comment_font_style` varchar(16) NOT NULL,
     `lightbox_comment_font_size` int(4) NOT NULL,
-    `lightbox_comment_button_bg_color` varchar(64) NOT NULL,
-    `lightbox_comment_button_border_color` varchar(64) NOT NULL,
+    `lightbox_comment_button_bg_color` varchar(8) NOT NULL,
+    `lightbox_comment_button_border_color` varchar(8) NOT NULL,
     `lightbox_comment_button_border_width` int(4) NOT NULL,
-    `lightbox_comment_button_border_style` varchar(64) NOT NULL,
-    `lightbox_comment_button_border_radius` varchar(64) NOT NULL,
-    `lightbox_comment_button_padding` varchar(64) NOT NULL,
-    `lightbox_comment_input_bg_color` varchar(64) NOT NULL,
-    `lightbox_comment_input_border_color` varchar(64) NOT NULL,
+    `lightbox_comment_button_border_style` varchar(16) NOT NULL,
+    `lightbox_comment_button_border_radius` varchar(32) NOT NULL,
+    `lightbox_comment_button_padding` varchar(32) NOT NULL,
+    `lightbox_comment_input_bg_color` varchar(8) NOT NULL,
+    `lightbox_comment_input_border_color` varchar(8) NOT NULL,
     `lightbox_comment_input_border_width` int(4) NOT NULL,
-    `lightbox_comment_input_border_style` varchar(64) NOT NULL,
-    `lightbox_comment_input_border_radius` varchar(64) NOT NULL,
-    `lightbox_comment_input_padding` varchar(64) NOT NULL,
+    `lightbox_comment_input_border_style` varchar(16) NOT NULL,
+    `lightbox_comment_input_border_radius` varchar(32) NOT NULL,
+    `lightbox_comment_input_padding` varchar(32) NOT NULL,
     `lightbox_comment_separator_width` int(4) NOT NULL,
-    `lightbox_comment_separator_style` varchar(64) NOT NULL,
-    `lightbox_comment_separator_color` varchar(64) NOT NULL,
+    `lightbox_comment_separator_style` varchar(16) NOT NULL,
+    `lightbox_comment_separator_color` varchar(8) NOT NULL,
     `lightbox_comment_author_font_size` int(4) NOT NULL,
     `lightbox_comment_date_font_size` int(4) NOT NULL,
     `lightbox_comment_body_font_size` int(4) NOT NULL,
-    `lightbox_comment_share_button_color` varchar(64) NOT NULL,
-    `lightbox_filmstrip_pos` varchar(64) NOT NULL,
-    `lightbox_filmstrip_rl_bg_color` varchar(64) NOT NULL,
+    `lightbox_comment_share_button_color` varchar(8) NOT NULL,
+    `lightbox_filmstrip_pos` varchar(8) NOT NULL,
+    `lightbox_filmstrip_rl_bg_color` varchar(8) NOT NULL,
     `lightbox_filmstrip_rl_btn_size` int(4) NOT NULL,
-    `lightbox_filmstrip_rl_btn_color` varchar(64) NOT NULL,
-    `lightbox_filmstrip_thumb_margin` varchar(64) NOT NULL,
+    `lightbox_filmstrip_rl_btn_color` varchar(8) NOT NULL,
+    `lightbox_filmstrip_thumb_margin` varchar(32) NOT NULL,
     `lightbox_filmstrip_thumb_border_width` int(4) NOT NULL,
-    `lightbox_filmstrip_thumb_border_style` varchar(64) NOT NULL,
-    `lightbox_filmstrip_thumb_border_color` varchar(64) NOT NULL,
-    `lightbox_filmstrip_thumb_border_radius` varchar(64) NOT NULL,
+    `lightbox_filmstrip_thumb_border_style` varchar(16) NOT NULL,
+    `lightbox_filmstrip_thumb_border_color` varchar(8) NOT NULL,
+    `lightbox_filmstrip_thumb_border_radius` varchar(32) NOT NULL,
     `lightbox_filmstrip_thumb_deactive_transparent` int(4) NOT NULL,
     `lightbox_filmstrip_thumb_active_border_width` int(4) NOT NULL,
-    `lightbox_filmstrip_thumb_active_border_color` varchar(64) NOT NULL,
-    `lightbox_rl_btn_style` varchar(64) NOT NULL,
+    `lightbox_filmstrip_thumb_active_border_color` varchar(8) NOT NULL,
+    `lightbox_rl_btn_style` varchar(16) NOT NULL,
 
-    `album_compact_back_font_color` varchar(64) NOT NULL,
-    `album_compact_back_font_style` varchar(64) NOT NULL,
+    `album_compact_back_font_color` varchar(8) NOT NULL,
+    `album_compact_back_font_style` varchar(16) NOT NULL,
     `album_compact_back_font_size` int(4) NOT NULL,
-    `album_compact_back_font_weight` varchar(64) NOT NULL,
-    `album_compact_back_padding` varchar(64) NOT NULL,
-    `album_compact_title_font_color` varchar(64) NOT NULL,
-    `album_compact_title_font_style` varchar(64) NOT NULL,
+    `album_compact_back_font_weight` varchar(8) NOT NULL,
+    `album_compact_back_padding` varchar(32) NOT NULL,
+    `album_compact_title_font_color` varchar(8) NOT NULL,
+    `album_compact_title_font_style` varchar(16) NOT NULL,
+    `album_compact_thumb_title_pos`  varchar(8) NOT NULL,
     `album_compact_title_font_size` int(4) NOT NULL,
-    `album_compact_title_font_weight` varchar(64) NOT NULL,
-    `album_compact_title_margin` varchar(64) NOT NULL,
-    `album_compact_title_shadow` varchar(64) NOT NULL,
+    `album_compact_title_font_weight` varchar(8) NOT NULL,
+    `album_compact_title_margin` varchar(32) NOT NULL,
+    `album_compact_title_shadow` varchar(32) NOT NULL,
     `album_compact_thumb_margin` int(4) NOT NULL,
     `album_compact_thumb_padding` int(4) NOT NULL,
-    `album_compact_thumb_border_radius` varchar(128) NOT NULL,
+    `album_compact_thumb_border_radius` varchar(32) NOT NULL,
     `album_compact_thumb_border_width` int(4) NOT NULL,
-    `album_compact_thumb_border_style` varchar(128) NOT NULL,
-    `album_compact_thumb_border_color` varchar(128) NOT NULL,
-    `album_compact_thumb_bg_color` varchar(128) NOT NULL,
-    `album_compact_thumbs_bg_color` varchar(128) NOT NULL,
+    `album_compact_thumb_border_style` varchar(8) NOT NULL,
+    `album_compact_thumb_border_color` varchar(8) NOT NULL,
+    `album_compact_thumb_bg_color` varchar(8) NOT NULL,
+    `album_compact_thumbs_bg_color` varchar(8) NOT NULL,
     `album_compact_thumb_bg_transparent` int(4) NOT NULL,
-    `album_compact_thumb_box_shadow` varchar(128) NOT NULL,
+    `album_compact_thumb_box_shadow` varchar(32) NOT NULL,
     `album_compact_thumb_transparent` int(4) NOT NULL,
-    `album_compact_thumb_align` varchar(128) NOT NULL,
-    `album_compact_thumb_hover_effect` varchar(128) NOT NULL,
-    `album_compact_thumb_hover_effect_value` varchar(128) NOT NULL,
+    `album_compact_thumb_align` varchar(8) NOT NULL,
+    `album_compact_thumb_hover_effect` varchar(64) NOT NULL,
+    `album_compact_thumb_hover_effect_value` varchar(64) NOT NULL,
     `album_compact_thumb_transition` tinyint(1) NOT NULL,
 
     `album_extended_thumb_margin` int(4) NOT NULL,
     `album_extended_thumb_padding` int(4) NOT NULL,
-    `album_extended_thumb_border_radius` varchar(128) NOT NULL,
+    `album_extended_thumb_border_radius` varchar(32) NOT NULL,
     `album_extended_thumb_border_width` int(4) NOT NULL,
-    `album_extended_thumb_border_style` varchar(128) NOT NULL,
-    `album_extended_thumb_border_color` varchar(128) NOT NULL,
-    `album_extended_thumb_bg_color` varchar(128) NOT NULL,
-    `album_extended_thumbs_bg_color` varchar(128) NOT NULL,
+    `album_extended_thumb_border_style` varchar(8) NOT NULL,
+    `album_extended_thumb_border_color` varchar(8) NOT NULL,
+    `album_extended_thumb_bg_color` varchar(8) NOT NULL,
+    `album_extended_thumbs_bg_color` varchar(8) NOT NULL,
     `album_extended_thumb_bg_transparent` int(4) NOT NULL,
-    `album_extended_thumb_box_shadow` varchar(128) NOT NULL,
+    `album_extended_thumb_box_shadow` varchar(32) NOT NULL,
     `album_extended_thumb_transparent` int(4) NOT NULL,
-    `album_extended_thumb_align` varchar(128) NOT NULL,
-    `album_extended_thumb_hover_effect` varchar(128) NOT NULL,
-    `album_extended_thumb_hover_effect_value` varchar(128) NOT NULL,
+    `album_extended_thumb_align` varchar(8) NOT NULL,
+    `album_extended_thumb_hover_effect` varchar(64) NOT NULL,
+    `album_extended_thumb_hover_effect_value` varchar(64) NOT NULL,
     `album_extended_thumb_transition` tinyint(1) NOT NULL,
-    `album_extended_back_font_color` varchar(64) NOT NULL,
-    `album_extended_back_font_style` varchar(64) NOT NULL,
+    `album_extended_back_font_color` varchar(8) NOT NULL,
+    `album_extended_back_font_style` varchar(8) NOT NULL,
     `album_extended_back_font_size` int(4) NOT NULL,
-    `album_extended_back_font_weight` varchar(64) NOT NULL,
-    `album_extended_back_padding` varchar(64) NOT NULL,
-    `album_extended_div_bg_color` varchar(64) NOT NULL,
+    `album_extended_back_font_weight` varchar(8) NOT NULL,
+    `album_extended_back_padding` varchar(32) NOT NULL,
+    `album_extended_div_bg_color` varchar(8) NOT NULL,
     `album_extended_div_bg_transparent` int(4) NOT NULL,
-    `album_extended_div_border_radius` varchar(64) NOT NULL,
-    `album_extended_div_margin` varchar(64) NOT NULL,
+    `album_extended_div_border_radius` varchar(32) NOT NULL,
+    `album_extended_div_margin` varchar(32) NOT NULL,
     `album_extended_div_padding` int(4) NOT NULL,
     `album_extended_div_separator_width` int(4) NOT NULL,
-    `album_extended_div_separator_style` varchar(64) NOT NULL,
-    `album_extended_div_separator_color` varchar(64) NOT NULL,
-    `album_extended_thumb_div_bg_color` varchar(64) NOT NULL,
-    `album_extended_thumb_div_border_radius` varchar(64) NOT NULL,
+    `album_extended_div_separator_style` varchar(8) NOT NULL,
+    `album_extended_div_separator_color` varchar(8) NOT NULL,
+    `album_extended_thumb_div_bg_color` varchar(8) NOT NULL,
+    `album_extended_thumb_div_border_radius` varchar(32) NOT NULL,
     `album_extended_thumb_div_border_width` int(4) NOT NULL,
-    `album_extended_thumb_div_border_style` varchar(64) NOT NULL,
-    `album_extended_thumb_div_border_color` varchar(64) NOT NULL,
-    `album_extended_thumb_div_padding` varchar(64) NOT NULL,
-    `album_extended_text_div_bg_color` varchar(64) NOT NULL,
-    `album_extended_text_div_border_radius` varchar(64) NOT NULL,
+    `album_extended_thumb_div_border_style` varchar(8) NOT NULL,
+    `album_extended_thumb_div_border_color` varchar(8) NOT NULL,
+    `album_extended_thumb_div_padding` varchar(32) NOT NULL,
+    `album_extended_text_div_bg_color` varchar(8) NOT NULL,
+    `album_extended_text_div_border_radius` varchar(32) NOT NULL,
     `album_extended_text_div_border_width` int(4) NOT NULL,
-    `album_extended_text_div_border_style` varchar(64) NOT NULL,
-    `album_extended_text_div_border_color` varchar(64) NOT NULL,
-    `album_extended_text_div_padding` varchar(64) NOT NULL,
+    `album_extended_text_div_border_style` varchar(8) NOT NULL,
+    `album_extended_text_div_border_color` varchar(8) NOT NULL,
+    `album_extended_text_div_padding` varchar(32) NOT NULL,
     `album_extended_title_span_border_width` int(4) NOT NULL,
-    `album_extended_title_span_border_style` varchar(64) NOT NULL,
-    `album_extended_title_span_border_color` varchar(64) NOT NULL,
-    `album_extended_title_font_color` varchar(64) NOT NULL,
-    `album_extended_title_font_style` varchar(64) NOT NULL,
+    `album_extended_title_span_border_style` varchar(8) NOT NULL,
+    `album_extended_title_span_border_color` varchar(8) NOT NULL,
+    `album_extended_title_font_color` varchar(8) NOT NULL,
+    `album_extended_title_font_style` varchar(8) NOT NULL,
     `album_extended_title_font_size` int(4) NOT NULL,
-    `album_extended_title_font_weight` varchar(64) NOT NULL,
+    `album_extended_title_font_weight` varchar(8) NOT NULL,
     `album_extended_title_margin_bottom` int(4) NOT NULL,
-    `album_extended_title_padding` varchar(64) NOT NULL,
+    `album_extended_title_padding` varchar(32) NOT NULL,
     `album_extended_desc_span_border_width` int(4) NOT NULL,
-    `album_extended_desc_span_border_style` varchar(64) NOT NULL,
-    `album_extended_desc_span_border_color` varchar(64) NOT NULL,
-    `album_extended_desc_font_color` varchar(64) NOT NULL,
-    `album_extended_desc_font_style` varchar(64) NOT NULL,
+    `album_extended_desc_span_border_style` varchar(8) NOT NULL,
+    `album_extended_desc_span_border_color` varchar(8) NOT NULL,
+    `album_extended_desc_font_color` varchar(8) NOT NULL,
+    `album_extended_desc_font_style` varchar(8) NOT NULL,
     `album_extended_desc_font_size` int(4) NOT NULL,
-    `album_extended_desc_font_weight` varchar(64) NOT NULL,
-    `album_extended_desc_padding` varchar(64) NOT NULL,
-    `album_extended_desc_more_color` varchar(64) NOT NULL,
+    `album_extended_desc_font_weight` varchar(8) NOT NULL,
+    `album_extended_desc_padding` varchar(32) NOT NULL,
+    `album_extended_desc_more_color` varchar(8) NOT NULL,
     `album_extended_desc_more_size` int(4) NOT NULL,
 
     `masonry_thumb_padding` int(4) NOT NULL,
-    `masonry_thumb_border_radius` varchar(128) NOT NULL,
+    `masonry_thumb_border_radius` varchar(32) NOT NULL,
     `masonry_thumb_border_width` int(4) NOT NULL,
-    `masonry_thumb_border_style` varchar(128) NOT NULL,
-    `masonry_thumb_border_color` varchar(128) NOT NULL,
-    `masonry_thumbs_bg_color` varchar(128) NOT NULL,
+    `masonry_thumb_border_style` varchar(8) NOT NULL,
+    `masonry_thumb_border_color` varchar(8) NOT NULL,
+    `masonry_thumbs_bg_color` varchar(8) NOT NULL,
     `masonry_thumb_bg_transparent` int(4) NOT NULL,
     `masonry_thumb_transparent` int(4) NOT NULL,
-    `masonry_thumb_align` varchar(128) NOT NULL,
-    `masonry_thumb_hover_effect` varchar(128) NOT NULL,
-    `masonry_thumb_hover_effect_value` varchar(128) NOT NULL,
+    `masonry_thumb_align` varchar(8) NOT NULL,
+    `masonry_thumb_hover_effect` varchar(64) NOT NULL,
+    `masonry_thumb_hover_effect_value` varchar(64) NOT NULL,
     `masonry_thumb_transition` tinyint(1) NOT NULL,
 
-    `slideshow_cont_bg_color`	varchar(64) NOT NULL,
-    `slideshow_close_btn_transparent`	int(4) NOT NULL,
-    `slideshow_rl_btn_bg_color`	varchar(64) NOT NULL,
-    `slideshow_rl_btn_border_radius` varchar(64) NOT NULL,
-    `slideshow_rl_btn_border_width`	int(4) NOT NULL,
-    `slideshow_rl_btn_border_style`	varchar(64) NOT NULL,
-    `slideshow_rl_btn_border_color`	varchar(64) NOT NULL,
-    `slideshow_rl_btn_box_shadow`	varchar(128) NOT NULL,
-    `slideshow_rl_btn_color` varchar(64) NOT NULL,
-    `slideshow_rl_btn_height`	int(4) NOT NULL,
-    `slideshow_rl_btn_size`	int(4) NOT NULL,
+    `slideshow_cont_bg_color` varchar(8) NOT NULL,
+    `slideshow_close_btn_transparent` int(4) NOT NULL,
+    `slideshow_rl_btn_bg_color`	varchar(8) NOT NULL,
+    `slideshow_rl_btn_border_radius` varchar(32) NOT NULL,
+    `slideshow_rl_btn_border_width` int(4) NOT NULL,
+    `slideshow_rl_btn_border_style` varchar(8) NOT NULL,
+    `slideshow_rl_btn_border_color` varchar(8) NOT NULL,
+    `slideshow_rl_btn_box_shadow` varchar(32) NOT NULL,
+    `slideshow_rl_btn_color` varchar(8) NOT NULL,
+    `slideshow_rl_btn_height` int(4) NOT NULL,
+    `slideshow_rl_btn_size` int(4) NOT NULL,
     `slideshow_rl_btn_width` int(4) NOT NULL,
-    `slideshow_close_rl_btn_hover_color` varchar(64) NOT NULL,
-    `slideshow_filmstrip_pos`	varchar(64) NOT NULL,
+    `slideshow_close_rl_btn_hover_color` varchar(8) NOT NULL,
+    `slideshow_filmstrip_pos` varchar(8) NOT NULL,
     `slideshow_filmstrip_thumb_border_width` int(4) NOT NULL,
-    `slideshow_filmstrip_thumb_border_style` varchar(64) NOT NULL,
-    `slideshow_filmstrip_thumb_border_color` varchar(64) NOT NULL,
-    `slideshow_filmstrip_thumb_border_radius`	varchar(64) NOT NULL,
-    `slideshow_filmstrip_thumb_margin` varchar(64) NOT NULL,
-    `slideshow_filmstrip_thumb_active_border_width`	int(4) NOT NULL,
-    `slideshow_filmstrip_thumb_active_border_color`	varchar(64) NOT NULL,
-    `slideshow_filmstrip_thumb_deactive_transparent`	int(4) NOT NULL,
-    `slideshow_filmstrip_rl_bg_color`	varchar(64) NOT NULL,
-    `slideshow_filmstrip_rl_btn_color` varchar(64) NOT NULL,
-    `slideshow_filmstrip_rl_btn_size`	int(4) NOT NULL,
+    `slideshow_filmstrip_thumb_border_style` varchar(8) NOT NULL,
+    `slideshow_filmstrip_thumb_border_color` varchar(8) NOT NULL,
+    `slideshow_filmstrip_thumb_border_radius` varchar(32) NOT NULL,
+    `slideshow_filmstrip_thumb_margin` varchar(32) NOT NULL,
+    `slideshow_filmstrip_thumb_active_border_width` int(4) NOT NULL,
+    `slideshow_filmstrip_thumb_active_border_color` varchar(8) NOT NULL,
+    `slideshow_filmstrip_thumb_deactive_transparent` int(4) NOT NULL,
+    `slideshow_filmstrip_rl_bg_color` varchar(8) NOT NULL,
+    `slideshow_filmstrip_rl_btn_color` varchar(8) NOT NULL,
+    `slideshow_filmstrip_rl_btn_size` int(4) NOT NULL,
     `slideshow_title_font_size` int(4) NOT NULL,
-    `slideshow_title_font` varchar(64) NOT NULL,
-    `slideshow_title_color`	varchar(64) NOT NULL,
+    `slideshow_title_font` varchar(16) NOT NULL,
+    `slideshow_title_color` varchar(8) NOT NULL,
     `slideshow_title_opacity` int(4) NOT NULL,
-    `slideshow_title_border_radius`	varchar(64) NOT NULL,
-    `slideshow_title_background_color`	varchar(64) NOT NULL,
-    `slideshow_title_padding`	varchar(64) NOT NULL,
+    `slideshow_title_border_radius` varchar(32) NOT NULL,
+    `slideshow_title_background_color` varchar(8) NOT NULL,
+    `slideshow_title_padding` varchar(32) NOT NULL,
     `slideshow_description_font_size` int(4) NOT NULL,
-    `slideshow_description_font` varchar(64) NOT NULL,
-    `slideshow_description_color`	varchar(64) NOT NULL,
+    `slideshow_description_font` varchar(16) NOT NULL,
+    `slideshow_description_color` varchar(8) NOT NULL,
     `slideshow_description_opacity` int(4) NOT NULL,
-    `slideshow_description_border_radius`	varchar(64) NOT NULL,
-    `slideshow_description_background_color`	varchar(64) NOT NULL,
-    `slideshow_description_padding`	varchar(64) NOT NULL,
+    `slideshow_description_border_radius` varchar(32) NOT NULL,
+    `slideshow_description_background_color` varchar(8) NOT NULL,
+    `slideshow_description_padding` varchar(32) NOT NULL,
     `slideshow_dots_width` int(4) NOT NULL,
     `slideshow_dots_height` int(4) NOT NULL,
-    `slideshow_dots_border_radius`	varchar(64) NOT NULL,
-    `slideshow_dots_background_color`	varchar(64) NOT NULL,
+    `slideshow_dots_border_radius` varchar(32) NOT NULL,
+    `slideshow_dots_background_color` varchar(8) NOT NULL,
     `slideshow_dots_margin` int(4) NOT NULL,
-    `slideshow_dots_active_background_color`	varchar(64) NOT NULL,
+    `slideshow_dots_active_background_color` varchar(8) NOT NULL,
     `slideshow_dots_active_border_width` int(4) NOT NULL,
-    `slideshow_dots_active_border_color`	varchar(64) NOT NULL,
-    `slideshow_play_pause_btn_size`	int(4) NOT NULL,
-    `slideshow_rl_btn_style`	varchar(64) NOT NULL,
+    `slideshow_dots_active_border_color` varchar(8) NOT NULL,
+    `slideshow_play_pause_btn_size` int(4) NOT NULL,
+    `slideshow_rl_btn_style` varchar(16) NOT NULL,
 
-    `blog_style_margin` varchar(128) NOT NULL,
-    `blog_style_padding` varchar(128) NOT NULL,
-    `blog_style_border_radius` varchar(128) NOT NULL,
+    `blog_style_margin` varchar(32) NOT NULL,
+    `blog_style_padding` varchar(32) NOT NULL,
+    `blog_style_border_radius` varchar(32) NOT NULL,
     `blog_style_border_width` int(4) NOT NULL,
-    `blog_style_border_style` varchar(128) NOT NULL,
-    `blog_style_border_color` varchar(128) NOT NULL,	
-    `blog_style_bg_color` varchar(128) NOT NULL,
-    `blog_style_box_shadow` varchar(128) NOT NULL,
+    `blog_style_border_style` varchar(16) NOT NULL,
+    `blog_style_border_color` varchar(8) NOT NULL,	
+    `blog_style_bg_color` varchar(8) NOT NULL,
+    `blog_style_box_shadow` varchar(32) NOT NULL,
     `blog_style_transparent` int(4) NOT NULL,
-    `blog_style_align` varchar(128) NOT NULL,
-	  `blog_style_share_buttons_bg_color` varchar(128) NOT NULL,
-    `blog_style_share_buttons_margin` varchar(128) NOT NULL,
-    `blog_style_share_buttons_border_radius` varchar(128) NOT NULL,
+    `blog_style_align` varchar(8) NOT NULL,
+    `blog_style_share_buttons_bg_color` varchar(8) NOT NULL,
+    `blog_style_share_buttons_margin` varchar(32) NOT NULL,
+    `blog_style_share_buttons_border_radius` varchar(32) NOT NULL,
     `blog_style_share_buttons_border_width` int(4) NOT NULL,
-    `blog_style_share_buttons_border_style` varchar(128) NOT NULL,
-    `blog_style_share_buttons_border_color` varchar(128) NOT NULL,
-    `blog_style_share_buttons_align` varchar(128) NOT NULL,
+    `blog_style_share_buttons_border_style` varchar(16) NOT NULL,
+    `blog_style_share_buttons_border_color` varchar(8) NOT NULL,
+    `blog_style_share_buttons_align` varchar(8) NOT NULL,
     `blog_style_img_font_size` int(4) NOT NULL,
-    `blog_style_img_font_family` varchar(128) NOT NULL,
-    `blog_style_img_font_color` varchar(128) NOT NULL,
-    `blog_style_share_buttons_color` varchar(128) NOT NULL,
+    `blog_style_img_font_family` varchar(16) NOT NULL,
+    `blog_style_img_font_color` varchar(8) NOT NULL,
+    `blog_style_share_buttons_color` varchar(8) NOT NULL,
     `blog_style_share_buttons_bg_transparent` int(4) NOT NULL,
     `blog_style_share_buttons_font_size` int(4) NOT NULL,
     
-    `image_browser_margin` varchar(128) NOT NULL,
-    `image_browser_padding` varchar(128) NOT NULL,
-    `image_browser_border_radius` varchar(128) NOT NULL,
+    `image_browser_margin` varchar(32) NOT NULL,
+    `image_browser_padding` varchar(32) NOT NULL,
+    `image_browser_border_radius` varchar(32) NOT NULL,
     `image_browser_border_width` int(4) NOT NULL,
-    `image_browser_border_style` varchar(128) NOT NULL,
-    `image_browser_border_color` varchar(128) NOT NULL,
-    `image_browser_bg_color` varchar(128) NOT NULL,
-    `image_browser_box_shadow` varchar(128) NOT NULL,
+    `image_browser_border_style` varchar(16) NOT NULL,
+    `image_browser_border_color` varchar(8) NOT NULL,
+    `image_browser_bg_color` varchar(8) NOT NULL,
+    `image_browser_box_shadow` varchar(32) NOT NULL,
     `image_browser_transparent` int(4) NOT NULL,
-    `image_browser_align` varchar(128) NOT NULL,	
-    `image_browser_image_description_margin` varchar(128) NOT NULL,
-    `image_browser_image_description_padding` varchar(128) NOT NULL,
-    `image_browser_image_description_border_radius` varchar(128) NOT NULL,
+    `image_browser_align` varchar(8) NOT NULL,	
+    `image_browser_image_description_margin` varchar(32) NOT NULL,
+    `image_browser_image_description_padding` varchar(32) NOT NULL,
+    `image_browser_image_description_border_radius` varchar(32) NOT NULL,
     `image_browser_image_description_border_width` int(4) NOT NULL,
-    `image_browser_image_description_border_style` varchar(128) NOT NULL,
-    `image_browser_image_description_border_color` varchar(128) NOT NULL,
-    `image_browser_image_description_bg_color` varchar(128) NOT NULL,
-    `image_browser_image_description_align` varchar(128) NOT NULL,
+    `image_browser_image_description_border_style` varchar(16) NOT NULL,
+    `image_browser_image_description_border_color` varchar(8) NOT NULL,
+    `image_browser_image_description_bg_color` varchar(8) NOT NULL,
+    `image_browser_image_description_align` varchar(8) NOT NULL,
     `image_browser_img_font_size` int(4) NOT NULL,
-    `image_browser_img_font_family` varchar(128) NOT NULL,
-    `image_browser_img_font_color` varchar(128) NOT NULL,
-    `image_browser_full_padding`  varchar(128) NOT NULL,
-    `image_browser_full_border_radius`	varchar(128) NOT NULL,
+    `image_browser_img_font_family` varchar(16) NOT NULL,
+    `image_browser_img_font_color` varchar(8) NOT NULL,
+    `image_browser_full_padding`  varchar(32) NOT NULL,
+    `image_browser_full_border_radius`	varchar(32) NOT NULL,
     `image_browser_full_border_width` int(4) NOT NULL,
-    `image_browser_full_border_style`  varchar(128) NOT NULL,
-    `image_browser_full_border_color` varchar(128) NOT NULL,
-    `image_browser_full_bg_color` varchar(128) NOT NULL,
+    `image_browser_full_border_style`  varchar(16) NOT NULL,
+    `image_browser_full_border_color` varchar(8) NOT NULL,
+    `image_browser_full_bg_color` varchar(8) NOT NULL,
     `image_browser_full_transparent`  int(4) NOT NULL,
-    
+
+    `lightbox_info_pos` varchar(8) NOT NULL,
+    `lightbox_info_align` varchar(8) NOT NULL,
+    `lightbox_info_bg_color` varchar(8) NOT NULL,
+    `lightbox_info_bg_transparent` int(4) NOT NULL,
+    `lightbox_info_border_width` int(4) NOT NULL,
+    `lightbox_info_border_style` varchar(16) NOT NULL,
+    `lightbox_info_border_color` varchar(8) NOT NULL,
+    `lightbox_info_border_radius` varchar(32) NOT NULL,
+    `lightbox_info_padding` varchar(32) NOT NULL,
+    `lightbox_info_margin` varchar(32) NOT NULL,
+    `lightbox_title_color` varchar(8) NOT NULL,
+    `lightbox_title_font_style` varchar(16) NOT NULL,
+    `lightbox_title_font_weight` varchar(8) NOT NULL,
+    `lightbox_title_font_size` int(4) NOT NULL,
+    `lightbox_description_color` varchar(8) NOT NULL,
+    `lightbox_description_font_style` varchar(16) NOT NULL,
+    `lightbox_description_font_weight` varchar(8) NOT NULL,
+    `lightbox_description_font_size` int(4) NOT NULL,
+
+    `lightbox_rate_pos` varchar(8) NOT NULL,
+    `lightbox_rate_align` varchar(8) NOT NULL,
+    `lightbox_rate_icon` varchar(16) NOT NULL,
+    `lightbox_rate_color` varchar(8) NOT NULL,
+    `lightbox_rate_size` int(4) NOT NULL,
+    `lightbox_rate_stars_count` int(4) NOT NULL,
+    `lightbox_rate_padding` varchar(32) NOT NULL,
+    `lightbox_rate_hover_color` varchar(8) NOT NULL,
+
+    `lightbox_hit_pos` varchar(8) NOT NULL,
+    `lightbox_hit_align` varchar(8) NOT NULL,
+    `lightbox_hit_bg_color` varchar(8) NOT NULL,
+    `lightbox_hit_bg_transparent` int(4) NOT NULL,
+    `lightbox_hit_border_width` int(4) NOT NULL,
+    `lightbox_hit_border_style` varchar(16) NOT NULL,
+    `lightbox_hit_border_color` varchar(8) NOT NULL,
+    `lightbox_hit_border_radius` varchar(32) NOT NULL,
+    `lightbox_hit_padding` varchar(32) NOT NULL,
+    `lightbox_hit_margin` varchar(32) NOT NULL,
+    `lightbox_hit_color` varchar(8) NOT NULL,
+    `lightbox_hit_font_style` varchar(16) NOT NULL,
+    `lightbox_hit_font_weight` varchar(8) NOT NULL,
+    `lightbox_hit_font_size` int(4) NOT NULL,
+    `masonry_description_font_size` int(4) NOT NULL,
+    `masonry_description_color` varchar(8) NOT NULL,
+    `masonry_description_font_style` varchar(16) NOT NULL,
+
     `default_theme` tinyint(1) NOT NULL,
     PRIMARY KEY (`id`)
-  ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;";
+  ) DEFAULT CHARSET=utf8;";
   $wpdb->query($bwg_theme);
   $bwg_image_comment = "CREATE TABLE IF NOT EXISTS `" . $wpdb->prefix . "bwg_image_comment` (
     `id` bigint(20) NOT NULL AUTO_INCREMENT,
@@ -872,8 +1001,18 @@ function bwg_activate() {
     `mail` mediumtext NOT NULL,
     `published` tinyint(1) NOT NULL,
     PRIMARY KEY (`id`)
-  ) ENGINE=MyISAM  DEFAULT CHARSET=utf8;";
+  ) DEFAULT CHARSET=utf8;";
   $wpdb->query($bwg_image_comment);
+
+  $bwg_image_rate = "CREATE TABLE IF NOT EXISTS `" . $wpdb->prefix . "bwg_image_rate` (
+    `id` bigint(20) NOT NULL AUTO_INCREMENT,
+    `image_id` bigint(20) NOT NULL,
+    `rate` float(16) NOT NULL,
+    `ip` varchar(64) NOT NULL,
+    `date` varchar(64) NOT NULL,
+    PRIMARY KEY (`id`)
+  ) DEFAULT CHARSET=utf8;";
+  $wpdb->query($bwg_image_rate);
 
   $upload_dir = wp_upload_dir();
   if (!is_dir($upload_dir['basedir'] . '/' . plugin_basename(dirname(__FILE__)))) {
@@ -882,95 +1021,119 @@ function bwg_activate() {
   $exists_default = $wpdb->get_var('SELECT count(id) FROM ' . $wpdb->prefix . 'bwg_option');
   if (!$exists_default) {
     $save = $wpdb->insert($wpdb->prefix . 'bwg_option', array(
-    'id' => 1,
-    'images_directory' => str_replace(ABSPATH, '', $upload_dir['basedir']),
+      'id' => 1,
+      'images_directory' => str_replace(ABSPATH, '', $upload_dir['basedir']),
 
-    'masonry' => 'vertical',
-    'image_column_number' => 5,
-    'images_per_page' => 30,
-    'thumb_width' => 180,
-    'thumb_height' => 90,
-    'upload_thumb_width' => 300,
-    'upload_thumb_height' => 300,
-    'image_enable_page' => 1,
-    'image_title_show_hover' => 'none',
+      'masonry' => 'vertical',
+      'image_column_number' => 5,
+      'images_per_page' => 30,
+      'thumb_width' => 180,
+      'thumb_height' => 90,
+      'upload_thumb_width' => 300,
+      'upload_thumb_height' => 300,
+      'image_enable_page' => 1,
+      'image_title_show_hover' => 'none',
 
-    'album_column_number' => 5,
-    'albums_per_page' => 30,
-    'album_title_show_hover' => 'hover',
-    'album_thumb_width' => 120,
-    'album_thumb_height' => 90,
-    'album_enable_page' => 1,
-    'extended_album_height' => 150,
-    'extended_album_description_enable' => 1,
+      'album_column_number' => 5,
+      'albums_per_page' => 30,
+      'album_title_show_hover' => 'hover',
+      'album_thumb_width' => 120,
+      'album_thumb_height' => 90,
+      'album_enable_page' => 1,
+      'extended_album_height' => 150,
+      'extended_album_description_enable' => 1,
 
-    'image_browser_width' => 800,
-    'image_browser_title_enable' => 1,
-    'image_browser_description_enable' => 1,
+      'image_browser_width' => 800,
+      'image_browser_title_enable' => 1,
+      'image_browser_description_enable' => 1,
 
-    'blog_style_width' => 800,
-    'blog_style_title_enable' => 1,
-    'blog_style_images_per_page' => 5,
-    'blog_style_enable_page' => 1,
+      'blog_style_width' => 800,
+      'blog_style_title_enable' => 1,
+      'blog_style_images_per_page' => 5,
+      'blog_style_enable_page' => 1,
 
-    'slideshow_type' => 'fade',
-    'slideshow_interval' => 5,
-    'slideshow_width' => 800,
-    'slideshow_height' => 500,
-    'slideshow_enable_autoplay' => 0,
-    'slideshow_enable_shuffle' => 0,
-    'slideshow_enable_ctrl' => 1,
-    'slideshow_enable_filmstrip' => 1,
-    'slideshow_filmstrip_height' => 90,
-    'slideshow_enable_title' => 0,
-    'slideshow_title_position' => 'top-right',
-    'slideshow_enable_description' => 0,
-    'slideshow_description_position' => 'bottom-right',
-    'slideshow_enable_music' => 0,
-    'slideshow_audio_url' => '',
+      'slideshow_type' => 'fade',
+      'slideshow_interval' => 5,
+      'slideshow_width' => 800,
+      'slideshow_height' => 500,
+      'slideshow_enable_autoplay' => 0,
+      'slideshow_enable_shuffle' => 0,
+      'slideshow_enable_ctrl' => 1,
+      'slideshow_enable_filmstrip' => 1,
+      'slideshow_filmstrip_height' => 90,
+      'slideshow_enable_title' => 0,
+      'slideshow_title_position' => 'top-right',
+      'slideshow_enable_description' => 0,
+      'slideshow_description_position' => 'bottom-right',
+      'slideshow_enable_music' => 0,
+      'slideshow_audio_url' => '',
 
-    'popup_width' => 800,
-    'popup_height' => 500,
-    'popup_type' => 'fade',
-    'popup_interval' => 5,
-    'popup_enable_filmstrip' => 1,
-    'popup_filmstrip_height' => 70,
-    'popup_enable_ctrl_btn' => 1,
-    'popup_enable_fullscreen' => 1,
-    'popup_enable_comment' => 1,
-    'popup_enable_email' => 0,
-    'popup_enable_captcha' => 0,
-    'popup_enable_download' => 0,
-    'popup_enable_fullsize_image' => 0,
-    'popup_enable_facebook' => 1,
-    'popup_enable_twitter' => 1,
-    'popup_enable_google' => 1,
+      'popup_width' => 800,
+      'popup_height' => 500,
+      'popup_type' => 'fade',
+      'popup_interval' => 5,
+      'popup_enable_filmstrip' => 1,
+      'popup_filmstrip_height' => 70,
+      'popup_enable_ctrl_btn' => 1,
+      'popup_enable_fullscreen' => 1,
+      'popup_enable_comment' => 1,
+      'popup_enable_email' => 0,
+      'popup_enable_captcha' => 0,
+      'popup_enable_download' => 0,
+      'popup_enable_fullsize_image' => 0,
+      'popup_enable_facebook' => 1,
+      'popup_enable_twitter' => 1,
+      'popup_enable_google' => 1,
 
-    'watermark_type' => 'none',
-    'watermark_position' => 'bottom-left',
-    'watermark_width' => 90,
-    'watermark_height' => 90,
-    'watermark_url' => WD_BWG_URL . '/images/watermark.png',
-    'watermark_text' => 'web-dorado.com',
-    'watermark_link' => 'http://web-dorado.com',
-    'watermark_font_size' => 20,
-    'watermark_font' => 'arial',
-    'watermark_color' => 'FFFFFF',
-    'watermark_opacity' => 30,
+      'watermark_type' => 'none',
+      'watermark_position' => 'bottom-left',
+      'watermark_width' => 90,
+      'watermark_height' => 90,
+      'watermark_url' => WD_BWG_URL . '/images/watermark.png',
+      'watermark_text' => 'web-dorado.com',
+      'watermark_link' => 'http://web-dorado.com',
+      'watermark_font_size' => 20,
+      'watermark_font' => 'arial',
+      'watermark_color' => 'FFFFFF',
+      'watermark_opacity' => 30,
 
-    'built_in_watermark_type' => 'none',
-    'built_in_watermark_position' => 'middle-center',
-    'built_in_watermark_size' => 15,
-    'built_in_watermark_url' => WD_BWG_URL . '/images/watermark.png',
-    'built_in_watermark_text' => 'web-dorado.com',
-    'built_in_watermark_font_size' => 20,
-    'built_in_watermark_font' => 'arial',
-    'built_in_watermark_color' => 'FFFFFF',
-    'built_in_watermark_opacity' => 30,
+      'built_in_watermark_type' => 'none',
+      'built_in_watermark_position' => 'middle-center',
+      'built_in_watermark_size' => 15,
+      'built_in_watermark_url' => WD_BWG_URL . '/images/watermark.png',
+      'built_in_watermark_text' => 'web-dorado.com',
+      'built_in_watermark_font_size' => 20,
+      'built_in_watermark_font' => 'arial',
+      'built_in_watermark_color' => 'FFFFFF',
+      'built_in_watermark_opacity' => 30,
 
-    'gallery_role' => 0,
-    'album_role' => 0,
-    'image_role' => 0
+      'image_right_click' => 0,
+      'popup_fullscreen' => 0,
+      'gallery_role' => 0,
+      'album_role' => 0,
+      'image_role' => 0,
+      'popup_autoplay' => 0,
+      'album_view_type' => 'thumbnail',
+      'popup_enable_pinterest' => 0,
+      'popup_enable_tumblr' => 0,
+      'show_search_box' => 0,
+      'search_box_width' => 180,
+      'preload_images' => 0,
+      'preload_images_count' => 10,
+      'popup_enable_info' => 1,
+      'popup_enable_rate' => 0,
+      'thumb_click_action' => 'open_lightbox',
+      'thumb_link_target' => 1,
+      'comment_moderation' => 0,
+      'popup_info_always_show' => 0,
+      'popup_hit_counter' => 0,
+      'enable_ML_import' => 0,
+      'showthumbs_name'=> 0,
+      'show_album_name'=> 0,
+      'show_image_counts'=> 0,
+      'upload_img_width' => 1200,
+      'upload_img_height' => 1200,
+      'play_icon'=> 1,
     ), array(
       '%d',
       '%s',
@@ -983,39 +1146,6 @@ function bwg_activate() {
       '%d',
       '%d',
       '%d',
-
-      '%d',
-      '%d',
-      '%s',
-      '%d',
-      '%d',
-      '%d',
-      '%d',
-      '%d',
-
-      '%d',
-      '%d',
-      '%d',
-
-      '%d',
-      '%d',
-      '%d',
-      '%d',
-
-      '%s',
-      '%d',
-      '%d',
-      '%d',
-      '%d',
-      '%d',
-      '%d',
-      '%d',
-      '%d',
-      '%d',
-      '%s',
-      '%d',
-      '%s',
-      '%d',
       '%s',
 
       '%d',
@@ -1026,6 +1156,40 @@ function bwg_activate() {
       '%d',
       '%d',
       '%d',
+
+      '%d',
+      '%d',
+      '%d',
+
+      '%d',
+      '%d',
+      '%d',
+      '%d',
+
+      '%s',
+      '%d',
+      '%d',
+      '%d',
+      '%d',
+      '%d',
+      '%d',
+      '%d',
+      '%d',
+      '%d',
+      '%s',
+      '%d',
+      '%s',
+      '%d',
+      '%s',
+
+      '%d',
+      '%d',
+      '%s',
+      '%d',
+      '%d',
+      '%d',
+      '%d',
+      '%d',
       '%d',
       '%d',
       '%d',
@@ -1059,7 +1223,31 @@ function bwg_activate() {
 
       '%d',
       '%d',
-      '%d'
+      '%d',
+      '%d',
+      '%d',
+      '%d',
+      '%s',
+      '%d',
+      '%d',
+      '%d',
+      '%d',
+      '%d',
+      '%d',
+      '%d',
+      '%d',
+      '%s',
+      '%d',
+      '%d',
+      '%d',
+      '%d',
+      '%d',
+      '%d',
+      '%d',
+      '%d',
+      '%d',
+      '%d',
+      '%d',
     ));
   }
   $exists_default = $wpdb->get_var('SELECT count(id) FROM ' . $wpdb->prefix . 'bwg_theme');
@@ -1084,6 +1272,7 @@ function bwg_activate() {
       'thumb_transition' => 1,
       'thumb_title_font_color' => 'CCCCCC',
       'thumb_title_font_style' => 'segoe ui',
+      'thumb_title_pos' => 'bottom',
       'thumb_title_font_size' => 16,
       'thumb_title_font_weight' => 'bold',
       'thumb_title_margin' => '2px',
@@ -1091,7 +1280,7 @@ function bwg_activate() {
 
       'page_nav_position' => 'bottom',
       'page_nav_align' => 'center',
-      'page_nav_number' => 1,
+      'page_nav_number' => 0,
       'page_nav_font_size' => 12,
       'page_nav_font_style' => 'segoe ui',
       'page_nav_font_color' => '666666',
@@ -1195,6 +1384,7 @@ function bwg_activate() {
       'album_compact_back_padding' => '0',
       'album_compact_title_font_color' => 'CCCCCC',
       'album_compact_title_font_style' => 'segoe ui',
+      'album_compact_thumb_title_pos' => 'bottom',
       'album_compact_title_font_size' => 16,
       'album_compact_title_font_weight' => 'bold',
       'album_compact_title_margin' => '2px',
@@ -1391,6 +1581,52 @@ function bwg_activate() {
       'image_browser_full_bg_color' => 'F5F5F5',
       'image_browser_full_transparent' => 90,
 
+      'lightbox_info_pos' => 'top',
+      'lightbox_info_align' => 'right',
+      'lightbox_info_bg_color' => '000000',
+      'lightbox_info_bg_transparent' => 70,
+      'lightbox_info_border_width' => 1,
+      'lightbox_info_border_style' => 'none',
+      'lightbox_info_border_color' => '000000',
+      'lightbox_info_border_radius' => '5px',
+      'lightbox_info_padding' => '5px',
+      'lightbox_info_margin' => '15px',
+      'lightbox_title_color' => 'FFFFFF',
+      'lightbox_title_font_style' => 'segoe ui',
+      'lightbox_title_font_weight' => 'bold',
+      'lightbox_title_font_size' => 18,
+      'lightbox_description_color' => 'FFFFFF',
+      'lightbox_description_font_style' => 'segoe ui',
+      'lightbox_description_font_weight' => 'normal',
+      'lightbox_description_font_size' => 14,
+
+      'lightbox_rate_pos' => 'bottom',
+      'lightbox_rate_align' => 'right',
+      'lightbox_rate_icon' => 'star',
+      'lightbox_rate_color' => 'F9D062',
+      'lightbox_rate_size' => 20,
+      'lightbox_rate_stars_count' => 5,
+      'lightbox_rate_padding' => '15px',
+      'lightbox_rate_hover_color' => 'F7B50E',
+
+      'lightbox_hit_pos' => 'bottom',
+      'lightbox_hit_align' => 'left',
+      'lightbox_hit_bg_color' => '000000',
+      'lightbox_hit_bg_transparent' => 70,
+      'lightbox_hit_border_width' => 1,
+      'lightbox_hit_border_style' => 'none',
+      'lightbox_hit_border_color' => '000000',
+      'lightbox_hit_border_radius' => '5px',
+      'lightbox_hit_padding' => '5px',
+      'lightbox_hit_margin' => '0 5px',
+      'lightbox_hit_color' => 'FFFFFF',
+      'lightbox_hit_font_style' => 'segoe ui',
+      'lightbox_hit_font_weight' => 'normal',
+      'lightbox_hit_font_size' => 14,
+      'masonry_description_font_size' => 12,
+			'masonry_description_color' => 'CCCCCC',
+			'masonry_description_font_style' => 'segoe ui',
+
       'default_theme' => 1
     ), array(
       '%d',
@@ -1412,6 +1648,7 @@ function bwg_activate() {
       '%d',
       '%s',
       '%s',
+      '%s',
       '%d',
       '%s',
       '%s',
@@ -1519,6 +1756,7 @@ function bwg_activate() {
       '%s',
       '%s',
       '%d',
+      '%s',
       '%s',
       '%s',
       '%s',
@@ -1719,6 +1957,52 @@ function bwg_activate() {
       '%s',
       '%d',
 
+      '%s',
+      '%s',
+      '%s',
+      '%d',
+      '%d',
+      '%s',
+      '%s',
+      '%s',
+      '%s',
+      '%s',
+      '%s',
+      '%s',
+      '%s',
+      '%d',
+      '%s',
+      '%s',
+      '%s',
+      '%d',
+
+      '%s',
+      '%s',
+      '%s',
+      '%s',
+      '%d',
+      '%d',
+      '%s',
+      '%s',
+
+      '%s',
+      '%s',
+      '%s',
+      '%d',
+      '%d',
+      '%s',
+      '%s',
+      '%s',
+      '%s',
+      '%s',
+      '%s',
+      '%s',
+      '%s',
+      '%d',
+      '%d',
+			'%s',
+			'%s',
+
       '%d'
     ));
 
@@ -1742,6 +2026,7 @@ function bwg_activate() {
       'thumb_transition' => 1,
       'thumb_title_font_color' => 'CCCCCC',
       'thumb_title_font_style' => 'segoe ui',
+      'thumb_title_pos' => 'bottom',
       'thumb_title_font_size' => 16,
       'thumb_title_font_weight' => 'bold',
       'thumb_title_margin' => '5px',
@@ -1749,7 +2034,7 @@ function bwg_activate() {
 
       'page_nav_position' => 'bottom',
       'page_nav_align' => 'center',
-      'page_nav_number' => 1,
+      'page_nav_number' => 0,
       'page_nav_font_size' => 12,
       'page_nav_font_style' => 'segoe ui',
       'page_nav_font_color' => '666666',
@@ -1853,6 +2138,7 @@ function bwg_activate() {
       'album_compact_back_padding' => '0',
       'album_compact_title_font_color' => 'CCCCCC',
       'album_compact_title_font_style' => 'segoe ui',
+      'album_compact_thumb_title_pos' => 'bottom',
       'album_compact_title_font_size' => 16,
       'album_compact_title_font_weight' => 'bold',
       'album_compact_title_margin' => '5px',
@@ -2049,6 +2335,52 @@ function bwg_activate() {
       'image_browser_full_bg_color' => 'FFFFFF',
       'image_browser_full_transparent' => 90,
 
+      'lightbox_info_pos' => 'top',
+      'lightbox_info_align' => 'right',
+      'lightbox_info_bg_color' => '000000',
+      'lightbox_info_bg_transparent' => 70,
+      'lightbox_info_border_width' => 1,
+      'lightbox_info_border_style' => 'none',
+      'lightbox_info_border_color' => '000000',
+      'lightbox_info_border_radius' => '5px',
+      'lightbox_info_padding' => '5px',
+      'lightbox_info_margin' => '15px',
+      'lightbox_title_color' => 'FFFFFF',
+      'lightbox_title_font_style' => 'segoe ui',
+      'lightbox_title_font_weight' => 'bold',
+      'lightbox_title_font_size' => 18,
+      'lightbox_description_color' => 'FFFFFF',
+      'lightbox_description_font_style' => 'segoe ui',
+      'lightbox_description_font_weight' => 'normal',
+      'lightbox_description_font_size' => 14,
+
+      'lightbox_rate_pos' => 'bottom',
+      'lightbox_rate_align' => 'right',
+      'lightbox_rate_icon' => 'star',
+      'lightbox_rate_color' => 'F9D062',
+      'lightbox_rate_size' => 20,
+      'lightbox_rate_stars_count' => 5,
+      'lightbox_rate_padding' => '15px',
+      'lightbox_rate_hover_color' => 'F7B50E',
+
+      'lightbox_hit_pos' => 'bottom',
+      'lightbox_hit_align' => 'left',
+      'lightbox_hit_bg_color' => '000000',
+      'lightbox_hit_bg_transparent' => 70,
+      'lightbox_hit_border_width' => 1,
+      'lightbox_hit_border_style' => 'none',
+      'lightbox_hit_border_color' => '000000',
+      'lightbox_hit_border_radius' => '5px',
+      'lightbox_hit_padding' => '5px',
+      'lightbox_hit_margin' => '0 5px',
+      'lightbox_hit_color' => 'FFFFFF',
+      'lightbox_hit_font_style' => 'segoe ui',
+      'lightbox_hit_font_weight' => 'normal',
+      'lightbox_hit_font_size' => 14,
+      'masonry_description_font_size' => 12,
+			'masonry_description_color' => 'CCCCCC',
+			'masonry_description_font_style' => 'segoe ui',
+
       'default_theme' => 0
     ), array(
       '%d',
@@ -2070,6 +2402,7 @@ function bwg_activate() {
       '%d',
       '%s',
       '%s',
+      '%s',
       '%d',
       '%s',
       '%s',
@@ -2177,6 +2510,7 @@ function bwg_activate() {
       '%s',
       '%s',
       '%d',
+      '%s',
       '%s',
       '%s',
       '%s',
@@ -2377,27 +2711,81 @@ function bwg_activate() {
       '%s',
       '%d',
 
+      '%s',
+      '%s',
+      '%s',
+      '%d',
+      '%d',
+      '%s',
+      '%s',
+      '%s',
+      '%s',
+      '%s',
+      '%s',
+      '%s',
+      '%s',
+      '%d',
+      '%s',
+      '%s',
+      '%s',
+      '%d',
+
+      '%s',
+      '%s',
+      '%s',
+      '%s',
+      '%d',
+      '%d',
+      '%s',
+      '%s',
+
+      '%s',
+      '%s',
+      '%s',
+      '%d',
+      '%d',
+      '%s',
+      '%s',
+      '%s',
+      '%s',
+      '%s',
+      '%s',
+      '%s',
+      '%s',
+      '%d',
+      '%d',
+			'%s',
+			'%s',
+
       '%d'
     ));
   }
-  $version = str_replace('.', '', get_option("wd_bwg_version"));
-  $new_version = 116;
-  if ($version && $version < $new_version) {
+  $version = get_option("wd_bwg_version");
+  $new_version = '1.2.5';
+  if ($version && version_compare($version, $new_version, '<')) {
     require_once WD_BWG_DIR . "/update/bwg_update.php";
-    for ($i = $version; $i < $new_version; $i++) {
-      $func_name = 'bwg_update_' . $i;
-      if (function_exists($func_name)) {
-        $func_name();
-      }
-    }
-    update_option("wd_bwg_version", '1.1.6');
+    bwg_update($version);
+    update_option("wd_bwg_version", $new_version);
   }
   else {
-    add_option("wd_bwg_version", '1.1.6', '', 'no');
+    add_option("wd_bwg_version", $new_version, '', 'no');
     add_option("wd_bwg_theme_version", '1.0.0', '', 'no');
   }
 }
 register_activation_hook(__FILE__, 'bwg_activate');
+
+function bwg_update_hook() {
+	$version = get_option("wd_bwg_version");
+  $new_version = '1.2.5';
+  if ($version && version_compare($version, $new_version, '<')) {
+    require_once WD_BWG_DIR . "/update/bwg_update.php";
+    bwg_update($version);
+    update_option("wd_bwg_version", $new_version);
+  }
+}
+if (!isset($_GET['action']) || $_GET['action'] != 'deactivate') {
+  add_action('admin_init', 'bwg_update_hook');
+}
 
 // Plugin styles.
 function bwg_styles() {
@@ -2421,10 +2809,6 @@ function bwg_scripts() {
   wp_enqueue_script('jquery-ui-sortable');
 }
 
-function bwg_featured_plugins_styles() {
-  wp_enqueue_style('Featured_Plugins', WD_BWG_URL . '/css/bwg_featured_plugins.css');
-}
-
 function bwg_licensing_styles() {
   wp_enqueue_style('bwg_licensing', WD_BWG_URL . '/css/bwg_licensing.css');
 }
@@ -2445,6 +2829,7 @@ function bwg_options_scripts() {
 }
 
 function bwg_front_end_scripts() {
+  $version = get_option("wd_bwg_version");
   global $wp_scripts;
   if (isset($wp_scripts->registered['jquery'])) {
     $jquery = $wp_scripts->registered['jquery'];
@@ -2454,21 +2839,22 @@ function bwg_front_end_scripts() {
     }
   }
   wp_enqueue_script('jquery');
-  wp_enqueue_script('jquery-ui-tooltip');
-  wp_enqueue_style('jquery-ui', WD_BWG_URL . '/css/jquery-ui-1.10.3.custom.css');
+  /*wp_enqueue_style('jquery-ui', WD_BWG_URL . '/css/jquery-ui-1.10.3.custom.css', array(), $version);*/
 
-  wp_enqueue_script('bwg_frontend', WD_BWG_URL . '/js/bwg_frontend.js', array(), get_option("wd_bwg_version"));
-  wp_enqueue_style('bwg_frontend', WD_BWG_URL . '/css/bwg_frontend.css');
+  wp_enqueue_script('bwg_frontend', WD_BWG_URL . '/js/bwg_frontend.js', array(), $version);
+  wp_enqueue_style('bwg_frontend', WD_BWG_URL . '/css/bwg_frontend.css', array(), $version);
 
   // Styles/Scripts for popup.
-  wp_enqueue_style('font-awesome', WD_BWG_URL . '/css/font-awesome-4.0.1/font-awesome.css');
-  wp_enqueue_script('bwg_mCustomScrollbar', WD_BWG_URL . '/js/jquery.mCustomScrollbar.concat.min.js', array(), get_option("wd_bwg_version"));
-  wp_enqueue_style('bwg_mCustomScrollbar', WD_BWG_URL . '/css/jquery.mCustomScrollbar.css');
+  wp_enqueue_style('bwg_font-awesome', WD_BWG_URL . '/css/font-awesome-4.0.1/font-awesome.css', array(), '4.0.1');
+  wp_enqueue_script('bwg_jquery_mobile', WD_BWG_URL . '/js/jquery.mobile.js', array(), $version);
+  wp_enqueue_script('bwg_mCustomScrollbar', WD_BWG_URL . '/js/jquery.mCustomScrollbar.concat.min.js', array(), $version);
+  wp_enqueue_style('bwg_mCustomScrollbar', WD_BWG_URL . '/css/jquery.mCustomScrollbar.css', array(), $version);
   wp_enqueue_script('jquery-fullscreen', WD_BWG_URL . '/js/jquery.fullscreen-0.4.1.js', array(), '0.4.1');
-  wp_enqueue_script('bwg_gallery_box', WD_BWG_URL . '/js/bwg_gallery_box.js', array(), get_option("wd_bwg_version"));
+  wp_enqueue_script('bwg_gallery_box', WD_BWG_URL . '/js/bwg_gallery_box.js', array(), $version);
   wp_localize_script('bwg_gallery_box', 'bwg_objectL10n', array(
     'bwg_field_required'  => __('field is required.', 'bwg'),
     'bwg_mail_validation' => __('This is not a valid email address.', 'bwg'),
+    'bwg_search_result' => __('There are no images matching your search.', 'bwg'),
   ));
 }
 add_action('wp_enqueue_scripts', 'bwg_front_end_scripts');

@@ -32,7 +32,7 @@ class  BWGViewThemes_bwg {
     $order_class = 'manage-column column-title sorted ' . $asc_or_desc;
     $ids_string = '';
     ?>
-    <div style="clear: both; float: left; width: 95%;">
+    <div style="clear: both; float: left; width: 99%;">
       <div style="float:left; font-size: 14px; font-weight: bold;">
         This section allows you to create, edit and delete themes.
         <a style="color: blue; text-decoration: none;" target="_blank" href="http://web-dorado.com/wordpress-gallery-guide-step-6/6-1.html">Read More in User Manual</a>
@@ -46,9 +46,8 @@ class  BWGViewThemes_bwg {
         ?>
       </div>
       <div style="float: right; text-align: right;">
-        <a style="color: red; text-decoration: none;" target="_blank" href="http://web-dorado.com/products/wordpress-photo-gallery-plugin.html">
-          <img width="215" border="0" alt="web-dorado.com" src="<?php echo WD_BWG_URL . '/images/header.png'; ?>" />
-          <p style="font-size: 16px; margin: 0; padding: 0 20px 0 0;">Get the full version</p>
+        <a style="text-decoration: none;" target="_blank" href="http://web-dorado.com/products/wordpress-photo-gallery-plugin.html">
+          <img width="215" border="0" alt="web-dorado.com" src="<?php echo WD_BWG_URL . '/images/logo.png'; ?>" />
         </a>
       </div>
     </div>
@@ -70,7 +69,7 @@ class  BWGViewThemes_bwg {
       die();
     }
     ?>
-    <form class="wrap" id="themes_form" method="post" action="admin.php?page=themes_bwg" style="float: left; width: 95%;">
+    <form class="wrap" id="themes_form" method="post" action="admin.php?page=themes_bwg" style="float: left; width: 99%;">
       <span class="theme_icon"></span>
       <h2>
         Themes
@@ -184,7 +183,7 @@ class  BWGViewThemes_bwg {
   public function edit($id, $reset) {
     $row = $this->model->get_row_data($id, $reset);
     $page_title = (($id != 0) ? 'Edit theme ' . $row->name : 'Create new theme');
-    $current_type = ((isset($_POST['current_type'])) ? esc_html($_POST['current_type']) : 'Thumbnail');
+    $current_type = WDWLibrary::get('current_type', 'Thumbnail');
     $border_styles = array(
       'none' => 'None',
       'solid' => 'Solid',
@@ -210,13 +209,13 @@ class  BWGViewThemes_bwg {
     );
     $aligns = array(
       'left' => 'Left',
-      'right' => 'Right',
       'center' => 'Center',
+      'right' => 'Right',
     );
     $font_weights = array(
-      'bold' => 'Bold',
       'lighter' => 'Lighter',
       'normal' => 'Normal',
+      'bold' => 'Bold',
     );
     $hover_effects = array(
       'none' => 'None',
@@ -229,6 +228,14 @@ class  BWGViewThemes_bwg {
       'fa-angle' => 'Angle',
       'fa-angle-double' => 'Double',
     );
+    $rate_icons = array(
+      'star' => 'Star',
+      'bell' => 'Bell',
+      'circle' => 'Circle',
+      'flag' => 'Flag',
+      'heart' => 'Heart',
+      'square' => 'Square',
+    );
     ?>
     <div style="clear: both; float: left; width: 99%;">
       <div style="float:left; font-size: 14px; font-weight: bold;">
@@ -236,9 +243,8 @@ class  BWGViewThemes_bwg {
         <a style="color: blue; text-decoration: none;" target="_blank" href="http://web-dorado.com/wordpress-gallery-guide-step-6/6-1.html">Read More in User Manual</a>
       </div>
       <div style="float: right; text-align: right;">
-        <a style="color: red; text-decoration: none;" target="_blank" href="http://web-dorado.com/products/wordpress-photo-gallery-plugin.html">
-          <img width="215" border="0" alt="web-dorado.com" src="<?php echo WD_BWG_URL . '/images/header.png'; ?>" />
-          <p style="font-size: 16px; margin: 0; padding: 0 20px 0 0;">Get the full version</p>
+        <a style="text-decoration: none;" target="_blank" href="http://web-dorado.com/products/wordpress-photo-gallery-plugin.html">
+          <img width="215" border="0" alt="web-dorado.com" src="<?php echo WD_BWG_URL . '/images/logo.png'; ?>" />
         </a>
       </div>
     </div>
@@ -356,7 +362,7 @@ class  BWGViewThemes_bwg {
                   </td>
                 </tr>
                 <tr>
-                  <td class="spider_label"><label for="thumb_transition1">Transition: </label></td>
+                  <td class="spider_label"><label>Transition: </label></td>
                   <td id="thumb_transition">
                     <input type="radio" name="thumb_transition" id="thumb_transition1" value="1"<?php if ($row->thumb_transition == 1) echo 'checked="checked"'; ?> />
                     <label for="thumb_transition1" id="thumb_transition1_lbl">Yes</label>
@@ -418,6 +424,15 @@ class  BWGViewThemes_bwg {
           <fieldset class="spider_child_fieldset" id="Thumbnail_3">
             <table style="clear:both;">
               <tbody>
+                <tr>
+                  <td class="spider_label"><label>Title position: </label></td>
+                  <td>
+                    <input type="radio" name="thumb_title_pos" id="thumb_title_pos1" value="top" <?php if ($row->thumb_title_pos == "top") echo 'checked="checked"'; ?> />
+                    <label for="thumb_title_pos1" id="thumb_title_pos1_lbl">Top</label>
+                    <input type="radio" name="thumb_title_pos" id="thumb_title_pos0" value="bottom" <?php if ($row->thumb_title_pos == "bottom") echo 'checked="checked"'; ?> />
+                    <label for="thumb_title_pos0" id="thumb_title_pos0_lbl">Bottom</label>
+                  </td>
+                </tr>
                 <tr>
                   <td class="spider_label"><label for="thumb_title_font_size">Title font size: </label></td>
                   <td>
@@ -588,12 +603,38 @@ class  BWGViewThemes_bwg {
                   </td>
                 </tr>
                 <tr>
-                  <td class="spider_label"><label for="masonry_thumb_transition1">Transition: </label></td>
+                  <td class="spider_label"><label>Transition: </label></td>
                   <td id="masonry_thumb_transition">
                     <input type="radio" name="masonry_thumb_transition" id="masonry_thumb_transition1" value="1"<?php if ($row->masonry_thumb_transition == 1) echo 'checked="checked"'; ?> />
                     <label for="masonry_thumb_transition1" id="masonry_thumb_transition1_lbl">Yes</label>
                     <input type="radio" name="masonry_thumb_transition" id="masonry_thumb_transition0" value="0"<?php if ($row->masonry_thumb_transition == 0) echo 'checked="checked"'; ?> />
                     <label for="masonry_thumb_transition0" id="masonry_thumb_transition0_lbl">No</label>
+                  </td>
+                </tr>
+		<tr>
+                  <td class="spider_label"><label for="masonry_description_font_size">Description font size: </label></td>
+                  <td>
+                    <input type="text" name="masonry_description_font_size" id="masonry_description_font_size" value="<?php echo $row->masonry_description_font_size; ?>" class="spider_int_input" onkeypress="return spider_check_isnum(event)"/> px
+                  </td>
+                </tr>
+                <tr>
+                  <td class="spider_label"><label for="masonry_description_color">Description font color: </label></td>
+                  <td>
+                    <input type="text" name="masonry_description_color" id="masonry_description_color" value="<?php echo $row->masonry_description_color; ?>" class="color" />
+                  </td>
+                </tr>
+                <tr>
+                  <td class="spider_label"><label for="masonry_description_font_style">Description font family: </label></td>
+                  <td>
+                    <select name="masonry_description_font_style" id="masonry_description_font_style">
+                      <?php
+                      foreach ($font_families as $key => $font_family) {
+                        ?>
+                        <option value="<?php echo $key; ?>" <?php echo (($row->masonry_description_font_style == $key) ? 'selected="selected"' : ''); ?>><?php echo $font_family; ?></option>
+                        <?php
+                      }
+                      ?>
+                    </select>
                   </td>
                 </tr>
               </tbody>
@@ -721,12 +762,14 @@ class  BWGViewThemes_bwg {
             <table style="clear:both;">
               <tbody>
                 <tr>
-                  <td class="spider_label"><label for="slideshow_filmstrip_pos1">Filmstrip/Slider bullet position: </label></td>
+                  <td class="spider_label"><label>Filmstrip/Slider bullet position: </label></td>
                   <td>
-                    <input type="radio" name="slideshow_filmstrip_pos" id="slideshow_filmstrip_pos1" value="top" <?php if ($row->slideshow_filmstrip_pos == "top") echo 'checked="checked"'; ?> />
-                    <label for="slideshow_filmstrip_pos1" id="slideshow_filmstrip_pos1_lbl">Top</label>
-                    <input type="radio" name="slideshow_filmstrip_pos" id="slideshow_filmstrip_pos0" value="bottom" <?php if ($row->slideshow_filmstrip_pos == "bottom") echo 'checked="checked"'; ?> />
-                    <label for="slideshow_filmstrip_pos0" id="slideshow_filmstrip_pos0_lbl">Bottom</label>
+                    <select name="slideshow_filmstrip_pos" id="slideshow_filmstrip_pos">
+                      <option value="top" <?php echo (($row->slideshow_filmstrip_pos == "top") ? 'selected="selected"' : ''); ?>>Top</option>
+                      <option value="right" <?php echo (($row->slideshow_filmstrip_pos == "right") ? 'selected="selected"' : ''); ?>>Right</option>
+                      <option value="bottom" <?php echo (($row->slideshow_filmstrip_pos == "bottom") ? 'selected="selected"' : ''); ?>>Bottom</option>
+                      <option value="left" <?php echo (($row->slideshow_filmstrip_pos == "left") ? 'selected="selected"' : ''); ?>>Left</option>
+                    </select>
                   </td>
                 </tr>
                 <tr>
@@ -1301,7 +1344,7 @@ class  BWGViewThemes_bwg {
                   </td>
                 </tr>
                 <tr>
-                  <td class="spider_label"><label for="album_compact_thumb_transition1">Thumbnail transition: </label></td>
+                  <td class="spider_label"><label>Thumbnail transition: </label></td>
                   <td id="album_compact_thumb_transition">
                     <input type="radio" name="album_compact_thumb_transition" id="album_compact_thumb_transition1" value="1"<?php if ($row->album_compact_thumb_transition == 1) echo 'checked="checked"'; ?> />
                     <label for="album_compact_thumb_transition1" id="album_compact_thumb_transition1_lbl">Yes</label>
@@ -1361,6 +1404,15 @@ class  BWGViewThemes_bwg {
           <fieldset class="spider_child_fieldset" id="Compact_album_3">
             <table style="clear:both;">
               <tbody>
+                <tr>
+                  <td class="spider_label"><label>Title position: </label></td>
+                  <td>
+                    <input type="radio" name="album_compact_thumb_title_pos" id="album_compact_thumb_title_pos1" value="top" <?php if ($row->album_compact_thumb_title_pos == "top") echo 'checked="checked"'; ?> />
+                    <label for="album_compact_thumb_title_pos1" id="album_compact_thumb_title_pos1_lbl">Top</label>
+                    <input type="radio" name="album_compact_thumb_title_pos" id="album_compact_thumb_title_pos0" value="bottom" <?php if ($row->album_compact_thumb_title_pos == "bottom") echo 'checked="checked"'; ?> />
+                    <label for="album_compact_thumb_title_pos0" id="album_compact_thumb_title_pos0_lbl">Bottom</label>
+                  </td>
+                </tr>
                 <tr>
                   <td class="spider_label"><label for="album_compact_title_font_size">Title font size: </label></td>
                   <td>
@@ -1524,7 +1576,7 @@ class  BWGViewThemes_bwg {
                   </td>
                 </tr>
                 <tr>
-                  <td class="spider_label"><label for="album_extended_thumb_transition1">Thumbnail transition: </label></td>
+                  <td class="spider_label"><label>Thumbnail transition: </label></td>
                   <td id="album_extended_thumb_transition">
                     <input type="radio" name="album_extended_thumb_transition" id="album_extended_thumb_transition1" value="1"<?php if ($row->album_extended_thumb_transition == 1) echo 'checked="checked"'; ?> />
                     <label for="album_extended_thumb_transition1" id="album_extended_thumb_transition1_lbl">Yes</label>
@@ -2222,7 +2274,7 @@ class  BWGViewThemes_bwg {
                   </td>
                 </tr>
                 <tr id="lightbox_cntrl9">
-                  <td class="spider_label"><label for="lightbox_ctrl_btn_pos1">Control buttons position: </label></td>
+                  <td class="spider_label"><label>Control buttons position: </label></td>
                   <td>
                     <input type="radio" name="lightbox_ctrl_btn_pos" id="lightbox_ctrl_btn_pos1" value="top"<?php if ($row->lightbox_ctrl_btn_pos == "top") echo 'checked="checked"'; ?> />
                     <label for="lightbox_ctrl_btn_pos1" id="lightbox_ctrl_btn_pos1_lbl">Top</label>
@@ -2493,12 +2545,14 @@ class  BWGViewThemes_bwg {
                   </td>
                 </tr>
                 <tr id="lightbox_filmstrip12">
-                  <td class="spider_label"><label for="lightbox_filmstrip_pos1">Filmstrip position: </label></td>
+                  <td class="spider_label"><label>Filmstrip position: </label></td>
                   <td>
-                    <input type="radio" name="lightbox_filmstrip_pos" id="lightbox_filmstrip_pos1" value="top" <?php if ($row->lightbox_filmstrip_pos == "top") echo 'checked="checked"'; ?> />
-                    <label for="lightbox_filmstrip_pos1" id="lightbox_filmstrip_pos1_lbl">Top</label>
-                    <input type="radio" name="lightbox_filmstrip_pos" id="lightbox_filmstrip_pos0" value="bottom" <?php if ($row->lightbox_filmstrip_pos == "bottom") echo 'checked="checked"'; ?> />
-                    <label for="lightbox_filmstrip_pos0" id="lightbox_filmstrip_pos0_lbl">Bottom</label>
+                    <select name="lightbox_filmstrip_pos" id="lightbox_filmstrip_pos">
+                      <option value="top" <?php echo (($row->lightbox_filmstrip_pos == "top") ? 'selected="selected"' : ''); ?>>Top</option>
+                      <option value="right" <?php echo (($row->lightbox_filmstrip_pos == "right") ? 'selected="selected"' : ''); ?>>Right</option>
+                      <option value="bottom" <?php echo (($row->lightbox_filmstrip_pos == "bottom") ? 'selected="selected"' : ''); ?>>Bottom</option>
+                      <option value="left" <?php echo (($row->lightbox_filmstrip_pos == "left") ? 'selected="selected"' : ''); ?>>Left</option>
+                    </select>
                   </td>
                 </tr>
                 <tr id="lightbox_filmstrip2">
@@ -2578,20 +2632,377 @@ class  BWGViewThemes_bwg {
                     <input type="text" name="lightbox_filmstrip_rl_bg_color" id="lightbox_filmstrip_rl_bg_color" value="<?php echo $row->lightbox_filmstrip_rl_bg_color; ?>" class="color"/>
                   </td>
                 </tr>
+                <tr>
+                  <td class="spider_label"><label for="lightbox_rate_pos1">Rating position: </label></td>
+                  <td>
+                    <input type="radio" name="lightbox_rate_pos" id="lightbox_rate_pos1" value="top" <?php if ($row->lightbox_rate_pos == "top") echo 'checked="checked"'; ?> />
+                    <label for="lightbox_rate_pos1" id="lightbox_rate_pos1_lbl">Top</label>
+                    <input type="radio" name="lightbox_rate_pos" id="lightbox_rate_pos0" value="bottom" <?php if ($row->lightbox_rate_pos == "bottom") echo 'checked="checked"'; ?> />
+                    <label for="lightbox_rate_pos0" id="lightbox_rate_pos0_lbl">Bottom</label>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="spider_label"><label for="lightbox_rate_align">Rating alignment: </label></td>
+                  <td>
+                    <select name="lightbox_rate_align" id="lightbox_rate_align">
+                      <?php
+                      foreach ($aligns as $key => $align) {
+                        ?>
+                        <option value="<?php echo $key; ?>" <?php echo (($row->lightbox_rate_align == $key) ? 'selected="selected"' : ''); ?>><?php echo $align; ?></option>
+                        <?php
+                      }
+                      ?>
+                    </select>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="spider_label"><label for="lightbox_rate_icon">Rating icon: </label></td>
+                  <td>
+                    <select name="lightbox_rate_icon" id="lightbox_rate_icon">
+                      <?php
+                      foreach ($rate_icons as $key => $rate_icon) {
+                        ?>
+                        <option value="<?php echo $key; ?>" <?php echo (($row->lightbox_rate_icon == $key) ? 'selected="selected"' : ''); ?>><?php echo $rate_icon; ?></option>
+                        <?php
+                      }
+                      ?>
+                    </select>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="spider_label"><label for="lightbox_rate_color">Rating color: </label></td>
+                  <td>
+                    <input type="text" name="lightbox_rate_color" id="lightbox_rate_color" value="<?php echo $row->lightbox_rate_color; ?>" class="color"/>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="spider_label"><label for="lightbox_rate_hover_color">Rating hover color: </label></td>
+                  <td>
+                    <input type="text" name="lightbox_rate_hover_color" id="lightbox_rate_hover_color" value="<?php echo $row->lightbox_rate_hover_color; ?>" class="color"/>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="spider_label"><label for="lightbox_rate_size">Rating size: </label></td>
+                  <td>
+                    <input type="text" name="lightbox_rate_size" id="lightbox_rate_size" value="<?php echo $row->lightbox_rate_size; ?>" class="spider_int_input" onkeypress="return spider_check_isnum(event)"/> px
+                  </td>
+                </tr>
+                <tr>
+                  <td class="spider_label"><label for="lightbox_rate_stars_count">Rating icon count: </label></td>
+                  <td>
+                    <input type="text" name="lightbox_rate_stars_count" id="lightbox_rate_stars_count" value="<?php echo $row->lightbox_rate_stars_count; ?>" class="spider_int_input" onkeypress="return spider_check_isnum(event)"/>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="spider_label"><label for="lightbox_rate_padding">Rating padding: </label></td>
+                  <td>
+                    <input type="text" name="lightbox_rate_padding" id="lightbox_rate_padding" value="<?php echo $row->lightbox_rate_padding; ?>" class="spider_char_input"/>
+                    <div class="spider_description">Use CSS type values.</div>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="spider_label"><label>Hit counter position: </label></td>
+                  <td>
+                    <input type="radio" name="lightbox_hit_pos" id="lightbox_hit_pos1" value="top" <?php if ($row->lightbox_hit_pos == "top") echo 'checked="checked"'; ?> />
+                    <label for="lightbox_hit_pos1" id="lightbox_hit_pos1_lbl">Top</label>
+                    <input type="radio" name="lightbox_hit_pos" id="lightbox_hit_pos0" value="bottom" <?php if ($row->lightbox_hit_pos == "bottom") echo 'checked="checked"'; ?> />
+                    <label for="lightbox_hit_pos0" id="lightbox_hit_pos0_lbl">Bottom</label>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="spider_label"><label for="lightbox_hit_align">Hit counter alignment: </label></td>
+                  <td>
+                    <select name="lightbox_hit_align" id="lightbox_hit_align">
+                      <?php
+                      foreach ($aligns as $key => $align) {
+                        ?>
+                        <option value="<?php echo $key; ?>" <?php echo (($row->lightbox_hit_align == $key) ? 'selected="selected"' : ''); ?>><?php echo $align; ?></option>
+                        <?php
+                      }
+                      ?>
+                    </select>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="spider_label"><label for="lightbox_hit_bg_color">Hit counter background color: </label></td>
+                  <td>
+                    <input type="text" name="lightbox_hit_bg_color" id="lightbox_hit_bg_color" value="<?php echo $row->lightbox_hit_bg_color; ?>" class="color"/>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="spider_label"><label for="lightbox_hit_bg_transparent">Hit counter background transparency: </label></td>
+                  <td>
+                    <input type="text" name="lightbox_hit_bg_transparent" id="lightbox_hit_bg_transparent" value="<?php echo $row->lightbox_hit_bg_transparent; ?>" class="spider_int_input" onkeypress="return spider_check_isnum(event)"/> %
+                    <div class="spider_description">Value must be between 0 to 100.</div>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="spider_label"><label for="lightbox_hit_border_width">Hit counter border width: </label></td>
+                  <td>
+                    <input type="text" name="lightbox_hit_border_width" id="lightbox_hit_border_width" value="<?php echo $row->lightbox_hit_border_width; ?>" class="spider_int_input" onkeypress="return spider_check_isnum(event)"/> px
+                  </td>
+                </tr>
+                <tr>
+                  <td class="spider_label"><label for="lightbox_hit_border_style">Hit counter border style: </label></td>
+                  <td>
+                    <select name="lightbox_hit_border_style" id="lightbox_hit_border_style">
+                      <?php
+                      foreach ($border_styles as $key => $border_style) {
+                        ?>
+                        <option value="<?php echo $key; ?>" <?php echo (($row->lightbox_hit_border_style == $key) ? 'selected="selected"' : ''); ?>><?php echo $border_style; ?></option>
+                        <?php
+                      }
+                      ?>
+                    </select>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="spider_label"><label for="lightbox_hit_border_color">Hit counter border color: </label></td>
+                  <td>
+                    <input type="text" name="lightbox_hit_border_color" id="lightbox_hit_border_color" value="<?php echo $row->lightbox_hit_border_color; ?>" class="color"/>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="spider_label"><label for="lightbox_hit_border_radius">Hit counter border radius: </label></td>
+                  <td>
+                    <input type="text" name="lightbox_hit_border_radius" id="lightbox_hit_border_radius" value="<?php echo $row->lightbox_hit_border_radius; ?>" class="spider_char_input"/>
+                    <div class="spider_description">Use CSS type values.</div>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="spider_label"><label for="lightbox_hit_padding">Hit counter padding: </label></td>
+                  <td>
+                    <input type="text" name="lightbox_hit_padding" id="lightbox_hit_padding" value="<?php echo $row->lightbox_hit_padding; ?>" class="spider_char_input"/>
+                    <div class="spider_description">Use CSS type values.</div>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="spider_label"><label for="lightbox_hit_margin">Hit counter margin: </label></td>
+                  <td>
+                    <input type="text" name="lightbox_hit_margin" id="lightbox_hit_margin" value="<?php echo $row->lightbox_hit_margin; ?>" class="spider_char_input"/>
+                    <div class="spider_description">Use CSS type values.</div>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="spider_label"><label for="lightbox_hit_color">Hit counter font color: </label></td>
+                  <td>
+                    <input type="text" name="lightbox_hit_color" id="lightbox_hit_color" value="<?php echo $row->lightbox_hit_color; ?>" class="color"/>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="spider_label"><label for="lightbox_hit_font_style">Hit counter font family: </label></td>
+                  <td>
+                    <select name="lightbox_hit_font_style" id="lightbox_hit_font_style">
+                      <?php
+                      foreach ($font_families as $key => $font_family) {
+                        ?>
+                        <option value="<?php echo $key; ?>" <?php echo (($row->lightbox_hit_font_style == $key) ? 'selected="selected"' : ''); ?>><?php echo $font_family; ?></option>
+                        <?php
+                      }
+                      ?>
+                    </select>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="spider_label"><label for="lightbox_hit_font_weight">Hit counter font weight: </label></td>
+                  <td>
+                    <select name="lightbox_hit_font_weight" id="lightbox_hit_font_weight">
+                      <?php
+                      foreach ($font_weights as $key => $font_weight) {
+                        ?>
+                        <option value="<?php echo $key; ?>" <?php echo (($row->lightbox_hit_font_weight == $key) ? 'selected="selected"' : ''); ?>><?php echo $font_weight; ?></option>
+                        <?php
+                      }
+                      ?>
+                    </select>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="spider_label"><label for="lightbox_hit_font_size">Hit counter font size: </label>
+                  </td>
+                  <td>
+                    <input type="text" name="lightbox_hit_font_size" id="lightbox_hit_font_size" value="<?php echo $row->lightbox_hit_font_size; ?>" class="spider_int_input" onkeypress="return spider_check_isnum(event)"/> px
+                  </td>
+                </tr>
               </tbody>
             </table>
           </fieldset>
           <fieldset class="spider_child_fieldset" id="Lightbox_3">
             <table style="clear:both;">
               <tbody>
-                <tr id="lightbox_comment1">
+                <tr>
+                  <td class="spider_label"><label>Info position: </label></td>
+                  <td>
+                    <input type="radio" name="lightbox_info_pos" id="lightbox_info_pos1" value="top" <?php if ($row->lightbox_info_pos == "top") echo 'checked="checked"'; ?> />
+                    <label for="lightbox_info_pos1" id="lightbox_info_pos1_lbl">Top</label>
+                    <input type="radio" name="lightbox_info_pos" id="lightbox_info_pos0" value="bottom" <?php if ($row->lightbox_info_pos == "bottom") echo 'checked="checked"'; ?> />
+                    <label for="lightbox_info_pos0" id="lightbox_info_pos0_lbl">Bottom</label>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="spider_label"><label for="lightbox_info_align">Info alignment: </label></td>
+                  <td>
+                    <select name="lightbox_info_align" id="lightbox_info_align">
+                      <?php
+                      foreach ($aligns as $key => $align) {
+                        ?>
+                        <option value="<?php echo $key; ?>" <?php echo (($row->lightbox_info_align == $key) ? 'selected="selected"' : ''); ?>><?php echo $align; ?></option>
+                        <?php
+                      }
+                      ?>
+                    </select>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="spider_label"><label for="lightbox_info_bg_color">Info background color: </label></td>
+                  <td>
+                    <input type="text" name="lightbox_info_bg_color" id="lightbox_info_bg_color" value="<?php echo $row->lightbox_info_bg_color; ?>" class="color"/>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="spider_label"><label for="lightbox_info_bg_transparent">Info background transparency: </label></td>
+                  <td>
+                    <input type="text" name="lightbox_info_bg_transparent" id="lightbox_info_bg_transparent" value="<?php echo $row->lightbox_info_bg_transparent; ?>" class="spider_int_input" onkeypress="return spider_check_isnum(event)"/> %
+                    <div class="spider_description">Value must be between 0 to 100.</div>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="spider_label"><label for="lightbox_info_border_width">Info border width: </label></td>
+                  <td>
+                    <input type="text" name="lightbox_info_border_width" id="lightbox_info_border_width" value="<?php echo $row->lightbox_info_border_width; ?>" class="spider_int_input" onkeypress="return spider_check_isnum(event)"/> px
+                  </td>
+                </tr>
+                <tr>
+                  <td class="spider_label"><label for="lightbox_info_border_style">Info border style: </label></td>
+                  <td>
+                    <select name="lightbox_info_border_style" id="lightbox_info_border_style">
+                      <?php
+                      foreach ($border_styles as $key => $border_style) {
+                        ?>
+                        <option value="<?php echo $key; ?>" <?php echo (($row->lightbox_info_border_style == $key) ? 'selected="selected"' : ''); ?>><?php echo $border_style; ?></option>
+                        <?php
+                      }
+                      ?>
+                    </select>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="spider_label"><label for="lightbox_info_border_color">Info border color: </label></td>
+                  <td>
+                    <input type="text" name="lightbox_info_border_color" id="lightbox_info_border_color" value="<?php echo $row->lightbox_info_border_color; ?>" class="color"/>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="spider_label"><label for="lightbox_info_border_radius">Info border radius: </label></td>
+                  <td>
+                    <input type="text" name="lightbox_info_border_radius" id="lightbox_info_border_radius" value="<?php echo $row->lightbox_info_border_radius; ?>" class="spider_char_input"/>
+                    <div class="spider_description">Use CSS type values.</div>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="spider_label"><label for="lightbox_info_padding">Info padding: </label></td>
+                  <td>
+                    <input type="text" name="lightbox_info_padding" id="lightbox_info_padding" value="<?php echo $row->lightbox_info_padding; ?>" class="spider_char_input"/>
+                    <div class="spider_description">Use CSS type values.</div>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="spider_label"><label for="lightbox_info_margin">Info margin: </label></td>
+                  <td>
+                    <input type="text" name="lightbox_info_margin" id="lightbox_info_margin" value="<?php echo $row->lightbox_info_margin; ?>" class="spider_char_input"/>
+                    <div class="spider_description">Use CSS type values.</div>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="spider_label"><label for="lightbox_title_color">Title font color: </label></td>
+                  <td>
+                    <input type="text" name="lightbox_title_color" id="lightbox_title_color" value="<?php echo $row->lightbox_title_color; ?>" class="color"/>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="spider_label"><label for="lightbox_title_font_style">Title font family: </label></td>
+                  <td>
+                    <select name="lightbox_title_font_style" id="lightbox_title_font_style">
+                      <?php
+                      foreach ($font_families as $key => $font_family) {
+                        ?>
+                        <option value="<?php echo $key; ?>" <?php echo (($row->lightbox_title_font_style == $key) ? 'selected="selected"' : ''); ?>><?php echo $font_family; ?></option>
+                        <?php
+                      }
+                      ?>
+                    </select>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="spider_label"><label for="lightbox_title_font_weight">Title font weight: </label></td>
+                  <td>
+                    <select name="lightbox_title_font_weight" id="lightbox_title_font_weight">
+                      <?php
+                      foreach ($font_weights as $key => $font_weight) {
+                        ?>
+                        <option value="<?php echo $key; ?>" <?php echo (($row->lightbox_title_font_weight == $key) ? 'selected="selected"' : ''); ?>><?php echo $font_weight; ?></option>
+                        <?php
+                      }
+                      ?>
+                    </select>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="spider_label"><label for="lightbox_title_font_size">Title font size: </label>
+                  </td>
+                  <td>
+                    <input type="text" name="lightbox_title_font_size" id="lightbox_title_font_size" value="<?php echo $row->lightbox_title_font_size; ?>" class="spider_int_input" onkeypress="return spider_check_isnum(event)"/> px
+                  </td>
+                </tr>
+                <tr>
+                  <td class="spider_label"><label for="lightbox_description_color">Description font color: </label></td>
+                  <td>
+                    <input type="text" name="lightbox_description_color" id="lightbox_description_color" value="<?php echo $row->lightbox_description_color; ?>" class="color"/>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="spider_label"><label for="lightbox_description_font_style">Description font family: </label></td>
+                  <td>
+                    <select name="lightbox_description_font_style" id="lightbox_description_font_style">
+                      <?php
+                      foreach ($font_families as $key => $font_family) {
+                        ?>
+                        <option value="<?php echo $key; ?>" <?php echo (($row->lightbox_description_font_style == $key) ? 'selected="selected"' : ''); ?>><?php echo $font_family; ?></option>
+                        <?php
+                      }
+                      ?>
+                    </select>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="spider_label"><label for="lightbox_description_font_weight">Description font weight: </label></td>
+                  <td>
+                    <select name="lightbox_description_font_weight" id="lightbox_description_font_weight">
+                      <?php
+                      foreach ($font_weights as $key => $font_weight) {
+                        ?>
+                        <option value="<?php echo $key; ?>" <?php echo (($row->lightbox_description_font_weight == $key) ? 'selected="selected"' : ''); ?>><?php echo $font_weight; ?></option>
+                        <?php
+                      }
+                      ?>
+                    </select>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="spider_label"><label for="lightbox_description_font_size">Description font size: </label>
+                  </td>
+                  <td>
+                    <input type="text" name="lightbox_description_font_size" id="lightbox_description_font_size" value="<?php echo $row->lightbox_description_font_size; ?>" class="spider_int_input" onkeypress="return spider_check_isnum(event)"/> px
+                  </td>
+                </tr>
+                <tr>
                   <td class="spider_label"><label for="lightbox_comment_width">Comments Width: </label></td>
                   <td>
                     <input type="text" name="lightbox_comment_width" id="lightbox_comment_width" value="<?php echo $row->lightbox_comment_width; ?>" class="spider_int_input" onkeypress="return spider_check_isnum(event)"/> px
                   </td>
                 </tr>
                 <tr id="lightbox_comment25">
-                  <td class="spider_label"><label for="lightbox_comment_pos1">Comments position: </label></td>
+                  <td class="spider_label"><label>Comments position: </label></td>
                   <td>
                     <input type="radio" name="lightbox_comment_pos" id="lightbox_comment_pos1" value="left"<?php if ($row->lightbox_comment_pos == "left") echo 'checked="checked"'; ?> />
                     <label for="lightbox_comment_pos1" id="lightbox_comment_pos1_lbl">Left</label>
@@ -2883,7 +3294,7 @@ class  BWGViewThemes_bwg {
                   </td>
                 </tr>
                 <tr>
-                  <td class="spider_label"><label for="page_nav_button_transition1">Button transition: </label></td>
+                  <td class="spider_label"><label>Button transition: </label></td>
                   <td>
                     <input type="radio" name="page_nav_button_transition" id="page_nav_button_transition1" value="1"<?php if ($row->page_nav_button_transition == 1) echo 'checked="checked"'; ?> />
                     <label for="page_nav_button_transition1" id="page_nav_button_transition1_lbl">Yes</label>
@@ -2905,7 +3316,7 @@ class  BWGViewThemes_bwg {
             <table style="clear:both;">
               <tbody>
                 <tr>
-                  <td class="spider_label"><label for="page_nav_position1">Position: </label></td>
+                  <td class="spider_label"><label>Position: </label></td>
                   <td id="page_nav_position">
                     <input type="radio" name="page_nav_position" id="page_nav_position1" value="top"<?php if ($row->page_nav_position == "top") echo 'checked="checked"'; ?> />
                     <label for="page_nav_position1" id="page_nav_position1_lbl">Top</label>
@@ -2928,7 +3339,7 @@ class  BWGViewThemes_bwg {
                   </td>
                 </tr>
                 <tr>
-                  <td class="spider_label"><label for="page_nav_number1">Numbering: </label></td>
+                  <td class="spider_label"><label>Numbering: </label></td>
                   <td>
                     <input type="radio" name="page_nav_number" id="page_nav_number1" value="1"<?php if ($row->page_nav_number == 1) echo 'checked="checked"'; ?> />
                     <label for="page_nav_number1" id="page_nav_number1_lbl">Yes</label>
@@ -2937,7 +3348,7 @@ class  BWGViewThemes_bwg {
                   </td>
                 </tr>
                 <tr>
-                  <td class="spider_label"><label for="page_nav_button_text1">Button text: </label></td>
+                  <td class="spider_label"><label>Button text: </label></td>
                   <td>
                     <input type="radio" name="page_nav_button_text" id="page_nav_button_text1" value="1"<?php if ($row->page_nav_button_text == 1) echo 'checked="checked"'; ?> />
                     <label for="page_nav_button_text1" id="page_nav_button_text1_lbl">Text</label>

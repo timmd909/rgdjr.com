@@ -90,6 +90,8 @@ class BWGControllerOptions_bwg {
     $thumb_height = (isset($_POST['thumb_height']) ? esc_html(stripslashes($_POST['thumb_height'])) : 90);
     $upload_thumb_width = (isset($_POST['upload_thumb_width']) ? esc_html(stripslashes($_POST['upload_thumb_width'])) : 300);
     $upload_thumb_height = (isset($_POST['upload_thumb_height']) ? esc_html(stripslashes($_POST['upload_thumb_height'])) : 300);
+	$upload_img_width = (isset($_POST['upload_img_width']) ? esc_html(stripslashes($_POST['upload_img_width'])) : 1200);
+    $upload_img_height = (isset($_POST['upload_img_height']) ? esc_html(stripslashes($_POST['upload_img_height'])) : 1200);	
     $image_enable_page = (isset($_POST['image_enable_page']) ? esc_html(stripslashes($_POST['image_enable_page'])) : 1);
     $image_title_show_hover = (isset($_POST['image_title_show_hover']) ? esc_html(stripslashes($_POST['image_title_show_hover'])) : 'none');
     $album_column_number = (isset($_POST['album_column_number']) ? esc_html(stripslashes($_POST['album_column_number'])) : 5);
@@ -138,6 +140,8 @@ class BWGControllerOptions_bwg {
     $popup_enable_facebook = (isset($_POST['popup_enable_facebook']) ? esc_html(stripslashes($_POST['popup_enable_facebook'])) : 1);
     $popup_enable_twitter = (isset($_POST['popup_enable_twitter']) ? esc_html(stripslashes($_POST['popup_enable_twitter'])) : 1);
     $popup_enable_google = (isset($_POST['popup_enable_google']) ? esc_html(stripslashes($_POST['popup_enable_google'])) : 1);
+    $popup_enable_pinterest = (isset($_POST['popup_enable_pinterest']) ? esc_html(stripslashes($_POST['popup_enable_pinterest'])) : 0);
+    $popup_enable_tumblr = (isset($_POST['popup_enable_tumblr']) ? esc_html(stripslashes($_POST['popup_enable_tumblr'])) : 0);
     $watermark_type = (isset($_POST['watermark_type']) ? esc_html(stripslashes($_POST['watermark_type'])) : 'none');
     $watermark_position = (isset($_POST['watermark_position']) ? esc_html(stripslashes($_POST['watermark_position'])) : 'bottom-right');
     $watermark_width = (isset($_POST['watermark_width']) ? esc_html(stripslashes($_POST['watermark_width'])) : 600);
@@ -159,8 +163,29 @@ class BWGControllerOptions_bwg {
     $built_in_watermark_font = (isset($_POST['built_in_watermark_font']) ? esc_html(stripslashes($_POST['built_in_watermark_font'])) : '');
     $built_in_watermark_color = (isset($_POST['built_in_watermark_color']) ? esc_html(stripslashes($_POST['built_in_watermark_color'])) : '');
     $gallery_role = (isset($_POST['gallery_role']) ? esc_html(stripslashes($_POST['gallery_role'])) : 0);
+    $image_right_click = (isset($_POST['image_right_click']) ? esc_html(stripslashes($_POST['image_right_click'])) : 0);
+    $popup_fullscreen = (isset($_POST['popup_fullscreen']) ? esc_html(stripslashes($_POST['popup_fullscreen'])) : 0);
     $album_role = (isset($_POST['album_role']) ? esc_html(stripslashes($_POST['album_role'])) : 0);
     $image_role = (isset($_POST['image_role']) ? esc_html(stripslashes($_POST['image_role'])) : 0);
+    $popup_autoplay = (isset($_POST['popup_autoplay']) ? esc_html(stripslashes($_POST['popup_autoplay'])) : 0);
+    $album_view_type = (isset($_POST['album_view_type']) ? esc_html(stripslashes($_POST['album_view_type'])) : 'thumbnail');
+    $show_search_box = (isset($_POST['show_search_box']) ? esc_html(stripslashes($_POST['show_search_box'])) : 0);
+    $search_box_width = (isset($_POST['search_box_width']) ? esc_html(stripslashes($_POST['search_box_width'])) : 180);
+    $preload_images = (isset($_POST['preload_images']) ? esc_html(stripslashes($_POST['preload_images'])) : 1);
+    $preload_images_count = (isset($_POST['preload_images_count']) ? esc_html(stripslashes($_POST['preload_images_count'])) : 10);
+    $popup_enable_info = (isset($_POST['popup_enable_info']) ? esc_html(stripslashes($_POST['popup_enable_info'])) : 1);
+    $popup_info_always_show = (isset($_POST['popup_info_always_show']) ? esc_html(stripslashes($_POST['popup_info_always_show'])) : 0);
+    $popup_enable_rate = (isset($_POST['popup_enable_rate']) ? esc_html(stripslashes($_POST['popup_enable_rate'])) : 0);
+    $thumb_click_action = (isset($_POST['thumb_click_action']) ? esc_html(stripslashes($_POST['thumb_click_action'])) : 'open_lightbox');
+    $thumb_link_target = (isset($_POST['thumb_link_target']) ? esc_html(stripslashes($_POST['thumb_link_target'])) : 1);
+    $comment_moderation = (isset($_POST['comment_moderation']) ? esc_html(stripslashes($_POST['comment_moderation'])) : 0);
+    $popup_hit_counter = (isset($_POST['popup_hit_counter']) ? esc_html(stripslashes($_POST['popup_hit_counter'])) : 0);
+    $enable_ML_import = (isset($_POST['enable_ML_import']) ? esc_html(stripslashes($_POST['enable_ML_import'])) : 0);
+    $showthumbs_name = (isset($_POST['thumb_name']) ? esc_html(stripslashes($_POST['thumb_name'])) : 1);
+    $show_album_name = (isset($_POST['show_album_name_enable']) ? esc_html(stripslashes($_POST['show_album_name_enable'])) : 1);
+    $show_image_counts = (isset($_POST['show_image_counts']) ? esc_html(stripslashes($_POST['show_image_counts'])) : 0);
+    $play_icon = (isset($_POST['play_icon']) ? esc_html(stripslashes($_POST['play_icon'])) : 1);
+    $show_masonry_thumb_description = (isset($_POST['show_masonry_thumb_description']) ? esc_html(stripslashes($_POST['show_masonry_thumb_description'])) : 0);
 
     $save = $wpdb->update($wpdb->prefix . 'bwg_option', array(
       'images_directory' => $images_directory,
@@ -171,6 +196,8 @@ class BWGControllerOptions_bwg {
       'thumb_height' => $thumb_height,
       'upload_thumb_width' => $upload_thumb_width,
       'upload_thumb_height' => $upload_thumb_height,
+	  'upload_img_width' => $upload_img_width, 
+      'upload_img_height' => $upload_img_height,
       'image_enable_page' => $image_enable_page,
       'image_title_show_hover' => $image_title_show_hover,
       'album_column_number' => $album_column_number,
@@ -219,6 +246,8 @@ class BWGControllerOptions_bwg {
       'popup_enable_facebook' => $popup_enable_facebook,
       'popup_enable_twitter' => $popup_enable_twitter,
       'popup_enable_google' => $popup_enable_google,
+      'popup_enable_pinterest' => $popup_enable_pinterest,
+      'popup_enable_tumblr' => $popup_enable_tumblr,
       'watermark_type' => $watermark_type,
       'watermark_position' => $watermark_position,
       'watermark_width' => $watermark_width,
@@ -240,8 +269,29 @@ class BWGControllerOptions_bwg {
       'built_in_watermark_color' => $built_in_watermark_color,
       'built_in_watermark_opacity' => $built_in_watermark_opacity,          
       'gallery_role' => $gallery_role,
+      'image_right_click' => $image_right_click,
+      'popup_fullscreen' => $popup_fullscreen,
       'album_role' => $album_role,
-      'image_role' => $image_role
+      'image_role' => $image_role,
+      'popup_autoplay' => $popup_autoplay,
+      'album_view_type' => $album_view_type,
+      'show_search_box' => $show_search_box,
+      'search_box_width' => $search_box_width,
+      'preload_images' => $preload_images,
+      'preload_images_count' => $preload_images_count,
+      'popup_enable_info' => $popup_enable_info,
+      'popup_info_always_show' => $popup_info_always_show,
+      'popup_enable_rate' => $popup_enable_rate,
+      'thumb_click_action' => $thumb_click_action,
+      'thumb_link_target' => $thumb_link_target,
+      'comment_moderation' => $comment_moderation,
+      'popup_hit_counter' => $popup_hit_counter,
+      'enable_ML_import' => $enable_ML_import,
+      'showthumbs_name' => $showthumbs_name,
+      'show_album_name' => $show_album_name,
+      'show_image_counts' => $show_image_counts,
+      'play_icon' => $play_icon,
+      'show_masonry_thumb_description' => $show_masonry_thumb_description,
       ), array('id' => 1));
 
     if ($save !== FALSE) {      

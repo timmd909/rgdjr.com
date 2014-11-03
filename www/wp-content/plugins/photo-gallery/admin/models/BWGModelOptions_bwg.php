@@ -36,6 +36,8 @@ class BWGModelOptions_bwg {
       $row->thumb_height = 90;
       $row->upload_thumb_width = 300;
       $row->upload_thumb_height = 300;
+	  $row->upload_img_width = 1200; 
+      $row->upload_img_height = 1200;
       $row->image_enable_page = 1;
       $row->image_title_show_hover = 'none';
 
@@ -89,6 +91,8 @@ class BWGModelOptions_bwg {
       $row->popup_enable_facebook = 1;
       $row->popup_enable_twitter = 1;
       $row->popup_enable_google = 1;
+      $row->popup_enable_pinterest = 0;
+      $row->popup_enable_tumblr = 0;
 
       $row->watermark_type = 'none';
       $row->watermark_position = 'bottom-left';
@@ -112,9 +116,30 @@ class BWGModelOptions_bwg {
       $row->built_in_watermark_color = 'FFFFFF';
       $row->built_in_watermark_opacity = 30;
 
+      $row->image_right_click = 0;
+      $row->popup_fullscreen = 0;
       $row->gallery_role = 0;
       $row->album_role = 0;
       $row->image_role = 0;
+      $row->popup_autoplay = 0;
+      $row->album_view_type = 'thumbnail';
+      $row->show_search_box = 0;
+      $row->search_box_width = 180;
+      $row->preload_images = 1;
+      $row->preload_images_count = 10;
+      $row->popup_enable_info = 1;
+      $row->popup_info_always_show = 0;
+      $row->popup_enable_rate = 0;
+      $row->thumb_click_action = 'open_lightbox';
+      $row->thumb_link_target = 1;
+      $row->comment_moderation = 0;
+      $row->popup_hit_counter = 0;
+      $row->enable_ML_import = 0;
+      $row->showthumbs_name = 0;
+      $row->show_album_name = 0;
+      $row->show_image_counts = 0;
+      $row->play_icon = 1;
+      $row->show_masonry_thumb_description = 0;
     }
     return $row;
   }

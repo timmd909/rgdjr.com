@@ -1,10 +1,10 @@
 === Photo Gallery ===
 Contributors: webdorado
 Donate link: http://web-dorado.com/products/wordpress-photo-gallery-plugin.html
-Tags: photo, photo gallery, image gallery, video gallery, gallery, galleries,  wordpress gallery plugin, images gallery, album, photo albums, Simple gallery, best gallery plugin, free photo gallery, wp gallery, wordpress gallery, website gallery, gallery shortcode, best gallery, picture, pictures, gallery slider, photo album, photogallery, widget gallery, image, images, photos,  gallery lightbox, photoset, wordpress photo gallery plugin, wp gallery plugins, responsive wordpress photo gallery, media, image album, filterable gallery, banner rotator, fullscreen gallery, Fotogalerie, Galleria, galerie, galeri 
+Tags: photo, photo gallery, image gallery, video gallery, gallery, galleries,  wordpress gallery plugin, images gallery, album, photo albums, simple gallery, best gallery plugin, free photo gallery, wp gallery, wordpress gallery, website gallery, gallery shortcode, best gallery, picture, pictures, gallery slider, photo album, photogallery, widget gallery, image, images, photos,  gallery lightbox, photoset, wordpress photo gallery plugin, wp gallery plugins, responsive wordpress photo gallery, media, image album, filterable gallery, banner rotator, fullscreen gallery, fotogalerie, galleria, galerie, galeri 
 Requires at least: 3.0
-Tested up to: 3.8.1
-Stable tag: 1.1.6
+Tested up to: 4.0
+Stable tag: 1.2.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -12,10 +12,15 @@ Photo Gallery is an advanced plugin with a list of tools and options for adding 
 
 == Description ==
 
-### [WordPress Photo Gallery](http://web-dorado.com/products/wordpress-photo-gallery-plugin.html)  
+https://www.youtube.com/watch?v=4Mxg0FsFZZE&index=5&list=PLnxWPiY5tLFUsFI67acGEPAqoDMZqss5F
+
+[WordPress Photo Gallery](http://web-dorado.com/products/wordpress-photo-gallery-plugin.html)  
+[Demo](http://wpdemo.web-dorado.com/gallery/)  
+[Demo Admin](http://wpdemo.web-dorado.com/wp-admin/admin.php?page=galleries_bwg)  
+[User Manual](http://web-dorado.com/wordpress-gallery-guide-step-1.html)  
+[Support Forum](http://web-dorado.com/forum/photo-gallery.html)  
 
 Photo Gallery is an advanced plugin with a list of tools and options for adding and editing images for different views. It is fully responsive. The product includes plugin for adding image galleries and albums to posts and pages, as well as multiple widgets. You can add images, providing detailed descriptions and tags, organize the galleries into different albums.  
-
 
 The plugin allows displaying galleries/albums within the following views: 
 
@@ -38,6 +43,8 @@ Photo Gallery product in addition to the main plugin includes 4 specific widgets
 *   Photo Gallery Slideshow 
 *   Photo Gallery (similar to the main plugin option)
 
+###IMPORTANT: If you think you found a bug in Photo Gallery or have any problem/question concerning the plugin, please check out [Support Forum](http://web-dorado.com/forum/photo-gallery.html) in our website. If you do not find a solution here, do not hesitate to contact us at [info@web-dorado.com](mailto:info@web-dorado.com).
+
 
 ### The list of the features:
 
@@ -59,6 +66,14 @@ Photo Gallery product in addition to the main plugin includes 4 specific widgets
 *   WordPress Tag cloud hosted widget  
 *   Photo Gallery Slideshow widget  
 *   Photo Gallery Widget for displaying albums and galleries as widgets
+*   Separate shortcode generator page for the websites using custom pages/custom editors.     
+*   Support for YouTube and Vimeo videos within Galleries.    
+*   Possibility of uploading images from the Media Library of the website.
+*   Possibility to add tags to all images at once.  
+*   Right-click enabling option for the image downloads protection.   
+*   Possibility to display images in the albums in thumbnail or masonry view upon opening   
+*   WordPress Search Integration by gallery and album title   
+*   Possibility to display the number of the images in the lighbox (optional feature)   
 
 Upgrade to [WordPress Photo Gallery Pro](http://web-dorado.com/products/wordpress-photo-gallery-plugin.html) to add features:
 
@@ -68,13 +83,15 @@ Upgrade to [WordPress Photo Gallery Pro](http://web-dorado.com/products/wordpres
 *   Editable themes.   
 *   Commenting possibility with Captcha protection possibility.   
 *   Comment-managing possibility to avoid spamming (Unpublish/Delete).    
-*   Social sharing possibility (Facebook, Google+, Twitter).    
+*   Social sharing possibility (Facebook, Google+, Twitter, Pinterest and Tumblr)    
 *   Dynamic Photo Gallery Tag Cloud widget  with image tag cloud and text tag cloud options.   
+
+
 
 
 ### Supported languages 
 
- *If you need language of Photo Gallery which is not included in this list, please contact us and we will do the translation of Photo Gallery within 3 days. If you find some mistakes in the translation of Photo Gallery, please contact  us and we will correct it within 3 days.*  
+ *If you need language of Photo Gallery which is not included in this list, please contact us and we will do the translation of Photo Gallery within 3 days. If you find any mistakes in the translation, please contact us and we will make relevant corrections within 3 days. *  
 
 Afrikaans (af)  
 Albanian (sq)  
@@ -139,11 +156,11 @@ After downloading the ZIP file,
 
 1. Log in to the administrator panel.   
 1. Go to Plugins Add > New > Upload.     
-1. Click `Choose file` (`Browse`) and select the downloaded zip file.     
+1. Click `Choose file` (`Browse`) and select the downloaded zip file of the gallery.     
 *For Mac Users*     
-*Go to your Downloads folder and locate the folder with the plugin. Right-click on the folder and select Compress. Now you have a newly created .zip file which can be installed as described here.*     
+*Go to your Downloads folder and locate the folder with the gallery plugin. Right-click on the folder and select Compress. Now you have a newly created .zip file which can be installed as described here.*     
 1. Click `Install Now` button.     
-1. Click `Activate Plugin` button for activating the plugin.    
+1. Click `Activate Plugin` button for activating the gallery plugin.    
 
 If any problem occurs, please contact us at  [info@web-dorado.com](mailto:info@web-dorado.com).
 
@@ -157,14 +174,128 @@ If any problem occurs, please contact us at  [info@web-dorado.com](mailto:info@w
 
 == Changelog ==
 
-1.0.1
-Initial version.
+= 1.2.4 =
+pagination input
+
+= 1.2.3 =
+play icon over the video thumbnail
+
+= 1.2.2 =
+add upload images with custom size
+
+= 1.2.1 =
+minor changes in shortcode generation code 
+
+= 1.2.0 =
+change shortcodes
+
+= 1.1.30 =
+*  images count in ligthbox (optional - only in options page)  
+*  images count column in galleries table   
+*  WordPress Search Integration by gallery and album title   
+*  show gallery, album title (optional - only in options page)  
+
+= 1.1.29 =
+*  Bug fixed in tag cloud widget
+
+= 1.1.28 =
+*  Bug fixed in filemanager     
+
+= 1.1.27 =
+*  change in loading   
+
+= 1.1.26 =
+*  added option "Import from Media Library"      
+
+= 1.1.25 =
+*  bug fixed in save gallery      
+
+= 1.1.24 =
+*  Improve translation, Add tags to all images      
+
+= 1.1.23 =
+*  redirect from widget, unique tags name      
+
+= 1.1.22 =
+*  order option for album images   
+
+= 1.1.21 =
+*  added option for sorting gallery images within album   
+
+= 1.1.20 =
+*  bug fixed on lightbox   
+
+= 1.1.19 =
+*  preload images count options  
+
+= 1.1.18 =
+*  redirect url optional 
+
+= 1.1.15 =
+*  added search images in gallery (optional), optional info, resize.
+
+= 1.1.14 =
+*  added option for show image title/description on lightbox.
+
+= 1.1.13 =
+*  added tag cloud ordering option, keep aspect ratio.
+
+= 1.1.12 =
+*  youtube, vimeo.
+
+= 1.1.11 =
+*  added tag cloud options and zip upload.
+
+= 1.1.10 =
+*  bug fixed on WP 3.9 editor.
+
+= 1.1.9 =
+*  gallery alignment bug fixed.
+
+= 1.1.8 =
+*  corrected album ordering and added slideshow widget filmstrip height option.
+
+= 1.1.7 =
+*  added swipe effect on lightbox.
+
+= 1.1.6 =
+*  added option disable/enable right click.
+
+= 1.1.5 =
+*  bug fixed in slideshow .
+
+= 1.1.4 =
+*  removed enters from code (conflicts fixed).
+
+= 1.1.2 =
+*  critical bug with uninstall fixed.
+
+= 1.0.8 =
+*  improved file upload and save on gallery.
+
+= 1.0.6 =
+*  improved filemanager functionality, fix bug on widget.
+
+= 1.0.5 =
+*  bug fixed in file manager. 
+
+= 1.0.4 =
+*  added shortcode generator, thumbnail title, thumb size in filemanager, bug  fixed in slideshow. 
+
+= 1.0.3 =
+*  bug fixed in album view .
+
+= 1.0.2 =
+*  php 5.2 capability.
+
+= 1.0.1 =
+*  Initial version.
 
   
 ==Wordpress Photo Gallery Step by step guide==    
 Step by step guide  
   
-Step 1: Installing the Gallery   
+= Step 1: Installing the Gallery =   
 1.1 Minimum requirements.  
 Wordpress 3.0+  
 PHP 5.x  
@@ -179,7 +310,8 @@ Click `Activate Plugin` button for activating the plugin.
 If the installation succeeded you will see the success message. If any problem occurs, please contact us  info@web-dorado.com.  
   
   
-Step 2:  Creating/Editing Galleries for the Photo Gallery.   
+  
+= Step 2:  Creating/Editing Galleries for the Photo Gallery. =   
 2.1 On the left menu select Photo Gallery>Add Galleries/Images> Add new.  
 2.2 Name. Specify the name of the gallery.  
 2.3 Slug. Specify the alias in your website for the gallery.  
@@ -191,24 +323,24 @@ Step 2:  Creating/Editing Galleries for the Photo Gallery.
 
 The Photo Gallery plugin is not using standard WordPress Media Manager, instead here you will be redirected to Photo Gallery File Manager. After uploading images you should mark them and press Add button.  
 Photo Gallery File Manager  
-2.8.1 Up. This button will allow you to move within the taxonomy of the folder to a higher level folder.  
+2.8.1 Up. This button will allow you to move within the taxonomy of the folder to a higher level folder to upload image from there.  
 2.8.2 Make a directory. You can indicate the location of the directory to get images to be used in the gallery.   
 2.8.3 Rename item. You can rename the chosen gallery images without leaving the uploader.  
 2.8.4 Copy. You can copy images and directories to use in the galleries and albums.  
 2.8.5 Cut. You can cut images and directories.  
 2.8.6 Paste. You can paste copied/cut images and directories.  
-2.8.7 Remove items. You can remove any amount of items from the list.  
-2.8.8 Upload files. You can upload images from your PC and other devices using this feature. Multi-upload is also possible. To upload all images, you should first press Ctrl+A.
+2.8.7 Remove items. You can remove any amount of items from the list, including gallery folder, images.  
+2.8.8 Upload files. You can upload images to your gallery from your PC and other devices using this feature. Multi-upload is also possible. To upload all images for the use in the gallery, you should first press Ctrl+A.
     
 To add the images to your Gallery, you should press Add the selected images to gallery button.    
-Important! Before uploading an image, you should provide dimensions for the generated thumbnail at the top of the Media Upload window or leave it to default value set in the Thumbnail options (Options Menu).     
-2.8.9 View options: View thumbnails. Displays images in Thumbnail view.  
-View list. Displays images in list view.  
+Important! Before uploading an image, you should provide dimensions for the generated thumbnail at the top of the Media Upload window or leave it to default value set in the Thumbnail options (Options Menu). This way the thumbnail view of the Gallery will use the specified dimension of the gallery.     
+2.8.9 View options: View thumbnails. Displays uploaded gallery images in Thumbnail view.  
+View list. Displays uploaded gallery images in list view.  
   
 Now let`s explore the individual gallery image options. Refer to the buttons on the right side and below.  
-2.9 Set Watermark. You can apply the created watermark by checking the image you want to add the watermark to and pressing the button. The watermark can be created in Options menu of the product.  You can also add the watermark to all gallery images first selecting all gallery images and then pressing Set watermark button.  
-2.10 Reset. You can reset the gallery images to the default by selecting multiple/all images and pressing this button. It will remove all kind of changes, including crop, rotate and watermark.  
-2.11 Show order column. You can either Drag and Drop images to change the positioning of the images in the gallery or prefer order column, where you can provide numbering for the images to be displayed in a gallery. This option is more useful when you have multiple pages of images and it is not convenient to use Drag/Drop.  
+2.9 Set Watermark. You can apply the created watermark by checking the gallery image you want to add the watermark to and pressing the button. The watermark can be created in Options menu of the Gallery plugin.  You can also add the watermark to all gallery images first selecting all gallery images and then pressing Set watermark button.  
+2.10 Reset. You can reset the gallery images to the default by selecting multiple/all images and pressing this button. It will remove all kind of changes, including crop, rotate and watermark changes to individual images or the entire gallery as such.  
+2.11 Show order column. You can either Drag and Drop gallery images to change the positioning of the images in the gallery or prefer order column, where you can provide numbering for the images to be displayed in a gallery. This option is more useful when you have multiple pages of images and it is not convenient to use Drag/Drop.  
 2.12 Save images. Using this button you can save only the changes made with the images, the changes with the gallery as a whole should be saved with the upper Save button.  
 2.13 Publish. Check the images you want to publish in the gallery and press the button.  
 2.14 Unpublish. Check the images you want to temporary unpublish from the gallery and press the button.  
@@ -221,13 +353,17 @@ Now let`s explore the individual gallery image options. Refer to the buttons on 
 2.21 Tags. Each gallery image can have a number of tags from the list of created tags.  
 2.22 Published. Choose whether to publish or unpublish the uploaded images within the gallery.  
   
-Step 3:  Creating/Editing Tags for the Photo Gallery galleries and albums.  
+  
+  
+= Step 3:  Creating/Editing Tags for the Photo Gallery galleries and albums. = 
 3.1 On the left menu select Photo Gallery> Tags.  
 3.2 Name. Provide a title for the tag.  
 3.3 Slug. Specify the alias for the tag in your website.  
 3.4 Add Tag. Press this button to add the created tag into the list.  
   
-Step 4:  Creating/Editing Albums for the Photo Gallery.   
+  
+  
+= Step 4:  Creating/Editing Albums for the Photo Gallery. =   
 4.1 On the left menu select Photo Gallery> Albums> Add new.  
 4.2 Name. Provide a name for the album.  
 4.3 Slug. Specify the alias for the album in your website.  
@@ -235,16 +371,22 @@ Step 4:  Creating/Editing Albums for the Photo Gallery.
 4.5 Author. The author of the album will be automatically set by the logged in user, who creates the album.  
 4.6 Published. Choose whether to publish the album or not.  
 4.7 Preview Image. Choose the preview image for the album. If you leave it blank it will automatically use the first image used in the album.  
-4.8 Albums and Galleries. Choose the galleries or already created albums to be used in the album. Here you can add multiple galleries and albums. There is no such limitation. 
+4.8 Albums and Galleries. Choose gallery, galleries or already created albums to be used in the album. Here you can add multiple galleries and albums. There is no such limitation. 
 4.9 Drag/Drop. After adding the albums you will be able to use drag/drop option to set the order for the albums to be displayed.  
-  
-Step 5:   Editing Options for Photo Gallery.  
+ 
+
+ 
+= Step 5:   Editing Options for Photo Gallery. =  
 Here you can change default options for different views of Photo Gallery, as well as general options of the galleries and albums. You can simply navigate here choosing the corresponding tab.  
 5.1 Global Options of Photo Gallery.  
 5.1.1 Images directory. Provide an image directory location which will host the uploaded gallery images.  
 5.1.2 Gallery role. Choose whether only author can make changes in the gallery or not.  
 5.1.3 Album role. Choose whether only author can make changes in the albums or not.  
 5.1.4 Image role. Choose whether only author can make changes in the gallery images or not.  
+5.1.5 Show Search box. Choose whether to display a search box for the image search in galleries or not.
+5.1.6 Search box width. Set the width for the search box displayed with the gallery. 
+5.1.7. Preload images. Choose whether to have a preload for specific number of gallery images first or have them all loaded and only then displayed in the slideshow of the gallery.
+5.1.8. Count of images. Specify the number of gallery images which will be loaded before opening the slideshow. The rest of the images will be loaded during the processing of the slideshow.
   
 5.2 Watermark. You can use this option to add different types of watermarks on your gallery images.  
 5.2.1 Watermark Type. Choose what kind of advertisement you want to use from provided 2 options (text, image) or not to use watermarks in your galleries and albums.  
@@ -284,14 +426,19 @@ Advertisement position. Choose the positioning of the advertisement from the ava
 5.4.4 Enable filmstrip. Choose whether to include the filmstrip of gallery or album images in the lightbox or not.  
 5.4.5 Filmstrip height. Define the height of the filmstrip in pixels.  
 5.4.6 Enable control buttons. Choose whether to display control buttons in the lightbox or not.  
-5.4.7 Enable fullscreen. Choose whether to have a possibility of entering Fullscreen from the lightbox or not.  
-5.4.8 Enable comments. Choose whether to display comments with the gallery images or not.  
-5.4.9 Enable Captcha for comments. Choose whether to have Captcha field for the possibility of adding comments as a human verification or not.  
-5.4.10 Enable original image display button. Choose whether to allow displaying original images upon clicking the button or not.  
-5.4.11 Enable image download. Choose whether to allow downloading the gallery images or not.  
-5.4.12 Enable Facebook button. Choose whether to display Facebook share button with the gallery images or not.  
-5.4.13 Enable Twitter button. Choose whether to display twit button with the gallery images or not.  
-5.4.14 Enable Google+ button. Choose whether to display Google+ share button with the gallery images or not.  
+5.4.7 Enable fullscreen. Choose whether to have a possibility of entering Fullscreen from the lightbox or not.
+5.4.8 Enable info. Choose whether to have possibility of displaying gallery image information (Title and description) in this view or not.
+5.4.9 Display info by default. Choose whether to display gallery image title by default when opening the lightbox or not. The image can be hidden hitting info button. 
+5.4.10 Enable rating. Choose whether to display rating possibility for the gallery images or not.  
+5.4.11 Enable comments. Choose whether to display comments with the gallery images or not.  
+5.4.12 Enable Captcha for comments. Choose whether to have Captcha field for the possibility of adding comments as a human verification or not.  
+5.4.13 Enable original image display button. Choose whether to allow displaying original images upon clicking the button or not.  
+5.4.14 Enable image download. Choose whether to allow downloading the gallery images or not.  
+5.4.15 Enable Facebook button. Choose whether to display Facebook share button with the gallery images or not.  
+5.4.16 Enable Twitter button. Choose whether to display twit button with the gallery images or not.  
+5.4.17 Enable Google+ button. Choose whether to display Google+ share button with the gallery images or not.
+5.4.18 Enable Pinterest button. Choose whether to display Pinterest  pin button with the gallery images or not.
+5.4.19 Enable Tumblr button. Choose whether to display Tumblr share button with the gallery images or not.  
   
 5.5 Album Options  
 5.5.1 Number of album columns. Provide the maximum number of columns to be displayed within a single album.  
@@ -319,7 +466,7 @@ Advertisement position. Choose the positioning of the advertisement from the ava
 5.6.14 Music URL. Provide the URL of the track which will be played alongside the slideshow.  
   
 5.7 Thumbnail Options  
-5.7.1 Number of image columns. Provide the maximum number of image columns to be displayed with Thumbnails view.  
+5.7.1 Number of image columns. Provide the maximum number of gallery image columns to be displayed with Thumbnails view.  
 5.7.2 Images per page. Provide the maximum number of gallery images to be displayed in a single page.  
 5.7.3 Show image title. Choose whether to always display the image title, have it displayed only when hovered or never display it.    
 5.7.4 Generated thumbnail dimensions. Provide the dimensions of the thumbnail image which will be generated from the original image.     
@@ -337,7 +484,10 @@ Advertisement position. Choose the positioning of the advertisement from the ava
 5.8.6 Images per page in Blog Style view. Specify the number of images to be displayed in a single page for the Blog Style view.  
 5.8.7 Enable Pagination for Blog Style view. Choose whether to have pagination for the Blog Style view or not.  
   
-Step 6:  Creating/Editing Themes for different views of the Photo Gallery.  
+  
+  
+  
+= Step 6:  Creating/Editing Themes for different views of the Photo Gallery. =  
 Use one of the default Photo Gallery themes or click `Add new` button to create a new theme.  
 6.1 Thumbnails.  
 6.1.1 Name. Provide a name for the theme.  
@@ -352,11 +502,15 @@ Use one of the default Photo Gallery themes or click `Add new` button to create 
 6.1.10 Thumbnail transparency. Specify the level of the transparency you want to apply to the thumbnails.   
 6.1.11 Full background color. Choose the background color for the overall thumbnail view box.  
 6.1.12 Full background transparency. Specify the level of the transparency you want to apply to the overall thumbnail view box.  
-6.1.13 Alignment. Select the alignment of the thumbnail box.  
-6.1.14 Hover effect. Choose the effect to the applied to individual images when hovered or avoid having any.  
-6.1.15 Hover effect value. Specify the values for the selected hover in CSS type.  
-6.1.16 Transition. Choose whether to have a transition with hover effects or not.  
-  
+6.1.13 Alignment. Select the alignment of the thumbnail box.
+6.1.14 Title position. Choose the position for the gallery title. 
+6.1.15 Title font size. Define the font size for the gallery image title.      
+6.1.16 Title font color. Choose the gallery image title font color.  
+6.1.17 Title font family. Choose the font family for the gallery image title.
+6.1.18 Title font weight. Choose the font weight for the gallery image title.    
+6.1.19 Title box shadow. Using CSS type values set the box shadow for the gallery image title.      
+6.1.20 Title margin. Set the gallery image title margin using CSS type values.
+
 6.2 Masonry  
 6.2.1 Name. Provide a name for the theme.  
 6.2.2 Padding. Define the padding of the individual gallery images.   
@@ -571,87 +725,127 @@ Use one of the default Photo Gallery themes or click `Add new` button to create 
 6.7.23 Buttons and title background transparency. Set the level of the background transparency for the buttons (social media sharing and comments) and title.  
 6.7.24 Buttons or title alignment. Choose an alignment for either buttons or title. The second option will be adjusted automatically.  
   
-6.8 Lightbox  
-6.8.1 Name. Provide a name for the theme.  
-6.8.2 Overlay background color. Choose the background color for the background overlay.   
-6.8.3 Overlay background transparency. Select the level of transparency for the background overlay.   
-6.8.4 Lightbox background color. Select the overall background color for the lightbox.   
-6.8.5 Control buttons height. Set the height for the control buttons in the lightbox.  
-6.8.6 Control buttons margin (top). Set the top margin for the control buttons in the lightbox.  
-6.8.7 Control buttons margin (left). Set the left margin for the control buttons in the lightbox.  
-6.8.8 Control buttons position. Choose the position for the control buttons.   
-6.8.9 Control buttons background color. Choose the background color for the control buttons.  
-6.8.10 Control buttons container border radius. Set the border radius for the control buttons container.  
-6.8.11 Control buttons container background transparency. Choose the transparency level for the control buttons container.  
-6.8.12 Control buttons alignment. Set the positioning of the control buttons.   
-6.8.13 Control buttons color. Choose the color to use for the control buttons.  
-6.8.14 Control buttons transparency. Choose the level of transparency for the control buttons.  
-6.8.15 Toggle button height. Set the height for the toggle button.  
-6.8.16 Toggle button width. Set the width for the toggle button.   
-6.8.17 Close button border radius. Define the border radius for the Right and Left buttons.   
-6.8.18 Close button border width. Set the border width for the Close button.  
-6.8.19 Close button border style. Choose the border style for the Close button.  
-6.8.20 Close button border color. Select the border color for the Close button.   
-6.8.21 Close button box shadow. Set the box shadow for the Close button.   
-6.8.22 Close button background color. Select Close button background color.   
-6.8.23 Close button transparency. Choose the level of transparency for the Close button.   
-6.8.24 Close button width. Set the Close button width.  
-6.8.25 Close button height. Set the Close button height.   
-6.8.26 Close button top. Set the margin between the top border and the Close button.   
-6.8.27 Close button right. Set the margin between the right border and the Close button.   
-6.8.28 Close button size. Define the Close button size in pixels.   
-6.8.29 Close button color. Choose a color for the Close button.   
-6.8.30 Fullscreen close button color. Choose a color for the Fullscreen exit button.   
-6.8.31 Share buttons color. Choose a color to be applied to all Social share buttons used with the view.  
-6.8.32 Right, left buttons style. Choose the style for the Right and Left buttons.   
-6.8.33 Right, left buttons background color. Select the background color for the Right and Left buttons.   
-6.8.34 Right, left buttons transparency. Select the level of transparency for the Right and Left buttons.  
-6.8.35 Right, left buttons box shadow. Set the Right and Left buttons box shadow using CSS type values.   
-6.8.36 Right, left buttons height. Set the height for the Right and Left buttons.   
-6.8.37 Right, left buttons width. Set the width for the Right and Left buttons.   
-6.8.38 Right, left buttons size. Define the size for the Right and Left buttons.   
-6.8.39 Right, left, close buttons hover color. Choose the Right, Left and Close buttons color when hovered.  
-6.8.40 Right, left buttons color. Choose the Right and Left buttons color.  
-6.8.41 Right, left buttons border radius. Set the border radius for the Right and Left buttons.   
-6.8.42 Right, left buttons border width. Set the border width for the Right and Left buttons.   
-6.8.43 Right, left buttons border style. Choose the border style for the Right and Left buttons.   
-6.8.44 Right, left buttons border color. Choose the border color for the Right and Left buttons.   
-6.8.45 Filmstrip position. Set the filmstrip position in the lightbox.   
-6.8.46 Filmstrip thumbnail margin. Specify the margin for the filmstrip image using CSS type values.   
-6.8.47 Filmstrip thumbnail border width. Set the border width for the lightbox filmstrip.  
-6.8.48 Filmstrip thumbnail border style. Choose the border style for the lightbox filmstrip.  
-6.8.49 Filmstrip thumbnail border color. Select the border color for the lightbox filmstrip.   
-6.8.50 Filmstrip thumbnail border radius. Set the lightbox filmstrip border radius using CSS type values.  
-6.8.51 Filmstrip thumbnail active border width. Set the border width for the lightbox filmstrip image which is currently displayed.  
-6.8.52 Filmstrip thumbnail active border color. Choose the border style for the lightbox filmstrip image which is currently displayed.  
-6.8.53 Filmstrip thumbnail deactive transparency. Choose the transparency level of the thumbnails except the currently displayed one.   
-6.8.54 Filmstrip right, left buttons size. Define the button size for the Right and Left buttons of the filmstrip.   
-6.8.55 Filmstrip right, left buttons color. Select the button color for the Right and Left buttons of the filmstrip.   
-6.8.56 Filmstrip right, left button background color. Select the button background color for the Right and Left buttons of the filmstrip.   
-6.8.57 Comments width. Define the width of the comment box for the images in the lightbox.   
-6.8.58 Comments position. Select the comment position for the images.  
-6.8.59 Comments background color. Select the background color for the comment box in the lightbox.   
-6.8.60 Comments font size. Define the font size for the comments input field labels.  
-6.8.61 Comments font color. Define the font color for the image comments.   
-6.8.62 Comments font family. Select the font family for the image comments.  
-6.8.63 Comments author font size. Define the font size for the Author text in the image comment box.  
-6.8.64 Comments date font size. Define the font size for the image comment date.  
-6.8.65 Comments body font size. Define the font size for the image comments.  
-6.8.66 Comment input border width. Define the border width for the comment box.  
-6.8.67 Comment input border style. Select the style to be applied to the comment box border.  
-6.8.68 Comment input border color. Choose the border color for the comment box border  
-6.8.69 Comment input border radius. Set the border radius for the comment box input field.  
-6.8.70 Comment input padding. Set padding for the comment box input area using CSS type values.   
-6.8.71 Comment input background color. Choose the background color for the comment input field.  
-6.8.72 Comment button background color. Choose a background color for the comment button.   
-6.8.73 Comment button padding. Set the comment button padding using CSS type values.   
-6.8.74 Comment button border width. Set the border width for the comment button.   
-6.8.75 Comment button border style. Select the border style for the comment button.   
-6.8.76 Comment button border color. Choose the border color for the comment button.  
-6.8.77 Comment button border radius. Set the border radius for the comment button using CSS type values.  
-6.8.78 Comment separator width. Set the width for the comment separators.   
-6.8.79 Comment separator style. Choose the style for the comment separator lines.   
-6.8.80 Comment separator color. Select the color for the comment separators.  
+6.8 Lightbox
+6.8.1 Name. Provide a name for the theme.
+6.8.2 Overlay background color. Choose the background color for the image background overlay. 
+6.8.3 Overlay background transparency. Select the level of transparency for the background overlay. 
+6.8.4 Lightbox background color. Select the overall background color for the lightbox. 
+6.8.5 Control buttons height. Set the height for the control buttons in the lightbox.
+6.8.6 Control buttons margin (top). Set the top margin for the control buttons in the lightbox.
+6.8.7 Control buttons margin (left). Set the left margin for the control buttons in the lightbox.
+6.8.8 Control buttons position. Choose the position for the control buttons over the gallery images. 
+6.8.9 Control buttons background color. Choose the background color for the control buttons of the gallery images.
+6.8.10 Control buttons container border radius. Set the border radius for the control buttons container.
+6.8.11 Control buttons container background transparency. Choose the transparency level for the control buttons container.
+6.8.12 Control buttons alignment. Set the positioning of the control buttons over the gallery images. 
+6.8.13 Control buttons color. Choose the color to use for the control buttons.
+6.8.14 Control buttons transparency. Choose the level of transparency for the control buttons.
+6.8.15 Toggle button height. Set the height for the toggle button.
+6.8.16 Toggle button width. Set the width for the toggle button. 
+6.8.17 Close button border radius. Define the border radius for the Right and Left buttons. 
+6.8.18 Close button border width. Set the border width for the Close button.
+6.8.19 Close button border style. Choose the border style for the Close button.
+6.8.20 Close button border color. Select the border color for the Close button. 
+6.8.21 Close button box shadow. Set the box shadow for the Close button. 
+6.8.22 Close button background color. Select Close button background color. 
+6.8.23 Close button transparency. Choose the level of transparency for the Close button. 
+6.8.24 Close button width. Set the Close button width.
+6.8.25 Close button height. Set the Close button height. 
+6.8.26 Close button top. Set the margin between the top border and the Close button. 
+6.8.27 Close button right. Set the margin between the right border and the Close button. 
+6.8.28 Close button size. Define the Close button size in pixels. 
+6.8.29 Close button color. Choose a color for the Close button. 
+6.8.30 Fullscreen close button color. Choose a color for the Fullscreen exit button. 
+6.8.31 Share buttons color. Choose a color to be applied to all Social share buttons used with the view.
+6.8.32 Right, left buttons style. Choose the style for the Right and Left buttons. 
+6.8.33 Right, left buttons background color. Select the background color for the Right and Left buttons. 
+6.8.34 Right, left buttons transparency. Select the level of transparency for the Right and Left buttons.
+6.8.35 Right, left buttons box shadow. Set the Right and Left buttons box shadow using CSS type values. 
+6.8.36 Right, left buttons height. Set the height for the Right and Left buttons. 
+6.8.37 Right, left buttons width. Set the width for the Right and Left buttons. 
+6.8.38 Right, left buttons size. Define the size for the Right and Left buttons. 
+6.8.39 Right, left, close buttons hover color. Choose the Right, Left and Close buttons color when hovered.
+6.8.40 Right, left buttons color. Choose the Right and Left buttons color.
+6.8.41 Right, left buttons border radius. Set the border radius for the Right and Left buttons. 
+6.8.42 Right, left buttons border width. Set the border width for the Right and Left buttons. 
+6.8.43 Right, left buttons border style. Choose the border style for the Right and Left buttons. 
+6.8.44 Right, left buttons border color. Choose the border color for the Right and Left buttons. 
+6.8.45 Filmstrip position. Set the filmstrip position in the lightbox. 
+6.8.46 Filmstrip thumbnail margin. Specify the margin for the filmstrip image using CSS type values. 
+6.8.47 Filmstrip thumbnail border width. Set the border width for the lightbox filmstrip.
+6.8.48 Filmstrip thumbnail border style. Choose the border style for the lightbox filmstrip.
+6.8.49 Filmstrip thumbnail border color. Select the border color for the lightbox filmstrip. 
+6.8.50 Filmstrip thumbnail border radius. Set the lightbox filmstrip border radius using CSS type values.
+6.8.51 Filmstrip thumbnail active border width. Set the border width for the lightbox filmstrip image which is currently displayed.
+6.8.52 Filmstrip thumbnail active border color. Choose the border style for the lightbox filmstrip image which is currently displayed.
+6.8.53 Filmstrip thumbnail deactive transparency. Choose the transparency level of the thumbnails except the currently displayed one. 
+6.8.54 Filmstrip right, left buttons size. Define the button size for the Right and Left buttons of the filmstrip. 
+6.8.55 Filmstrip right, left buttons color. Select the button color for the Right and Left buttons of the filmstrip. 
+6.8.56 Filmstrip right, left button background color. Select the button background color for the Right and Left buttons of the filmstrip. 
+6.8.57 Rating position. Set the position for the rating icons over the gallery images.
+6.8.58 Rating alignment. Set the alignment for the rating icon.
+6.8.59 Rating icon. Select the rating icon among six possible options.
+6.8.60 Rating color. Choose the color for the selected rating icon.
+6.8.61 Rating hover color. Choose the color for the selecting rating icon range when hovered.      
+6.8.62 Rating size. Define the rating dimensions.
+6.8.63 Rating icon count. Set the amount of the rating symbols to be displayed.
+6.8.64 Rating padding. Set the padding for the rating.
+6.8.65 Hit counter position. Set the position for the hit counter.
+6.8.66 Hit counter alignment. Set the alignment for the hit counter.
+6.8.67 Hit counter background color. Choose the background color for the hit counter box.
+6.8.68 Hit counter background transparency. Define the level of the background transparency for the hit counter box.
+6.8.69 Hit counter border width. Set the border width for the hit counter box.
+6.8.70 Hit counter border style. Specify the border style for the hit counter box.
+6.8.71 Hit counter border color. Choose the border color for the hit counter box.
+6.8.72 Hit counter border radius. Set the border radius for the hit counter box.
+6.8.73 Hit counter padding. Set the padding for the hit counter box.
+6.8.74 Hit counter margin. Set the margin for the hit counter box.
+6.8.75 Hit counter font color. Select the font color within the hit counter box.
+6.8.76 Hit counter font family. Choose the font family for the hit counter box text.  
+6.8.77 Hit counter font weight. Choose the font weight for the hit counter box text.
+6.8.78 Hit counter font size. Select the font size for the hit counter box text. 
+6.8.79 Info position. Specify the position of the gallery image title and description.
+6.8.80 Info alignment. Select the alignment for the gallery image title and description.
+6.8.81 Info background color. Choose the background color for the gallery image information.      
+6.8.82 Info background transparency. Set the level of transparency for the gallery image information background.  
+6.8.83 Info border width. Set a border width for the gallery image information box.  
+6.8.84 Info border style. Set the border style for the gallery image information box.  
+6.8.85 Info border color. Set the border color for the gallery image information box. 
+6.8.86 Info border radius. Set the border radius for the gallery image information box.        
+6.8.87 Info padding. Set the padding for the image information box using CSS style values.
+6.8.88 Info margin. Set the margin for the image information box using CSS style values.    
+6.8.89 Title font color. Choose the font color for the gallery image title. 
+6.8.90 Title font family. Specify the font family for the gallery image title.       
+6.8.91 Title font weight. Specify the font style for the gallery image title.        
+6.8.92 Title font size. Set the font size for the gallery image title.
+6.8.93 Description font color. Choose the font color for the gallery image description.
+6.8.94 Description font family. Set the font family for the gallery image description. 
+6.8.95 Description font weight. Set the font style for the gallery image description.
+6.8.96 Description font size. Define the font size for the gallery image description.
+6.8.97 Comments width. Define the width of the comment box for the gallery images in the lightbox.      
+6.8.98 Comments position. Select the comment position for the gallery images.
+6.8.99 Comments background color. Select the background color for the comment box in the lightbox.    
+6.8.100 Comments font size. Define the font size for the comments input field labels.
+6.8.101 Comments font color. Define the font color for the gallery image comments. 
+6.8.102 Comments font family. Select the font family for the image comments.
+6.8.103 Comments author font size. Define the font size for the Author text in the image comment box.
+6.8.104 Comments date font size. Define the font size for the gallery image comment date.
+6.8.105 Comments body font size. Define the font size for the gallery image comments.
+6.8.106 Comment input border width. Define the border width for the comment box.       
+6.8.107 Comment input border style. Select the style to be applied to the comment box border.
+6.8.108 Comment input border color. Choose the border color for the comment box border
+6.8.109 Comment input border radius. Set the border radius for the comment box input field.
+6.8.110 Comment input padding. Set padding for the comment box input area using CSS type values.       
+6.8.111 Comment input background color. Choose the background color for the comment input field.
+6.8.112 Comment button background color. Choose a background color for the comment button.                 
+6.8.113 Comment button padding. Set the comment button padding using CSS type values.        
+6.8.114 Comment button border width. Set the border width for the comment button.    
+6.8.115 Comment button border style. Select the border style for the comment button.   
+6.8.116 Comment button border color. Choose the border color for the comment button.
+6.8.117 Comment button border radius. Set the border radius for the comment button using CSS type values.
+6.8.118 Comment separator width. Set the width for the comment separators.       
+6.8.119 Comment separator style. Choose the style for the comment separator lines.       
+6.8.120 Comment separator color. Select the color for the comment separators.
   
 6.9 Page Navigation.  
 6.9.1 Name. Provide a name for the theme.  
@@ -674,14 +868,18 @@ Use one of the default Photo Gallery themes or click `Add new` button to create 
 6.9.18 Numbering. Choose whether to have numbers next to navigation buttons or not.  
 6.9.19 Button text. Choose whether to have text or navigation arrow set for the page navigation.  
   
-Step 7: Editing comments.  
+  
+  
+= Step 7: Editing comments. =  
 7.1 Image. Choose the gallery image you want to moderate the comments for.  
 7.2 Name. Choose the author of the comments, if there are multiple comments for the chosen gallery image.  
 7.3 Publish. Click to publish the gallery image comment.  
 7.4 Unpublish. Click to unpublish the gallery image comment.  
 7.5 Delete. Click to delete the gallery image comment.  
   
-Step 8: Publishing the Created Photo Gallery.   
+  
+  
+= Step 8: Publishing the Created Photo Gallery. =   
 To insert a gallery into a Page or a Post.   
 Open the post/page you want to display the gallery. Press the button named Photo Gallery. A camera icon will be inserted into the page/post. Click on the image and select the gallery/album display you want to use for that specific page/post.  
 Each Photo Gallery shortcode uses three columns of parameters. The first column shows parameters specific for that Photo Gallery view only, the second one shows Lightbox (except Slideshow view) parameters, the third one is referred to the Advertisement.   
@@ -790,9 +988,10 @@ Advertisement link. Provide the link, which will open in a new window, when the 
 Advertisement dimensions. Define the dimensions of the image used for the advertisement.  
 Advertisement opacity. Define the level of opacity for the advertisement, providing its percentage.  
 Advertisement position. Choose the positioning of the advertisement from the available 9 options.  
+ 
+ 
   
-  
-Step 9: Publishing Photo Gallery widgets.  
+= Step 9: Publishing Photo Gallery widgets. =  
 Go to Appearance>Widgets. Here select the widget option you want to add to a custom location. Afterwards drag and drop the selected widget into the custom location, fill in the options and press Save button.  
 9.1 Tag Cloud. This widget is included as a hosted widget for the WordPress standard Tag Cloud. It will display the tags added to the albums and images. After the click, the images using the tags will be displayed in Thumbnails view.  
 9.1.1 Title. Provide a title for the tag cloud.  
@@ -835,7 +1034,8 @@ Theme. Choose the theme, which will be applied to the gallery/album correspondin
 9.4.7 Theme. Choose the theme, which will be applied to the gallery/album.  
 
 
-Step 10: Generating shortcode for the Photo Gallery.    
+
+= Step 10: Generating shortcode for the Photo Gallery. =    
  
 To use the created galleries and albums for the custom location, you can generate custom shortcodes and edit the created shortcodes.    
 

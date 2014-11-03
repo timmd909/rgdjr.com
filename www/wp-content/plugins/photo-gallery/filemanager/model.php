@@ -45,10 +45,11 @@ class FilemanagerModel {
       $data = array();
       $data['session_data'] = $session_data;
       $data['path_components'] = $this->get_path_components();
-      $data['dir'] = (isset($_REQUEST['dir']) ? $_REQUEST['dir'] : '');
+      $data['dir'] = (isset($_REQUEST['dir']) ? esc_html($_REQUEST['dir']) : '');
       $data['files'] = $this->get_files($session_data['sort_by'], $session_data['sort_order']);
-      $data['extensions'] = (isset($_REQUEST['extensions']) ? $_REQUEST['extensions'] : '');
-      $data['callback'] = (isset($_REQUEST['callback']) ? $_REQUEST['callback'] : '');
+      $data['media_library_files'] = ($this->controller->get_options_data()->enable_ML_import ? $this->get_media_library_files($session_data['sort_by'], $session_data['sort_order']) : array());
+      $data['extensions'] = (isset($_REQUEST['extensions']) ? esc_html($_REQUEST['extensions']) : '');
+      $data['callback'] = (isset($_REQUEST['callback']) ? esc_html($_REQUEST['callback']) : '');
 
       return $data;
     }
@@ -104,9 +105,9 @@ class FilemanagerModel {
     function get_files($sort_by, $sort_order) {
       $icons_dir_path = WD_BWG_DIR . '/filemanager/images/file_icons';
       $icons_dir_url = WD_BWG_URL . '/filemanager/images/file_icons';
-      $valid_types = explode(',', isset($_REQUEST['extensions']) ? strtolower($_REQUEST['extensions']) : '*');
-      $parent_dir = $this->controller->get_uploads_dir() . (isset($_REQUEST['dir']) ? '/' . $_REQUEST['dir'] : '');
-      $parent_dir_url = $this->controller->get_uploads_url() . (isset($_REQUEST['dir']) ? '/' . $_REQUEST['dir'] : '');
+      $valid_types = explode(',', isset($_REQUEST['extensions']) ? strtolower(esc_html($_REQUEST['extensions'])) : '*');
+      $parent_dir = $this->controller->get_uploads_dir() . (isset($_REQUEST['dir']) ? '/' . esc_html($_REQUEST['dir']) : '');
+      $parent_dir_url = $this->controller->get_uploads_url() . (isset($_REQUEST['dir']) ? '/' . esc_html($_REQUEST['dir']) : '');
 
 
       $file_names = $this->get_sorted_file_names($parent_dir, $sort_by, $sort_order);
@@ -135,7 +136,8 @@ class FilemanagerModel {
           $file['is_dir'] = FALSE;
           $file['name'] = $file_name;
           $file['filename'] = substr($file_name, 0, strrpos($file_name, '.'));
-          $file['type'] = strtolower(end(explode('.', $file_name)));
+          $file_extension = explode('.', $file_name);
+          $file['type'] = strtolower(end($file_extension));
           $icon = $icons_dir_url . '/' . $file['type'] . '.png';
           if (file_exists($icons_dir_path . '/' . $file['type'] . '.png') == FALSE) {
             $icon = $icons_dir_url . '/' . '_blank.png';
@@ -150,7 +152,7 @@ class FilemanagerModel {
           // $file['size'] = $file_size_kb < 1024 ? (string)$file_size_kb . 'KB' : (string)$file_size_mb . 'MB';
           $file['size'] = $file_size_kb . ' KB';
           $file['date_modified'] = date('d F Y, H:i', filemtime($parent_dir . '/' . $file_name));
-          $image_info = getimagesize(htmlspecialchars_decode($parent_dir . '/' . $file_name));
+          $image_info = getimagesize(htmlspecialchars_decode($parent_dir . '/' . $file_name, ENT_COMPAT | ENT_QUOTES));
           $file['resolution'] = $this->is_img($file['type']) ? $image_info[0]  . ' x ' . $image_info[1] . ' px' : '';
           $files[] = $file;
         }
@@ -158,6 +160,60 @@ class FilemanagerModel {
 
       $result = $sort_order == 'asc' ? array_merge($dirs, $files) : array_merge($files, $dirs);
       return $result;
+    }
+    
+    function get_media_library_files($sort_by, $sort_order) {
+      $icons_dir_path = WD_BWG_DIR . '/filemanager/images/file_icons';
+      $icons_dir_url = WD_BWG_URL . '/filemanager/images/file_icons';
+      $valid_types = explode(',', isset($_REQUEST['extensions']) ? strtolower(esc_html($_REQUEST['extensions'])) : '*');
+      $upload_dir = wp_upload_dir();
+      $parent_dir = $upload_dir['basedir'];
+      $parent_dir_url = $upload_dir['baseurl'];
+
+      $query_images_args = array(
+          'post_type' => 'attachment', 'post_mime_type' =>'image', 'post_status' => 'inherit', 'posts_per_page' => -1,
+      );
+
+      $query_images = new WP_Query( $query_images_args );
+
+      $files = array();
+      $upload_dir = wp_upload_dir();
+
+      foreach ($query_images->posts as $image) {
+        $file_meta = wp_get_attachment_metadata($image->ID);
+        if (isset($file_meta['file'])) {
+          $file = array();
+          $file['is_dir'] = FALSE;
+          $file_name_array = explode('/', $file_meta['file']);
+          $file_name = end($file_name_array);
+          $file['name'] = $file_name;
+          $file['path'] = $file_meta['file'];
+          $file['filename'] = substr($file_name, 0, strrpos($file_name, '.'));
+          $file_type_array = explode('.', $file_name);
+          $file['type'] = strtolower(end($file_type_array));
+          // $file['thumb'] = wp_get_attachment_thumb_url($image->ID);
+          if (!empty($file_meta['sizes']) && $file_meta['sizes']['thumbnail']['file']) {
+            $file_pos = strrpos($file_meta['file'], '/');
+            $sub_folder = substr($file_meta['file'], 0, $file_pos); 
+            $file['thumb'] = $upload_dir['baseurl'] . '/' . $sub_folder . '/' . $file_meta['sizes']['thumbnail']['file'];
+          }
+          else {
+            $file['thumb'] = $upload_dir['baseurl'] . '/' . $file_meta['file'];
+          }
+          $file['icon'] = $file['thumb'];
+          if (($valid_types[0] != '*') && (in_array($file['type'], $valid_types) == FALSE)) {
+            continue;
+          }
+          $file_size_kb = (int)(@filesize($parent_dir . '/' . $file_meta['file']) / 1024);
+          if (!$file_size_kb) continue;
+          $file['size'] = $file_size_kb . ' KB';
+          $file['date_modified'] = date('d F Y, H:i', filemtime($parent_dir . '/' . $file_meta['file']));
+          // $image_info = getimagesize(htmlspecialchars_decode($parent_dir . '/' . $file_meta['file'], ENT_COMPAT | ENT_QUOTES));
+          $file['resolution'] = $this->is_img($file['type']) ? $file_meta['width']  . ' x ' . $file_meta['height'] . ' px' : '';
+          $files[] = $file;
+        }
+      }
+      return $files;
     }
 
     private function get_sorted_file_names($parent_dir, $sort_by, $sort_order) {

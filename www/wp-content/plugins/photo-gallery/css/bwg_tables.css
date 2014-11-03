@@ -204,6 +204,7 @@
 
 .tag_icon {
   background-image: url("../images/tag-icon.png");
+  background-repeat: no-repeat;
   border: none;
   float: left;
   height: 32px;
@@ -213,6 +214,7 @@
 
 .gallery-icon {
   background-image: url("../images/gallery-icon.png");
+  background-repeat: no-repeat;
   border: none;
   float: left;
   height: 32px;
@@ -222,6 +224,7 @@
 
 .album-icon {
   background-image: url("../images/album-icon.png");
+  background-repeat: no-repeat;
   border: none;
   float: left;
   height: 32px;
@@ -231,6 +234,7 @@
 
 .option-icon {
   background-image: url("../images/option-icon.png");
+  background-repeat: no-repeat;
   border: none;
   float: left;
   height: 32px;
@@ -240,6 +244,7 @@
 
 .theme_icon {
   background-image: url("../images/theme-icon.png");
+  background-repeat: no-repeat;
   border: none;
   float: left;
   height: 32px;
@@ -249,6 +254,17 @@
 
 .comment_icon{
   background-image: url("../images/comment-icon.png");
+  background-repeat: no-repeat;
+  border: none;
+  float: left;
+  height: 32px;
+  margin: 7px 8px 0 0;
+  width: 32px;
+}
+
+.rating_icon{
+  background-image: url("../images/rating-icon.png");
+  background-repeat: no-repeat;
   border: none;
   float: left;
   height: 32px;
@@ -258,6 +274,7 @@
 
 .uninstall_icon {
   background-image: url("../images/uninstall-icon.png");
+  background-repeat: no-repeat;
   border: none;
   float: left;
   height: 32px;
@@ -324,6 +341,16 @@
 
 .buttons_div {
   clear: both;
+  float: right;
+  margin: 5px 0;
+}
+
+.buttons_div_left {
+  float: left;
+  margin: 5px 0;
+}
+
+.buttons_div_right {
   float: right;
   margin: 5px 0;
 }
@@ -457,10 +484,63 @@
   border-radius: 2px;
   border: 1px solid #FFFFFF;
   height: 30px;
-  
 }
 
 .spider_search_value {
   height: 2em;
   margin: 0 0 4px;
+}
+
+#th_order,
+.spider_order {
+  display: none;
+}
+
+.bwg_add_video,
+.bwg_resize_image {
+  display: none;
+  padding: 10px;
+  height: 60px;
+  background-color: #FFFFFF;
+  border: 1px solid #999999;
+  top: 50%;
+  position: fixed;
+  left: 50%;
+  text-align: left;
+  z-index: 100000;
+  border-radius: 3px;
+  margin-top: -45px;
+}
+
+.bwg_add_video {
+  margin-left: -340px;
+}
+
+.bwg_resize_image {
+  margin-left: -200px;
+}
+
+#add_video input[type="text"] {
+  width: 500px;
+}
+
+.bwg_resize_image input[type="text"] {
+  width: 60px;
+}
+
+.bwg_opacity_video {
+  display: none;
+  background-color: #000000;
+  opacity: 0.75;
+  filter: Alpha(opacity=75);
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 99998;
+}
+
+.widefat  .check-column {
+  text-align: center;
 }

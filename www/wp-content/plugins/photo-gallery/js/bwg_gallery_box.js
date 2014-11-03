@@ -64,6 +64,7 @@ function spider_destroypopup(duration) {
   if (isMobile && viewportmeta) {
     viewportmeta.content = 'width=device-width, initial-scale=1';
   }
+  clearInterval(bwg_playInterval);
 }
 
 // Submit popup.
@@ -101,6 +102,31 @@ function spider_ajax_save(form_id) {
     jQuery(".bwg_comments_close_btn").click(bwg_comment);
   });
 
+  // if (event.preventDefault) {
+    // event.preventDefault();
+  // }
+  // else {
+    // event.returnValue = false;
+  // }
+  return false;
+}
+
+// Submit rating.
+function spider_rate_ajax_save(form_id) {
+  var post_data = {};
+  post_data["image_id"] = jQuery("#" + form_id + " input[name='image_id']").val();
+  post_data["rate"] = jQuery("#" + form_id + " input[name='score']").val();
+  post_data["ajax_task"] = jQuery("#rate_ajax_task").val();
+  jQuery.post(
+    jQuery('#' + form_id).attr('action'),
+    post_data,
+
+    function (data) {
+      var str = jQuery(data).find('#' + form_id).html();
+      jQuery('#' + form_id).html(str);
+    }
+  ).success(function(jqXHR, textStatus, errorThrown) {
+  });
   // if (event.preventDefault) {
     // event.preventDefault();
   // }

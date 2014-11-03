@@ -1,6 +1,6 @@
 <?php
 
-class BWGViewWidget extends BWGControllerWidget {
+class BWGViewWidget {
   ////////////////////////////////////////////////////////////////////////////////////////
   // Events                                                                             //
   ////////////////////////////////////////////////////////////////////////////////////////
@@ -27,7 +27,7 @@ class BWGViewWidget extends BWGControllerWidget {
 
   function widget($args, $instance) {
     extract($args);
-    $title = $instance['title'];
+    $title = (isset($instance['title']) ? $instance['title'] : "");
     $type = (isset($instance['type']) ? $instance['type'] : "gallery");
     $gallery_id = (isset($instance['gallery_id']) ? $instance['gallery_id'] : 0);
     $album_id = (isset($instance['album_id']) ? $instance['album_id'] : 0);
@@ -43,29 +43,27 @@ class BWGViewWidget extends BWGControllerWidget {
       echo $before_title . $title . $after_title;
     }
     // Widget output.
-    if ($id) {
-      if ($type == 'gallery') {
-        require_once(WD_BWG_DIR . '/frontend/controllers/BWGControllerThumbnails.php');
-        $controller_class = 'BWGControllerThumbnails';
-      }
-      else {
-        require_once(WD_BWG_DIR . '/frontend/controllers/BWGControllerAlbum_compact_preview.php');
-        $controller_class = 'BWGControllerAlbum_compact_preview';
-      }
-      $controller = new $controller_class();
-      global $bwg;
-      $params = array (
-        'from' => 'widget',
-        'gallery_type' => $type,
-        'id' => ($type == 'gallery' ? $gallery_id : $album_id),
-        'show' => $show,
-        'count' => $count, 
-        'width' => $width, 
-        'height' => $height,
-        'theme_id' => $theme_id);
-      $controller->execute($params, 1, $bwg);
-      $bwg++;
+    if ($type == 'gallery') {
+      require_once(WD_BWG_DIR . '/frontend/controllers/BWGControllerThumbnails.php');
+      $controller_class = 'BWGControllerThumbnails';
     }
+    else {
+      require_once(WD_BWG_DIR . '/frontend/controllers/BWGControllerAlbum_compact_preview.php');
+      $controller_class = 'BWGControllerAlbum_compact_preview';
+    }
+    $controller = new $controller_class();
+    global $bwg;
+    $params = array (
+      'from' => 'widget',
+      'gallery_type' => $type,
+      'id' => ($type == 'gallery' ? $gallery_id : $album_id),
+      'show' => $show,
+      'count' => $count, 
+      'width' => $width, 
+      'height' => $height,
+      'theme_id' => $theme_id);
+    $controller->execute($params, 1, $bwg);
+    $bwg++;
     // After widget.
     echo $after_widget;
   }
@@ -94,10 +92,12 @@ class BWGViewWidget extends BWGControllerWidget {
         if (jQuery(jQuery(div).find(".sel_gallery")[0]).prop("checked")) {
           jQuery(jQuery(div).find("#p_galleries")).css("display", "");
           jQuery(jQuery(div).find("#p_albums")).css("display", "none");
+          jQuery(obj).nextAll(".bwg_hidden").first().attr("value", "gallery");
         }
         else {
           jQuery(jQuery(div).find("#p_galleries")).css("display", "none");
           jQuery(jQuery(div).find("#p_albums")).css("display", "");
+          jQuery(obj).nextAll(".bwg_hidden").first().attr("value", "album");
         }
       }
     </script>
@@ -107,7 +107,8 @@ class BWGViewWidget extends BWGControllerWidget {
     </p>
     <p>
       <input type="radio" name="<?php echo $name_type; ?>" id="<?php echo $id_type . "_1"; ?>" value="gallery" class="sel_gallery" onclick="bwg_change_type(event, this)" <?php if ($instance['type'] == "gallery") echo 'checked="checked"'; ?> /><label for="<?php echo $id_type . "_1"; ?>">Gallery</label>
-      <input type="radio" name="<?php echo $name_type; ?>" id="<?php echo $id_type . "_2"; ?>" value="album" class="sel_album" onclick="bwg_change_type(event, this)" <?php if ($instance['type'] == "album") echo 'checked="checked"'; ?> /><label for="<?php echo $id_type . "_2"; ?>">Album</label>     
+      <input type="radio" name="<?php echo $name_type; ?>" id="<?php echo $id_type . "_2"; ?>" value="album" class="sel_album" onclick="bwg_change_type(event, this)" <?php if ($instance['type'] == "album") echo 'checked="checked"'; ?> /><label for="<?php echo $id_type . "_2"; ?>">Album</label>
+      <input type="hidden" name="<?php echo $name_type; ?>" id="<?php echo $id_type; ?>" value="<?php echo $instance['type']; ?>" class="bwg_hidden" />
     </p>
     <p id="p_galleries" style="display:<?php echo ($instance['type'] == "gallery") ? "" : "none" ?>;">
       <select name="<?php echo $name_gallery_id; ?>" id="<?php echo $id_gallery_id; ?>" class="widefat">
@@ -134,8 +135,10 @@ class BWGViewWidget extends BWGControllerWidget {
       </select>
     </p>    
     <p>
-      <input type="radio" name="<?php echo $name_show; ?>" id="<?php echo $id_show . "_1"; ?>" value="random" onclick="bwg_change_type(event, this)" <?php if ($instance['show'] == "random") echo 'checked="checked"'; ?> /><label for="<?php echo $id_show . "_1"; ?>">Random</label>
-      <input type="radio" name="<?php echo $name_show; ?>" id="<?php echo $id_show . "_2"; ?>" value="last" onclick="bwg_change_type(event, this)" <?php if ($instance['show'] == "last") echo 'checked="checked"'; ?> /><label for="<?php echo $id_show . "_2"; ?>">Last</label>          
+      <input type="radio" name="<?php echo $name_show; ?>" id="<?php echo $id_show . "_1"; ?>" value="random" <?php if ($instance['show'] == "random") echo 'checked="checked"'; ?> onclick='jQuery(this).nextAll(".bwg_hidden").first().attr("value", "random");' /><label for="<?php echo $id_show . "_1"; ?>">Random</label>
+      <input type="radio" name="<?php echo $name_show; ?>" id="<?php echo $id_show . "_2"; ?>" value="first" <?php if ($instance['show'] == "first") echo 'checked="checked"'; ?> onclick='jQuery(this).nextAll(".bwg_hidden").first().attr("value", "first");' /><label for="<?php echo $id_show . "_2"; ?>">First</label>
+      <input type="radio" name="<?php echo $name_show; ?>" id="<?php echo $id_show . "_3"; ?>" value="last" <?php if ($instance['show'] == "last") echo 'checked="checked"'; ?> onclick='jQuery(this).nextAll(".bwg_hidden").first().attr("value", "last");' /><label for="<?php echo $id_show . "_3"; ?>">Last</label>
+      <input type="hidden" name="<?php echo $name_show; ?>" id="<?php echo $id_show; ?>" value="<?php echo $instance['show']; ?>" class="bwg_hidden" />
     </p>
     <p>
       <label for="<?php echo $id_count; ?>">Count:</label>
@@ -147,7 +150,7 @@ class BWGViewWidget extends BWGControllerWidget {
       <input class="widefat" style="width:25%;" id="<?php echo $id_height; ?>" name="<?php echo $name_height; ?>'" type="text" value="<?php echo $instance['height']; ?>"/> px
     </p>
     <p>
-      <select name="<?php echo $name_theme_id; ?>" id="<?php echo $id_theme_id; ?>" class="widefat" <?php echo (get_option("wd_bwg_theme_version") ? 'title="This option is disabled in free version."  disabled="disabled"' : ''); ?>>
+      <select name="<?php echo $name_theme_id; ?>" id="<?php echo $id_theme_id; ?>" class="widefat">
         <?php
         foreach ($theme_rows as $theme_row) {
           ?>

@@ -33,26 +33,25 @@ class BWGViewAlbums_bwg {
     $order_class = 'manage-column column-title sorted ' . $asc_or_desc;
     $ids_string = '';
     ?>
-    <div style="clear: both; float: left; width: 95%;">
+    <div style="clear: both; float: left; width: 99%;">
       <div style="float:left; font-size: 14px; font-weight: bold;">
         This section allows you to create, edit and delete albums.
         <a style="color: blue; text-decoration: none;" target="_blank" href="http://web-dorado.com/wordpress-gallery-guide-step-4.html">Read More in User Manual</a>
       </div>
       <div style="float: right; text-align: right;">
-        <a style="color: red; text-decoration: none;" target="_blank" href="http://web-dorado.com/products/wordpress-photo-gallery-plugin.html">
-          <img width="215" border="0" alt="web-dorado.com" src="<?php echo WD_BWG_URL . '/images/header.png'; ?>" />
-          <p style="font-size: 16px; margin: 0; padding: 0 20px 0 0;">Get the full version</p>
+        <a style="text-decoration: none;" target="_blank" href="http://web-dorado.com/products/wordpress-photo-gallery-plugin.html">
+          <img width="215" border="0" alt="web-dorado.com" src="<?php echo WD_BWG_URL . '/images/logo.png'; ?>" />
         </a>
       </div>
     </div>
-    <form class="wrap" id="albums_form" method="post" action="admin.php?page=albums_bwg" style="float: left; width: 95%;">
+    <form class="wrap" id="albums_form" method="post" action="admin.php?page=albums_bwg" style="float: left; width: 99%;">
       <span class="album-icon"></span>
       <h2>
         Albums
         <a href="" class="add-new-h2" onclick="spider_set_input_value('task', 'add');
                                                spider_form_submit(event, 'albums_form')">Add new</a>
       </h2>
-      <div id="draganddrop" class="updated" style="display:none;"><strong><p>Changes made in this table shoud be saved.</p></strong></div>
+      <div id="draganddrop" class="updated" style="display:none;"><strong><p>Changes made in this table should be saved.</p></strong></div>
       <div class="buttons_div">
         <span class="button-secondary non_selectable" onclick="spider_check_all_items()">
           <input type="checkbox" id="check_all_items" name="check_all_items" onclick="spider_check_all_items_checkbox()" style="margin: 0; vertical-align: middle;" />
@@ -189,15 +188,14 @@ class BWGViewAlbums_bwg {
     $row = $this->model->get_row_data($id);
     $page_title = (($id != 0) ? 'Edit album ' . $row->name : 'Create new album');
     ?>
-    <div style="clear: both; float: left; width: 95%;">
+    <div style="clear: both; float: left; width: 99%;">
       <div style="float:left; font-size: 14px; font-weight: bold;">
         This section allows you to add/edit album.
         <a style="color: blue; text-decoration: none;" target="_blank" href="http://web-dorado.com/wordpress-gallery-guide-step-4.html">Read More in User Manual</a>
       </div>
       <div style="float: right; text-align: right;">
-        <a style="color: red; text-decoration: none;" target="_blank" href="http://web-dorado.com/products/wordpress-photo-gallery-plugin.html">
-          <img width="215" border="0" alt="web-dorado.com" src="<?php echo WD_BWG_URL . '/images/header.png'; ?>" />
-          <p style="font-size: 16px; margin: 0; padding: 0 20px 0 0;">Get the full version</p>
+        <a style="text-decoration: none;" target="_blank" href="http://web-dorado.com/products/wordpress-photo-gallery-plugin.html">
+          <img width="215" border="0" alt="web-dorado.com" src="<?php echo WD_BWG_URL . '/images/logo.png'; ?>" />
         </a>
       </div>
     </div>
@@ -256,7 +254,7 @@ class BWGViewAlbums_bwg {
         tb_remove();
       }
     </script>
-    <form class="wrap" method="post" action="admin.php?page=albums_bwg" style="float: left; width: 95%;">
+    <form class="wrap" method="post" action="admin.php?page=albums_bwg" style="float: left; width: 99%;">
       <span class="album-icon"></span>
       <h2><?php echo $page_title; ?></h2>
       <div style="float:right;">

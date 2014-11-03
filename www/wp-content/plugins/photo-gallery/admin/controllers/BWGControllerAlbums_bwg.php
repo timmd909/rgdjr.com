@@ -19,8 +19,10 @@ class BWGControllerAlbums_bwg {
   // Public Methods                                                                     //
   ////////////////////////////////////////////////////////////////////////////////////////
   public function execute() {
-    $task = ((isset($_POST['task'])) ? esc_html(stripslashes($_POST['task'])) : '');
-    $id = ((isset($_POST['current_id'])) ? esc_html(stripslashes($_POST['current_id'])) : 0);
+    $task = WDWLibrary::get('task');
+    $id = WDWLibrary::get('current_id', 0);
+    $message = WDWLibrary::get('message');
+    echo WDWLibrary::message_id($message);
     if (method_exists($this, $task)) {
       $this->$task($id);
     }
@@ -53,22 +55,23 @@ class BWGControllerAlbums_bwg {
 
     require_once WD_BWG_DIR . "/admin/views/BWGViewAlbums_bwg.php";
     $view = new BWGViewAlbums_bwg($model);
-    $id = ((isset($_POST['current_id']) && esc_html(stripslashes($_POST['current_id'])) != '') ? esc_html(stripslashes($_POST['current_id'])) : 0);
+    $id = WDWLibrary::get('current_id', 0);
     $view->edit($id);
   }
 
   public function save() {
-    $this->save_db();
-    $this->display();
+    $message = $this->save_db();
+    $page = WDWLibrary::get('page');
+    WDWLibrary::spider_redirect(add_query_arg(array('page' => $page, 'task' => 'display', 'message' => $message), admin_url('admin.php')));
   }
 
   public function apply() {
-    $this->save_db();
+    $message = $this->save_db();
     global $wpdb;
-    if (!isset($_POST['current_id']) || esc_html(stripslashes($_POST['current_id'])) == '' || esc_html(stripslashes($_POST['current_id'])) == 0) {
-      $_POST['current_id'] = (int) $wpdb->get_var('SELECT MAX(`id`) FROM ' . $wpdb->prefix . 'bwg_album');
-    }
-    $this->edit();
+    $id = (int) $wpdb->get_var('SELECT MAX(`id`) FROM ' . $wpdb->prefix . 'bwg_album');
+    $current_id = WDWLibrary::get('current_id', $id);
+    $page = WDWLibrary::get('page');
+    WDWLibrary::spider_redirect(add_query_arg(array('page' => $page, 'task' => 'edit', 'current_id' => $current_id, 'message' => $message), admin_url('admin.php')));
   }
 
   // Return random image from gallery or album for album preview.
@@ -131,14 +134,13 @@ class BWGControllerAlbums_bwg {
 
   public function save_db() {
     global $wpdb;
-    $id = (isset($_POST['current_id']) ? (int) $_POST['current_id'] : 0);
+    $id = (int) WDWLibrary::get('current_id', 0);
     $name = ((isset($_POST['name'])) ? esc_html(stripslashes($_POST['name'])) : '');
     $name = $this->bwg_get_unique_name($name, $id);
     $slug = ((isset($_POST['slug']) && esc_html(stripslashes($_POST['slug'])) != '') ? esc_html(stripslashes($_POST['slug'])) : $name);
     $slug = $this->bwg_get_unique_slug($slug, $id);
     $description = (isset($_POST['description']) ? stripslashes($_POST['description']) : '');
     $preview_image = ((isset($_POST['preview_image']) && esc_html(stripslashes($_POST['preview_image'])) != '') ? esc_html(stripslashes($_POST['preview_image'])) : '');
-    $order = ((isset($_POST['order']) && esc_html(stripslashes($_POST['order'])) != '') ? esc_html(stripslashes($_POST['order'])) : '');
     $author = get_current_user_id();
     $published = ((isset($_POST['published']) && esc_html(stripslashes($_POST['published'])) != '') ? esc_html(stripslashes($_POST['published'])) : '');
     $albums_galleries = (isset($_POST['albums_galleries']) ? esc_html(stripslashes($_POST['albums_galleries'])) : '');
@@ -158,7 +160,7 @@ class BWGControllerAlbums_bwg {
         'description' => $description,
         'preview_image' => $preview_image,
         'random_preview_image' => '',
-        'order' => $order,	
+        'order' => ((int) $wpdb->get_var('SELECT MAX(`order`) FROM ' . $wpdb->prefix . 'bwg_album')) + 1,
         'author' => $author,
         'published' => $published
       ), array(
@@ -178,10 +180,10 @@ class BWGControllerAlbums_bwg {
     $random_preview_image = (($preview_image == '') ? $this->get_image_for_album($id) : '');
     $wpdb->update($wpdb->prefix . 'bwg_album', array('random_preview_image' => $random_preview_image), array('id' => $id));
     if ($save !== FALSE) {
-      echo WDWLibrary::message('Item Succesfully Saved.', 'updated');
+      return 1;
     }
     else {
-      echo WDWLibrary::message('Error. Please install plugin again.', 'error');
+      return 2;
     }
   }
   
@@ -211,15 +213,16 @@ class BWGControllerAlbums_bwg {
   public function delete($id) {
     global $wpdb;
     $query = $wpdb->prepare('DELETE FROM ' . $wpdb->prefix . 'bwg_album WHERE id="%d"', $id);
-    $query_gal = $wpdb->prepare('DELETE FROM ' . $wpdb->prefix . 'bwg_album_gallery WHERE id="%d" OR (is_album AND alb_gal_id="%d")', $id, $id);
+    $query_gal = $wpdb->prepare('DELETE FROM ' . $wpdb->prefix . 'bwg_album_gallery WHERE album_id="%d" OR (is_album AND alb_gal_id="%d")', $id, $id);
     if ($wpdb->query($query)) {
       $wpdb->query($query_gal);
-      echo WDWLibrary::message('Item Succesfully Deleted.', 'updated');
+      $message = 3;
     }
     else {
-      echo WDWLibrary::message('Error. Please install plugin again.', 'error');
+      $message = 2;
     }
-    $this->display();
+    $page = WDWLibrary::get('page');
+    WDWLibrary::spider_redirect(add_query_arg(array('page' => $page, 'task' => 'display', 'message' => $message), admin_url('admin.php')));
   }
   
   public function delete_all() {
@@ -230,30 +233,32 @@ class BWGControllerAlbums_bwg {
       if (isset($_POST['check_' . $album_id]) || isset($_POST['check_all_items'])) {
         $flag = TRUE;
         $query = $wpdb->prepare('DELETE FROM ' . $wpdb->prefix . 'bwg_album WHERE id="%d"', $album_id);
-        $query_gal = $wpdb->prepare('DELETE FROM ' . $wpdb->prefix . 'bwg_album_gallery WHERE id="%d" OR (is_album AND alb_gal_id="%d")', $album_id, $album_id);
+        $query_gal = $wpdb->prepare('DELETE FROM ' . $wpdb->prefix . 'bwg_album_gallery WHERE album_id="%d" OR (is_album AND alb_gal_id="%d")', $album_id, $album_id);
         $wpdb->query($query);
         $wpdb->query($query_gal);
       }
     }
     if ($flag) {
-      echo WDWLibrary::message('Items Succesfully Deleted.', 'updated');
+      $message = 5;
     }
     else {
-      echo WDWLibrary::message('You must select at least one item.', 'error');
+      $message = 2;
     }
-	$this->display();
+    $page = WDWLibrary::get('page');
+    WDWLibrary::spider_redirect(add_query_arg(array('page' => $page, 'task' => 'display', 'message' => $message), admin_url('admin.php')));
   }
 
   public function publish($id) {
     global $wpdb;
     $save = $wpdb->update($wpdb->prefix . 'bwg_album', array('published' => 1), array('id' => $id));
     if ($save !== FALSE) {
-      echo WDWLibrary::message('Item Succesfully Published.', 'updated');
+      $message = 9;
     }
     else {
-      echo WDWLibrary::message('Error. Please install plugin again.', 'error');
+      $message = 2;
     }
-    $this->display();
+    $page = WDWLibrary::get('page');
+    WDWLibrary::spider_redirect(add_query_arg(array('page' => $page, 'task' => 'display', 'message' => $message), admin_url('admin.php')));
   }
   
   public function publish_all() {
@@ -273,24 +278,26 @@ class BWGControllerAlbums_bwg {
       }
     }
     if ($flag) {
-      echo WDWLibrary::message('Items Succesfully Published.', 'updated');
+      $message = 10;
     }
     else {
-      echo WDWLibrary::message('You must select at least one item.', 'error');
+      $message = 6;
     }
-    $this->display();
+    $page = WDWLibrary::get('page');
+    WDWLibrary::spider_redirect(add_query_arg(array('page' => $page, 'task' => 'display', 'message' => $message), admin_url('admin.php')));
   }
 
   public function unpublish($id) {
     global $wpdb;
     $save = $wpdb->update($wpdb->prefix . 'bwg_album', array('published' => 0), array('id' => $id));
     if ($save !== FALSE) {
-      echo WDWLibrary::message('Item Succesfully Unpublished.', 'updated');
+      $message = 11;
     }
     else {
-      echo WDWLibrary::message('Error. Please install plugin again.', 'error');
+      $message = 2;
     }
-    $this->display();
+    $page = WDWLibrary::get('page');
+    WDWLibrary::spider_redirect(add_query_arg(array('page' => $page, 'task' => 'display', 'message' => $message), admin_url('admin.php')));
   }
   
   public function unpublish_all() {
@@ -310,12 +317,13 @@ class BWGControllerAlbums_bwg {
       }
     }
     if ($flag) {
-      echo WDWLibrary::message('Items Succesfully Unpublished.', 'updated');
+      $message = 12;
     }
     else {
-      echo WDWLibrary::message('You must select at least one item.', 'error');
+      $message = 6;
     }
-    $this->display();
+    $page = WDWLibrary::get('page');
+    WDWLibrary::spider_redirect(add_query_arg(array('page' => $page, 'task' => 'display', 'message' => $message), admin_url('admin.php')));
   }
   
   public function save_order($flag = TRUE) {
@@ -337,10 +345,11 @@ class BWGControllerAlbums_bwg {
         $i++;
       }
       if ($flag) {
-        echo WDWLibrary::message('Ordering Succesfully Saved.', 'updated');
+        $message = 13;
       }
     }
-    $this->display();
+    $page = WDWLibrary::get('page');
+    WDWLibrary::spider_redirect(add_query_arg(array('page' => $page, 'task' => 'display', 'message' => $message), admin_url('admin.php')));
   }
   ////////////////////////////////////////////////////////////////////////////////////////
   // Getters & Setters                                                                  //

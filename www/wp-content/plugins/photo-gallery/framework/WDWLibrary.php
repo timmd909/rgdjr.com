@@ -23,7 +23,7 @@ class WDWLibrary {
   ////////////////////////////////////////////////////////////////////////////////////////
   // Getters & Setters                                                                  //
   ////////////////////////////////////////////////////////////////////////////////////////
-  public static function get($key) {
+  public static function get($key, $default_value = '') {
     if (isset($_GET[$key])) {
       $value = $_GET[$key];
     }
@@ -33,11 +33,124 @@ class WDWLibrary {
     else {
       $value = '';
     }
+    if (!$value) {
+      $value = $default_value;
+    }
     return esc_html($value);
   }
 
+  public static function message_id($message_id) {
+    if ($message_id) {
+      switch($message_id) {
+        case 1: {
+          $message = 'Item Succesfully Saved.';
+          $type = 'updated';
+          break;
+
+        }
+        case 2: {
+          $message = 'Error. Please install plugin again.';
+          $type = 'error';
+          break;
+
+        }
+        case 3: {
+          $message = 'Item Succesfully Deleted.';
+          $type = 'updated';
+          break;
+
+        }
+        case 4: {
+          $message = "You can't delete default theme";
+          $type = 'error';
+          break;
+
+        }
+        case 5: {
+          $message = 'Items Succesfully Deleted.';
+          $type = 'updated';
+          break;
+
+        }
+        case 6: {
+          $message = 'You must select at least one item.';
+          $type = 'error';
+          break;
+
+        }
+        case 7: {
+          $message = 'The item is successfully set as default.';
+          $type = 'updated';
+          break;
+
+        }
+        case 8: {
+          $message = 'Options Succesfully Saved.';
+          $type = 'updated';
+          break;
+
+        }
+        case 9: {
+          $message = 'Item Succesfully Published.';
+          $type = 'updated';
+          break;
+
+        }
+        case 10: {
+          $message = 'Items Succesfully Published.';
+          $type = 'updated';
+          break;
+
+        }
+        case 11: {
+          $message = 'Item Succesfully Unpublished.';
+          $type = 'updated';
+          break;
+
+        }
+        case 12: {
+          $message = 'Items Succesfully Unpublished.';
+          $type = 'updated';
+          break;
+
+        }
+        case 13: {
+          $message = 'Ordering Succesfully Saved.';
+          $type = 'updated';
+          break;
+
+        }
+        case 14: {
+          $message = 'A term with the name provided already exists.';
+          $type = 'error';
+          break;
+
+        }
+        case 15: {
+          $message = 'Name field is required.';
+          $type = 'error';
+          break;
+
+        }
+        case 16: {
+          $message = 'The slug must be unique.';
+          $type = 'error';
+          break;
+
+        }
+        case 17: {
+          $message = 'Changes must be saved.';
+          $type = 'error';
+          break;
+
+        }
+      }
+      return '<div style="width:99%"><div class="' . $type . '"><p><strong>' . $message . '</strong></p></div></div>';
+    }
+  }
+
   public static function message($message, $type) {
-    return '<div style="width:95%"><div class="' . $type . '"><p><strong>' . $message . '</strong></p></div></div>';
+    return '<div style="width:99%"><div class="' . $type . '"><p><strong>' . $message . '</strong></p></div></div>';
   }
 
   public static function search($search_by, $search_value, $form_id) {
@@ -61,7 +174,7 @@ class WDWLibrary {
       </script>
       <div class="alignleft actions" style="">
         <label for="search_value" style="font-size:14px; width:50px; display:inline-block;"><?php echo $search_by; ?>:</label>
-        <input type="text" id="search_value" name="search_value" class="spider_search_value" value="<?php echo esc_html($search_value); ?>" style="width:150px;" />
+        <input type="text" id="search_value" name="search_value" class="spider_search_value" value="<?php echo esc_html($search_value); ?>" style="width: 150px;<?php echo (get_bloginfo('version') > '3.7') ? ' height: 28px;' : ''; ?>" />
       </div>
       <div class="alignleft actions">
         <input type="button" value="Search" onclick="spider_search()" class="button-secondary action">
@@ -71,7 +184,7 @@ class WDWLibrary {
     <?php
   }
 
-  public static function search_select($search_by, $search_select_value, $playlists, $form_id) {
+  public static function search_select($search_by, $search_select_id = 'search_select_value', $search_select_value, $playlists, $form_id) {
     ?>
     <div class="alignleft actions" style="clear:both;">
       <script>
@@ -82,8 +195,8 @@ class WDWLibrary {
         }
       </script>
       <div class="alignleft actions" >
-        <label for="search_select_value" style="font-size:14px; width:50px; display:inline-block;"><?php echo $search_by; ?>:</label>
-        <select id="search_select_value" name="search_select_value" onchange="spider_search_select();" style="float:none; width:150px;">
+        <label for="<?php echo $search_select_id; ?>" style="font-size:14px; width:50px; display:inline-block;"><?php echo $search_by; ?>:</label>
+        <select id="<?php echo $search_select_id; ?>" name="<?php echo $search_select_id; ?>" onchange="spider_search_select();" style="float: none; width: 150px;">
         <?php
           foreach ($playlists as $id => $playlist) {
             ?>
@@ -112,8 +225,8 @@ class WDWLibrary {
     }
     ?>
     <script type="text/javascript">
-      function spider_page(x, y) {
-        var items_county = <?php echo $items_county; ?>;
+      var items_county = <?php echo $items_county; ?>;
+      function spider_page(x, y) {       
         switch (y) {
           case 1:
             if (x >= items_county) {
@@ -141,6 +254,19 @@ class WDWLibrary {
             document.getElementById('page_number').value = 1;
         }
         document.getElementById('<?php echo $form_id; ?>').submit();
+      }
+      function check_enter_key(e) {
+        var key_code = (e.keyCode ? e.keyCode : e.which);
+        if (key_code == 13) { /*Enter keycode*/
+          if (jQuery('#current_page').val() >= items_county) {
+           document.getElementById('page_number').value = items_county;
+          }
+          else {
+           document.getElementById('page_number').value = jQuery('#current_page').val();
+          }
+          return true;
+        }
+        return true;
       }
     </script>
     <div class="tablenav-pages">
@@ -174,7 +300,10 @@ class WDWLibrary {
         <a class="<?php echo $first_page; ?>" title="Go to the first page" href="javascript:spider_page(<?php echo $page_number; ?>,-2);">«</a>
         <a class="<?php echo $prev_page; ?>" title="Go to the previous page" href="javascript:spider_page(<?php echo $page_number; ?>,-1);">‹</a>
         <span class="paging-input">
-          <span class="total-pages"><?php echo $page_number; ?></span> of <span class="total-pages">
+          <span class="total-pages">
+          <input class="current_page" id="current_page" name="current_page" value="<?php echo $page_number; ?>" onkeypress="return check_enter_key(event)" title="Go to the page" type="text" size="1" />
+        </span> of 
+        <span class="total-pages">
             <?php echo $items_county; ?>
           </span>
         </span>
@@ -208,7 +337,7 @@ class WDWLibrary {
       </script>
       <div class="alignleft actions" style="">
         <label for="search_value" style="font-size:14px; width:60px; display:inline-block;"><?php echo $search_by; ?>:</label>
-        <input type="text" id="search_value" name="search_value" class="spider_search_value" value="<?php echo esc_html($search_value); ?>" style="width:150px;" />
+        <input type="text" id="search_value" name="search_value" class="spider_search_value" value="<?php echo esc_html($search_value); ?>" style="width: 150px;<?php echo (get_bloginfo('version') > '3.7') ? ' height: 28px;' : ''; ?>" />
       </div>
       <div class="alignleft actions">
         <input type="button" value="Search" onclick="spider_search()" class="button-secondary action">
@@ -233,8 +362,8 @@ class WDWLibrary {
     }
     ?>
     <script type="text/javascript">
+      var items_county = <?php echo $items_county; ?>;
       function spider_page(x, y) {
-        var items_county = <?php echo $items_county; ?>;
         switch (y) {
           case 1:
             if (x >= items_county) {
@@ -262,6 +391,20 @@ class WDWLibrary {
             document.getElementById('page_number').value = 1;
         }
         spider_ajax_save('<?php echo $form_id; ?>');
+      }
+      function check_enter_key(e) { 	  
+        var key_code = (e.keyCode ? e.keyCode : e.which);
+        if (key_code == 13) { /*Enter keycode*/
+          if (jQuery('#current_page').val() >= items_county) {
+           document.getElementById('page_number').value = items_county;
+          }
+          else {
+           document.getElementById('page_number').value = jQuery('#current_page').val();
+          }
+          spider_ajax_save('<?php echo $form_id; ?>');
+          return false;
+        }
+       return true;		 
       }
     </script>
     <div id="tablenav-pages" class="tablenav-pages">
@@ -295,7 +438,10 @@ class WDWLibrary {
         <a class="<?php echo $first_page; ?>" title="Go to the first page" onclick="spider_page(<?php echo $page_number; ?>,-2)">«</a>
         <a class="<?php echo $prev_page; ?>" title="Go to the previous page" onclick="spider_page(<?php echo $page_number; ?>,-1)">‹</a>
         <span class="paging-input">
-          <span class="total-pages"><?php echo $page_number; ?></span> of <span class="total-pages">
+          <span class="total-pages">
+          <input class="current_page" id="current_page" name="current_page" value="<?php echo $page_number; ?>" onkeypress="return check_enter_key(event)" title="Go to the page" type="text" size="1" />
+        </span> of 
+        <span class="total-pages">
             <?php echo $items_county; ?>
           </span>
         </span>
@@ -310,9 +456,9 @@ class WDWLibrary {
     <input type="hidden" id="search_or_not" name="search_or_not" value="<?php echo ((isset($_POST['search_or_not'])) ? esc_html($_POST['search_or_not']) : ''); ?>"/>
     <?php
   }
-  
-  public static function ajax_html_frontend_page_nav($theme_row, $count_items, $page_number, $form_id, $limit = 20, $current_view, $id, $cur_alb_gal_id = 0) {
-    $type = (isset($_POST['type_' . $current_view]) ? esc_html($_POST['type_' . $current_view]) : 'album');
+
+  public static function ajax_html_frontend_page_nav($theme_row, $count_items, $page_number, $form_id, $limit = 20, $current_view, $id, $cur_alb_gal_id = 0, $type = 'album') {
+    $type = (isset($_POST['type_' . $current_view]) ? esc_html($_POST['type_' . $current_view]) : $type);
     $album_gallery_id = (isset($_POST['album_gallery_id_' . $current_view]) ? esc_html($_POST['album_gallery_id_' . $current_view]) : $cur_alb_gal_id);
     if ($count_items) {
       if ($count_items % $limit) {
@@ -358,7 +504,7 @@ class WDWLibrary {
           default:
             document.getElementById('page_number_<?php echo $current_view; ?>').value = 1;
         }
-        spider_frontend_ajax('<?php echo $form_id; ?>', '<?php echo $current_view; ?>', '<?php echo $id; ?>', '<?php echo $album_gallery_id; ?>', '', '<?php echo $type; ?>');
+        spider_frontend_ajax('<?php echo $form_id; ?>', '<?php echo $current_view; ?>', '<?php echo $id; ?>', '<?php echo $album_gallery_id; ?>', '', '<?php echo $type; ?>', 0);
       }
     </script>
     <div class="tablenav-pages_<?php echo $current_view; ?>">
@@ -417,6 +563,95 @@ class WDWLibrary {
     <?php
   }
 
+  public static function ajax_html_frontend_search_box($form_id, $current_view, $cur_gal_id, $images_count, $search_box_width) {
+    $bwg_search = ((isset($_POST['bwg_search_' . $current_view]) && esc_html($_POST['bwg_search_' . $current_view]) != '') ? esc_html($_POST['bwg_search_' . $current_view]) : '');	
+    $type = (isset($_POST['type_' . $current_view]) ? esc_html($_POST['type_' . $current_view]) : 'album');
+    $album_gallery_id = (isset($_POST['album_gallery_id_' . $current_view]) ? esc_html($_POST['album_gallery_id_' . $current_view]) : 0);
+    ?>
+    <style>
+      .bwg_search_container_1 {
+        display: inline-block;
+        width: 100%;
+        text-align: right;
+        margin: 0 5px 20px 5px;
+        background-color: rgba(0,0,0,0);
+      }
+      .bwg_search_container_2 {
+        display: inline-block;
+        position: relative;
+        border-radius: 4px;
+        box-shadow: 0 0 3px 1px #CCCCCC;
+        background-color: #FFFFFF;
+        border: 1px solid #CCCCCC;
+        width: <?php echo $search_box_width; ?>px;
+        max-width: 100%;
+      }
+      #bwg_search_container_1_<?php echo $current_view; ?> #bwg_search_container_2_<?php echo $current_view; ?> .bwg_search_input_container {
+        display: block;
+        margin-right: 45px;
+      }
+      #bwg_search_container_1_<?php echo $current_view; ?> #bwg_search_container_2_<?php echo $current_view; ?> .bwg_search_loupe_container {
+        display: inline-block; 
+        margin-right: 1px;
+        vertical-align: middle;
+        float: right;
+        padding-top: 3px;
+      }
+      #bwg_search_container_1_<?php echo $current_view; ?> #bwg_search_container_2_<?php echo $current_view; ?> .bwg_search_reset_container {
+        display: inline-block;
+        margin-right: 5px;
+        vertical-align: middle;
+        float: right;
+        padding-top: 3px;
+      }
+      #bwg_search_container_1_<?php echo $current_view; ?> #bwg_search_container_2_<?php echo $current_view; ?> .bwg_search,
+      #bwg_search_container_1_<?php echo $current_view; ?> #bwg_search_container_2_<?php echo $current_view; ?> .bwg_reset {
+        font-size: 18px;
+        color: #CCCCCC;
+        cursor: pointer;
+      }
+      #bwg_search_container_1_<?php echo $current_view; ?> #bwg_search_container_2_<?php echo $current_view; ?> .bwg_search_input_<?php echo $current_view; ?>,
+      #bwg_search_container_1_<?php echo $current_view; ?> #bwg_search_container_2_<?php echo $current_view; ?> .bwg_search_input_<?php echo $current_view; ?>:focus {
+        color: hsl(0, 1%, 3%);
+        outline: none;
+        border: none;
+        box-shadow: none;
+        background: none;
+        padding: 0 5px;
+        font-family: inherit;
+        width: 100%;
+      }
+    </style>
+    <script type="text/javascript">
+      function clear_input_<?php echo $current_view; ?> (current_view) {
+        jQuery("#bwg_search_input_" + current_view).val('');
+      }
+      function check_enter_key(e) {
+        var key_code = e.which || e.keyCode;
+        if (key_code == 13) {
+          spider_frontend_ajax('<?php echo $form_id; ?>', '<?php echo $current_view; ?>', '<?php echo $cur_gal_id; ?>', <?php echo $album_gallery_id; ?>, '', '<?php echo $type; ?>', 1);
+          return false;
+        }
+        return true;
+      } 
+    </script>
+    <div class="bwg_search_container_1" id="bwg_search_container_1_<?php echo $current_view; ?>">
+      <div class="bwg_search_container_2" id="bwg_search_container_2_<?php echo $current_view; ?>">
+        <span class="bwg_search_reset_container" >
+          <i title="<?php echo __('Reset', 'bwg'); ?>" class="bwg_reset fa fa-times" onclick="clear_input_<?php echo $current_view; ?>('<?php echo $current_view; ?>'),spider_frontend_ajax('<?php echo $form_id; ?>', '<?php echo $current_view; ?>', '<?php echo $cur_gal_id; ?>', <?php echo $album_gallery_id; ?>, '', '<?php echo $type; ?>', 1)"></i>
+        </span>
+        <span class="bwg_search_loupe_container" >
+          <i title="<?php echo __('Search', 'bwg'); ?>" class="bwg_search fa fa-search" onclick="spider_frontend_ajax('<?php echo $form_id; ?>', '<?php echo $current_view; ?>', '<?php echo $cur_gal_id; ?>', <?php echo $album_gallery_id; ?>, '', '<?php echo $type; ?>', 1)"></i>
+        </span>
+        <span class="bwg_search_input_container">
+          <input id="bwg_search_input_<?php echo $current_view; ?>" class="bwg_search_input_<?php echo $current_view; ?>" type="text" onkeypress="return check_enter_key(event)" name="bwg_search_<?php echo $current_view; ?>" value="<?php echo $bwg_search; ?>" >
+          <input id="bwg_images_count_<?php echo $current_view; ?>" class="bwg_search_input" type="hidden" name="bwg_images_count_<?php echo $current_view; ?>" value="<?php echo $images_count; ?>" >
+        </span>
+      </div>
+    </div>
+    <?php
+  }
+
   public static function spider_hex2rgb($colour) {
     if ($colour[0] == '#') {
       $colour = substr( $colour, 1 );
@@ -436,6 +671,14 @@ class WDWLibrary {
     return array('red' => $r, 'green' => $g, 'blue' => $b);
   }
 
+  public static function spider_redirect($url) {
+    ?>
+    <script>
+      window.location = "<?php echo $url; ?>";
+    </script>
+    <?php
+    exit();
+  }
   ////////////////////////////////////////////////////////////////////////////////////////
   // Private Methods                                                                    //
   ////////////////////////////////////////////////////////////////////////////////////////

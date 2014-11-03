@@ -26,7 +26,7 @@ class BWGViewUninstall_bwg {
     global $wpdb;
     $prefix = $wpdb->prefix;
     ?>
-    <form method="post" action="admin.php?page=uninstall_bwg" style="width:95%;">
+    <form method="post" action="admin.php?page=uninstall_bwg" style="width:99%;">
       <?php wp_nonce_field('best_wordpress_gallery uninstall');?>
       <div class="wrap">
         <span class="uninstall_icon"></span>
@@ -55,9 +55,11 @@ class BWGViewUninstall_bwg {
                   <li><?php echo $prefix; ?>bwg_gallery</li>
                   <li><?php echo $prefix; ?>bwg_image</li>
                   <li><?php echo $prefix; ?>bwg_image_comment</li>
+                  <li><?php echo $prefix; ?>bwg_image_rate</li>
                   <li><?php echo $prefix; ?>bwg_image_tag</li>
                   <li><?php echo $prefix; ?>bwg_option</li>
                   <li><?php echo $prefix; ?>bwg_theme</li>
+                  <li><?php echo $prefix; ?>bwg_shortcode</li>
               </ol>
             </td>
           </tr>
@@ -134,13 +136,21 @@ class BWGViewUninstall_bwg {
       <p><?php echo $prefix; ?>bwg_gallery,</p>
       <p><?php echo $prefix; ?>bwg_image,</p>
       <p><?php echo $prefix; ?>bwg_image_comment,</p>
+      <p><?php echo $prefix; ?>bwg_image_rate,</p>
       <p><?php echo $prefix; ?>bwg_image_tag,</p>
       <p><?php echo $prefix; ?>bwg_option,</p>
-      <p><?php echo $prefix; ?>bwg_theme.</p>
+      <p><?php echo $prefix; ?>bwg_theme,</p>
+      <p><?php echo $prefix; ?>bwg_shortcode.</p>
     </div>
+    <?php
+    if (isset($_POST['bwg_delete_files'])) {
+    ?>
     <div class="<?php echo ($flag) ? 'updated' : 'error'?>">
       <p><?php echo ($flag) ? 'The folder was successfully deleted.' : 'An error occurred when deleting the folder.'?></p>
     </div>
+    <?php
+    }
+    ?>
     <div class="wrap">
       <h2>Uninstall Photo Gallery</h2>
       <p><strong><a href="<?php echo $deactivate_url; ?>">Click Here</a> To Finish the Uninstallation and Photo Gallery will be Deactivated Automatically.</strong></p>

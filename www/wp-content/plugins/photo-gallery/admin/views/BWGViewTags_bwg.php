@@ -34,20 +34,19 @@ class BWGViewTags_bwg {
     <script>
       var ajax_url = "<?php echo add_query_arg(array('action' => ''), admin_url('admin-ajax.php'));  ?>"
     </script>
-    <div style="clear: both; float: left; width: 95%;">
+    <div style="clear: both; float: left; width: 99%;">
       <div style="float:left; font-size: 14px; font-weight: bold;">
         This section allows you to create, edit and delete tags.
         <a style="color: blue; text-decoration: none;" target="_blank" href="http://web-dorado.com/wordpress-gallery-guide-step-3.html">Read More in User Manual</a>
       </div>
       <div style="float: right; text-align: right;">
-        <a style="color: red; text-decoration: none;" target="_blank" href="http://web-dorado.com/products/wordpress-photo-gallery-plugin.html">
-          <img width="215" border="0" alt="web-dorado.com" src="<?php echo WD_BWG_URL . '/images/header.png'; ?>" />
-          <p style="font-size: 16px; margin: 0; padding: 0 20px 0 0;">Get the full version</p>
+        <a style="text-decoration: none;" target="_blank" href="http://web-dorado.com/products/wordpress-photo-gallery-plugin.html">
+          <img width="215" border="0" alt="web-dorado.com" src="<?php echo WD_BWG_URL . '/images/logo.png'; ?>" />
         </a>
       </div>
     </div>
-    <div id="wordpress_message_1" style="width:95%;display:none"><div id="wordpress_message_2" class="updated"><p><strong>Item Succesfully Saved.</strong></p></div></div>
-    <form class="wrap" id="tags_form" method="post" action="admin.php?page=tags_bwg" style="float:left; width: 95%;">
+    <div id="wordpress_message_1" style="width:99%;display:none"><div id="wordpress_message_2" class="updated"><p><strong>Item Succesfully Saved.</strong></p></div></div>
+    <form class="wrap" id="tags_form" method="post" action="admin.php?page=tags_bwg" style="float:left; width: 99%;">
       <span class="tag_icon"></span>
       <h2>Tags</h2>
       <div class="buttons_div">
